@@ -218,16 +218,16 @@ const MOCK_CATALOG = [
   { id: 40, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
 ];
 
-export default function App() {
+export default function Page() {
   const [lang, setLang] = useState('ru');
   return (
     <LanguageContext.Provider value={{ lang, setLang, t: translations[lang] || translations['en'] }}>
-      <MainApp />
+      <NutriBotApp />
     </LanguageContext.Provider>
   );
 }
 
-function MainApp() {
+function NutriBotApp() {
   const { t, lang } = useContext(LanguageContext);
   
   const [user, setUser] = useState(null);
