@@ -1066,4 +1066,3 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
     </div>
   );
 });
-```eof
