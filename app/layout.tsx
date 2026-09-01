@@ -1,3 +1,5 @@
+import './globals.css';
+
 export const metadata = {
   title: 'NutriBot',
   description: 'Умный трекер КБЖУ',
@@ -10,7 +12,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body className="bg-slate-900 text-slate-100 antialiased">
+        {children}
+      </body>
     </html>
   )
 }
