@@ -3,12 +3,12 @@
 
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, signInWithCustomToken, signInAnonymously } from 'firebase/auth';
+import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
+  ImagePlus, ArrowRight, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
@@ -22,7 +22,11 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
+
+// 👇👇👇 ВАЖНО: ВСТАВЬ СЮДА СВОЙ КЛЮЧ ОТ GEMINI API 👇👇👇
 const apiKey = "AQ.Ab8RN6LJtXgkJWS8UygpSEB0b4MLycCu2XPwYcfqFjZoBjNLRg"; 
+// 👆👆👆 БЕЗ НЕГО ИИ-ДИЕТОЛОГ И СКАНЕР НЕ БУДУТ РАБОТАТЬ 👆👆👆
+
 
 const translations = {
   ru: {
@@ -42,7 +46,7 @@ const translations = {
     activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
   },
   kk: {
-    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканеري", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
+    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
     activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
   }
 };
@@ -50,7 +54,6 @@ const translations = {
 const LanguageContext = createContext<any>(null);
 
 const globalStyles = `
-  @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
   .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
   .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
   @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
@@ -60,7 +63,7 @@ const globalStyles = `
   @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } }
   @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } }
   @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } }
-  @keyframes particle-explode { 0% { transform: translate(0px, 0px) scale(0); opacity: 1; } 20% { transform: translate(var(--tx-mid), var(--ty-mid)) scale(1.2); opacity: 1; } 100% { transform: translate(var(--tx-end), var(--ty-end)) scale(0); opacity: 0; } }
+  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 `;
 
 const langMap: any = { ru: "Русский", en: "English", pt: "Português", fr: "Français", kk: "Қазақша" };
@@ -77,37 +80,54 @@ const LightningStorm = () => (
 );
 
 const GoldBurstAnimation = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-    <div className="absolute w-[450px] h-[450px] bg-amber-500/70 blur-[80px] rounded-full animate-pulse"></div>
-    <div className="absolute w-[300px] h-[300px] bg-yellow-300/50 blur-[50px] rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
+    <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
+    <div className="absolute w-64 h-64 bg-yellow-300/40 blur-[40px] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
     
-    <div className="relative z-20 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-      <Crown size={110} className="text-[#fde047] mb-[-15px] z-30" fill="currentColor" style={{ filter: 'drop-shadow(0 0 35px rgba(253,224,71,1))' }} />
-      <span className="text-[#fde047] font-black text-8xl tracking-widest z-25 relative" style={{ filter: 'drop-shadow(0 0 40px rgba(253,224,71,1))' }}>GOLD</span>
+    <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
+      <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
+      <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
     </div>
 
-    <div className="absolute inset-0 z-30 flex items-center justify-center">
-      {[...Array(120)].map((_, i) => {
-        const angle = (i * 360) / 120 + (Math.random() * 8 - 4);
-        const dist1 = 150 + Math.random() * 200;
-        const dist2 = 300 + Math.random() * 350;
-        const txMid = Math.cos(angle * Math.PI / 180) * dist1;
-        const tyMid = Math.sin(angle * Math.PI / 180) * dist1;
-        const txEnd = Math.cos(angle * Math.PI / 180) * dist2;
-        const tyEnd = Math.sin(angle * Math.PI / 180) * dist2;
-        const size = 4 + Math.random() * 10;
+    <div className="absolute inset-0 z-20 flex items-center justify-center">
+      {[...Array(80)].map((_, i) => {
+        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+        const distance = 100 + Math.random() * 400;
+        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+        const size = 3 + Math.random() * 8;
         return (
           <div 
-            key={`p-${i}`} 
-            className="absolute bg-gradient-to-r from-yellow-100 to-amber-300 rounded-full"
+            key={`l-${i}`} 
+            className="absolute bg-yellow-200 rounded-full"
             style={{
               width: `${size}px`, height: `${size}px`,
-              left: '50%', top: '50%',
-              '--tx-mid': `${txMid}px`, '--ty-mid': `${tyMid}px`,
-              '--tx-end': `${txEnd}px`, '--ty-end': `${tyEnd}px`,
-              animation: `particle-explode ${0.8 + Math.random() * 1.2}s cubic-bezier(0.1, 0.9, 0.2, 1) infinite`,
-              animationDelay: `${Math.random() * 0.4}s`,
-              boxShadow: '0 0 20px 4px #fde047'
+              left: '20%', top: '50%',
+              '--tx': tx, '--ty': ty,
+              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
+              animationDelay: `${Math.random() * 0.5}s`,
+              boxShadow: '0 0 15px 3px #fcd34d'
+            }}
+          />
+        )
+      })}
+      {[...Array(80)].map((_, i) => {
+        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+        const distance = 100 + Math.random() * 400;
+        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+        const size = 3 + Math.random() * 8;
+        return (
+          <div 
+            key={`r-${i}`} 
+            className="absolute bg-yellow-200 rounded-full"
+            style={{
+              width: `${size}px`, height: `${size}px`,
+              left: '80%', top: '50%',
+              '--tx': tx, '--ty': ty,
+              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
+              animationDelay: `${Math.random() * 0.5}s`,
+              boxShadow: '0 0 15px 3px #fcd34d'
             }}
           />
         )
@@ -413,11 +433,11 @@ function NutriBotApp() {
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? 'bg-orange-500/20 border-orange-500/50 text-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.3)]' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? 'bg-orange-500/20 border-orange-500/50 text-orange-400 shadow-md shadow-orange-500/30' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             <Flame size={16} className={hasMealsToday ? "fill-orange-400 animate-pulse text-orange-400" : ""} />
             <span className="font-bold text-sm">{hasMealsToday ? streakDays : streakDays}</span>
           </div>
-          <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.2)]' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
             <span className="font-bold tracking-wide">{subscription.toUpperCase()}</span>
           </div>
@@ -439,7 +459,7 @@ function NutriBotApp() {
             <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={() => setActiveTab('search')} />
           </div>
           <div className="w-1/5 flex justify-center relative">
-            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-gradient-to-tr from-emerald-500 to-emerald-400 text-slate-900 p-4 rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.4)] flex items-center justify-center z-30"><Camera size={28} /></div>
+            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
           </div>
           <div className="flex w-2/5 justify-around">
             <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={() => setActiveTab('weight')} />
@@ -489,7 +509,7 @@ function NutriBotApp() {
                <Flame size={140} className="text-orange-500 relative z-10 drop-shadow-[0_0_30px_rgba(249,115,22,1)] animate-bounce" fill="currentColor" />
             </div>
             <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-[0_0_20px_rgba(249,115,22,0.6)] mt-4">🔥 {streakDays}</div>
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl shadow-orange-500/60 mt-4">🔥 {streakDays}</div>
           </div>
         </div>
       )}
@@ -551,7 +571,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
         </div>
         <div className="flex items-end gap-2 mb-4 mt-[-10px]"><span className="text-4xl font-bold text-white">{remaining.calories}</span><span className="text-slate-400 text-sm mb-1">{t.from} {goals?.calories || 2000}</span></div>
         <div className="h-3 w-full bg-slate-700/50 rounded-full overflow-hidden mb-5"><div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-1000 ease-out" style={{ width: `${getPercent(current.calories, goals?.calories || 2000)}%` }} /></div>
-        <div onClick={handleAskAI} className="btn-glass w-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 font-medium py-3 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.1)]"><Lightbulb size={20} className="text-amber-400" /> {t.aiDietitian}</div>
+        <div onClick={handleAskAI} className="btn-glass w-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-300 font-medium py-3 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-amber-500/20"><Lightbulb size={20} className="text-amber-400" /> {t.aiDietitian}</div>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -593,7 +613,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
         })}
       </div>
 
-      <div onClick={() => checkAccess('silver') && setIsVoiceModalOpen(true)} className="btn-glass fixed bottom-24 right-4 bg-emerald-500 text-slate-900 p-4 rounded-full shadow-[0_5px_20px_rgba(16,185,129,0.5)] z-30"><Mic size={24} /></div>
+      <div onClick={() => checkAccess('silver') && setIsVoiceModalOpen(true)} className="btn-glass fixed bottom-24 right-4 bg-emerald-500 text-white p-4 rounded-full shadow-lg shadow-emerald-500/50 z-50"><Mic size={24} /></div>
 
       {isVoiceModalOpen && (
         <div className="absolute inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in">
@@ -724,7 +744,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
         <div className="p-4 animate-in slide-in-from-right h-full bg-slate-900">
           <div className="flex items-center gap-3 mb-6"><div onClick={() => setIngSelected(null)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div><h3 className="font-bold text-lg text-white truncate">Вес: {ingSelected.name}</h3></div>
           <div className="flex items-center justify-center gap-4 mb-8"><input type="number" value={ingWeight} onChange={e => setIngWeight(Number(e.target.value))} className="bg-slate-800/80 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 text-white outline-none" /><span className="text-xl text-slate-400">{t.g}</span></div>
-          <div onClick={addIngredientToRecipe} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-[0_5px_20px_rgba(16,185,129,0.4)]">{t.addIngredient}</div>
+          <div onClick={addIngredientToRecipe} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-lg shadow-emerald-500/40">{t.addIngredient}</div>
         </div>
       );
     }
@@ -773,7 +793,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
             </div>
           </div>
         )}
-        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-[0_5px_20px_rgba(16,185,129,0.4)]' : 'bg-slate-700 text-slate-500'}`}>{t.saveRecipe}</div>
+        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/40' : 'bg-slate-700 text-slate-500'}`}>{t.saveRecipe}</div>
       </div>
     );
   }
@@ -817,7 +837,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
         <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 animate-in slide-in-from-right">
           <div className="flex items-center gap-3 mb-6"><div onClick={() => setSelectedItem(null)} className="btn-glass p-1 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div><h3 className="font-bold text-lg text-white truncate">{selectedItem.name}</h3></div>
           <div className="flex items-center justify-center gap-4 mb-8"><input type="number" value={weight} onChange={e => setWeight(Number(e.target.value))} className="bg-slate-900 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 focus:border-emerald-500 outline-none text-white" /><span className="text-xl text-slate-400 font-medium">{t.weightInfo}</span></div>
-          <div onClick={handleSaveToDiary} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-[0_5px_20px_rgba(16,185,129,0.4)]">{t.addToDiary}</div>
+          <div onClick={handleSaveToDiary} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-lg shadow-emerald-500/40">{t.addToDiary}</div>
         </div>
       )}
     </div>
@@ -868,7 +888,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
                   <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
                   <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
                 </div>
-                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
+                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/40 text-center">{t.addToDiary}</div>
               </div>
             )}
           </div>
@@ -893,7 +913,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2"><Scale size={20} className="text-emerald-400" /> {t.weightTitle}</h2>
-        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button></form>
+        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-md shadow-emerald-500/30">{t.add}</button></form>
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
@@ -966,7 +986,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'gold' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF1}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF2}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF3}</span></li></ul>)}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)]">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-amber-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-amber-500/40 text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
       </div>
@@ -977,7 +997,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="relative w-full h-full flex flex-col items-center justify-center">
               <LightningStorm />
               <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.8)] rotate-12">
+                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/80 rotate-12">
                   <Zap size={64} className="text-slate-900 -rotate-12" />
                 </div>
                 <h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2>
@@ -992,7 +1012,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
         </div>
       )}
     </div>
@@ -1033,9 +1053,10 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
   );
 });
+```eof
