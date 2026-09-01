@@ -1,14 +1,16 @@
-import "./globals.css";
-
 export const metadata = {
-  title: "NutriBot",
-  description: "Умный трекер КБЖУ",
-};
+  title: 'NutriBot',
+  description: 'Умный трекер КБЖУ',
+}
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="ru">
       <body>{children}</body>
     </html>
-  );
+  )
 }
