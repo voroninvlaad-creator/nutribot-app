@@ -269,18 +269,25 @@ function NutriBotApp() {
 
   useEffect(() => {
     if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
-    const initAuth = async () => {
-      try {
-        if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { await signInWithCustomToken(auth, (window as any).__initial_auth_token); } 
-        else { await signInAnonymously(auth); }
-      } catch (e: any) { 
-        console.error("Auth err", e); 
-        setUser({ uid: 'offline-user-' + Math.random().toString(36).substring(7) });
-      } finally {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
         setAuthLoading(false);
+      } else {
+        try {
+          if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { 
+            await signInWithCustomToken(auth, (window as any).__initial_auth_token); 
+          } else { 
+            await signInAnonymously(auth); 
+          }
+        } catch (e: any) { 
+          console.error("Auth err", e); 
+          setUser({ uid: 'offline-user-' + Math.random().toString(36).substring(7) });
+          setAuthLoading(false);
+        }
       }
-    };
-    initAuth();
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -837,7 +844,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
         <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl p-5 border border-white/10 animate-in slide-in-from-right">
           <div className="flex items-center gap-3 mb-6"><div onClick={() => setSelectedItem(null)} className="btn-glass p-1 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div><h3 className="font-bold text-lg text-white truncate">{selectedItem.name}</h3></div>
           <div className="flex items-center justify-center gap-4 mb-8"><input type="number" value={weight} onChange={e => setWeight(Number(e.target.value))} className="bg-slate-900 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 focus:border-emerald-500 outline-none text-white" /><span className="text-xl text-slate-400 font-medium">{t.weightInfo}</span></div>
-          <div onClick={handleSaveToDiary} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-lg shadow-emerald-500/40">{t.addToDiary}</div>
+          <div onClick={handleSaveToDiary} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-[0_5px_20px_rgba(16,185,129,0.4)]">{t.addToDiary}</div>
         </div>
       )}
     </div>
@@ -888,7 +895,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
                   <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
                   <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
                 </div>
-                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-lg shadow-emerald-500/40 text-center">{t.addToDiary}</div>
+                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
               </div>
             )}
           </div>
@@ -913,7 +920,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2"><Scale size={20} className="text-emerald-400" /> {t.weightTitle}</h2>
-        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-md shadow-emerald-500/30">{t.add}</button></form>
+        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button></form>
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
@@ -986,7 +993,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'gold' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF1}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF2}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF3}</span></li></ul>)}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-amber-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-amber-500/40 text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
       </div>
@@ -997,7 +1004,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="relative w-full h-full flex flex-col items-center justify-center">
               <LightningStorm />
               <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/80 rotate-12">
+                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.8)] rotate-12">
                   <Zap size={64} className="text-slate-900 -rotate-12" />
                 </div>
                 <h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2>
@@ -1012,7 +1019,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
         </div>
       )}
     </div>
@@ -1053,9 +1060,10 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
   );
 });
+```eof
