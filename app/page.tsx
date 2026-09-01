@@ -3,12 +3,12 @@
 
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithCustomToken, signInAnonymously } from 'firebase/auth';
 import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, ArrowRight, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
+  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
@@ -42,7 +42,7 @@ const translations = {
     activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
   },
   kk: {
-    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
+    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканеري", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
     activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
   }
 };
@@ -50,6 +50,7 @@ const translations = {
 const LanguageContext = createContext<any>(null);
 
 const globalStyles = `
+  @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');
   .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
   .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
   @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
@@ -59,7 +60,7 @@ const globalStyles = `
   @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } }
   @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } }
   @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } }
-  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(20px, -30px) scale(1); opacity: 1; } 100% { transform: translate(var(--tx, 100px), var(--ty, 100px)) scale(0); opacity: 0; } }
+  @keyframes particle-explode { 0% { transform: translate(0px, 0px) scale(0); opacity: 1; } 20% { transform: translate(var(--tx-mid), var(--ty-mid)) scale(1.2); opacity: 1; } 100% { transform: translate(var(--tx-end), var(--ty-end)) scale(0); opacity: 0; } }
 `;
 
 const langMap: any = { ru: "Русский", en: "English", pt: "Português", fr: "Français", kk: "Қазақша" };
@@ -76,58 +77,37 @@ const LightningStorm = () => (
 );
 
 const GoldBurstAnimation = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
-    <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
-    <div className="absolute w-64 h-64 bg-yellow-300/40 blur-[40px] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="absolute w-[450px] h-[450px] bg-amber-500/70 blur-[80px] rounded-full animate-pulse"></div>
+    <div className="absolute w-[300px] h-[300px] bg-yellow-300/50 blur-[50px] rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
     
-    <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
-      <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
-      <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
+    <div className="relative z-20 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
+      <Crown size={110} className="text-[#fde047] mb-[-15px] z-30" fill="currentColor" style={{ filter: 'drop-shadow(0 0 35px rgba(253,224,71,1))' }} />
+      <span className="text-[#fde047] font-black text-8xl tracking-widest z-25 relative" style={{ filter: 'drop-shadow(0 0 40px rgba(253,224,71,1))' }}>GOLD</span>
     </div>
 
-    <div className="absolute inset-0 z-20 flex items-center justify-center">
-      {[...Array(80)].map((_, i) => {
-        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 400;
-        const tx = Math.cos(angle * Math.PI / 180) * distance;
-        const ty = Math.sin(angle * Math.PI / 180) * distance;
-        const size = 3 + Math.random() * 8;
+    <div className="absolute inset-0 z-30 flex items-center justify-center">
+      {[...Array(120)].map((_, i) => {
+        const angle = (i * 360) / 120 + (Math.random() * 8 - 4);
+        const dist1 = 150 + Math.random() * 200;
+        const dist2 = 300 + Math.random() * 350;
+        const txMid = Math.cos(angle * Math.PI / 180) * dist1;
+        const tyMid = Math.sin(angle * Math.PI / 180) * dist1;
+        const txEnd = Math.cos(angle * Math.PI / 180) * dist2;
+        const tyEnd = Math.sin(angle * Math.PI / 180) * dist2;
+        const size = 4 + Math.random() * 10;
         return (
           <div 
-            key={`l-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
+            key={`p-${i}`} 
+            className="absolute bg-gradient-to-r from-yellow-100 to-amber-300 rounded-full"
             style={{
-              width: size, height: size,
-              left: '20%', top: '50%',
-              transform: `translate(0px, 0px)`,
-              '--tx': `${tx}px`,
-              '--ty': `${ty}px`,
-              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.5}s`,
-              boxShadow: '0 0 15px 3px #fcd34d'
-            }}
-          />
-        )
-      })}
-      {[...Array(80)].map((_, i) => {
-        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 400;
-        const tx = Math.cos(angle * Math.PI / 180) * distance;
-        const ty = Math.sin(angle * Math.PI / 180) * distance;
-        const size = 3 + Math.random() * 8;
-        return (
-          <div 
-            key={`r-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
-            style={{
-              width: size, height: size,
-              left: '80%', top: '50%',
-              transform: `translate(0px, 0px)`,
-              '--tx': `${tx}px`,
-              '--ty': `${ty}px`,
-              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.5}s`,
-              boxShadow: '0 0 15px 3px #fcd34d'
+              width: `${size}px`, height: `${size}px`,
+              left: '50%', top: '50%',
+              '--tx-mid': `${txMid}px`, '--ty-mid': `${tyMid}px`,
+              '--tx-end': `${txEnd}px`, '--ty-end': `${tyEnd}px`,
+              animation: `particle-explode ${0.8 + Math.random() * 1.2}s cubic-bezier(0.1, 0.9, 0.2, 1) infinite`,
+              animationDelay: `${Math.random() * 0.4}s`,
+              boxShadow: '0 0 20px 4px #fde047'
             }}
           />
         )
@@ -958,7 +938,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
         <div className="flex items-center gap-2 text-white font-medium"><Globe size={20} className="text-blue-400"/> {t.language}</div>
         <select value={lang} onChange={e => setLang(String(e.target.value))} className="bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 outline-none font-medium">
-          <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option><option value="pt">🇵🇹 Português</option><option value="fr">🇫🇷 Français</option><option value="kk">Қазақша</option>
+          <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option><option value="pt">🇵🇹 Português</option><option value="fr">🇫🇷 Français</option><option value="kk">🇰🇿 Қазақша</option>
         </select>
       </div>
 
@@ -1032,7 +1012,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
 
   const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
   const activityOptions = [{ id: 'min', label: t.activities.min }, { id: 'low', label: t.activities.low }, { id: 'med', label: t.activities.med }, { id: 'high', label: t.activities.high }, { id: 'ext', label: t.activities.ext }];
-  const goalOptions = [{ id: 'lose', label: t.goals.lose }, { id: 'keep', label: t.goals.gkep || t.goals.keep }, { id: 'gain', label: t.goals.gain }];
+  const goalOptions = [{ id: 'lose', label: t.goals.lose }, { id: 'keep', label: t.goals.keep }, { id: 'gain', label: t.goals.gain }];
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto p-4 relative overflow-y-auto pb-10">
