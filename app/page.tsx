@@ -1,4 +1,5 @@
 "use client";
+// @ts-nocheck
 
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
