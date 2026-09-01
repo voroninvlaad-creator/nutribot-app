@@ -22,7 +22,7 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
-const apiKey = ""; 
+const apiKey = "AQ.Ab8RN6LJtXgkJWS8UygpSEB0b4MLycCu2XPwYcfqFjZoBjNLRg"; 
 
 const translations = {
   ru: {
