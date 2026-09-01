@@ -8,8 +8,10 @@
     "start": "next start",
     "lint": "eslint"
   },
-  "dependencies": {
-  "next": "latest",
+ "dependencies": {
+  "next": "14.2.3",
+  // ... остальные зависимости
+}
   "react": "^18",
   "react-dom": "^18",
   "firebase": "^10.8.0",
