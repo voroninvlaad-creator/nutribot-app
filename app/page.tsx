@@ -1,6 +1,5 @@
-"use client";
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext } from 'react';
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { 
@@ -9,36 +8,38 @@ import {
   ImagePlus, ArrowRight, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
-let app, auth, db, appId;
+let app, auth, db, appId = 'default-app-id';
 try {
-  if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-    app = initializeApp(JSON.parse(__firebase_config));
-    auth = getAuth(app); db = getFirestore(app);
-    appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+  if (typeof window !== 'undefined') {
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "AIzaSyDummyKeyForBuild" };
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    db = getFirestore(app);
+    if (typeof __app_id !== 'undefined') appId = __app_id;
   }
-} catch (e) { console.error("Firebase init failed:", e); }
+} catch (e) { console.error("Firebase init:", e); }
 
 const apiKey = ""; 
 
 const translations = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", gender: "Пол", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык интерфейса", loadingData: "Загрузка данных...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский",
-    activities: { min: "Минимальная (сидячая)", low: "Слабая (1-3 трен.)", med: "Средняя (3-5 трен.)", high: "Высокая (каждый день)", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
+    activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", gender: "Gender", age: "Age", height: "Height (cm)", weight: "Weight (kg)", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Interface Language", loadingData: "Loading data...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD STATUS", male: "Male", female: "Female",
-    activities: { min: "Minimal (sedentary)", low: "Light (1-3 workouts)", med: "Moderate (3-5 workouts)", high: "High (daily)", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD STATUS", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
+    activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   },
   pt: {
-    dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água consumida", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que você comeu.", dictatePlaceholder: "ex: 200g de arroz", aiThinking: "IA analisando...", aiCreating: "Criando receitas...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro de reconhecimento", tryAgain: "Tentar novamente", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Mais um registro", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", bronzeF1: "Busca", bronzeF2: "scans", bronzeF3: "IA indisponível", silverF1: "Tudo do Bronze", silverF2: "fotos IA/dia", silverF3: "Código ilimitado", goldF1: "Acesso total", goldF2: "IA ilimitada", goldF3: "Dicas de IA", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", continue: "Continuar", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", gender: "Sexo", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "STATUS GOLD", male: "Masculino", female: "Feminino",
+    dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que comeu.", dictatePlaceholder: "ex: 200g arroz", aiThinking: "Analisando...", aiCreating: "Criando...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada encontrado", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro", tryAgain: "Tentar de novo", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Precisa mais um", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", bronzeF1: "Busca básica", bronzeF2: "scans código", bronzeF3: "IA indisponível", silverF1: "Tudo do Bronze", silverF2: "fotos IA/dia", silverF3: "Código ilimitado", goldF1: "Acesso total", goldF2: "IA ilimitada", goldF3: "Dicas de IA", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", continue: "Continuar", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "STATUS GOLD", male: "Masculino", female: "Feminino", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)",
     activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" }
   },
   fr: {
-    dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau consommée", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déj", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g de riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom de recette", addIngredient: "Ajouter un ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer le poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre Cloud", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Toutes fonctions", hideDetails: "Masquer", bronzeF1: "Recherche", bronzeF2: "scans codes-barres", bronzeF3: "IA indisponible", silverF1: "Tout de Bronze", silverF2: "scans photos IA/j", silverF3: "Codes-barres illimités", goldF1: "Accès total", goldF2: "Scanner IA illimité", goldF3: "Conseils Diététicien", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", continue: "Continuer", makingPlan: "Création...", accountSetup: "Configurer NutriBot", gender: "Sexe", age: "Âge", height: "Taille", weight: "Poids", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "STATUT GOLD", male: "Homme", female: "Femme",
+    dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom recette", addIngredient: "Ajouter ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Fonctions", hideDetails: "Masquer", bronzeF1: "Recherche", bronzeF2: "scans codes-barres", bronzeF3: "IA indisponible", silverF1: "Tout de Bronze", silverF2: "scans photos/j", silverF3: "Codes-barres illimités", goldF1: "Accès total", goldF2: "IA illimité", goldF3: "Conseils Diététicien", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", continue: "Continuer", makingPlan: "Création...", accountSetup: "Configurer NutriBot", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "STATUT GOLD", male: "Homme", female: "Femme", age: "Âge", height: "Taille (cm)", weight: "Poids (kg)",
     activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
   },
   kk: {
-    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Тағам атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze-дағы барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз AI сканері", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", continue: "Жалғастыру", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", gender: "Жынысы", age: "Жас", height: "Бой (см)", weight: "Салмақ (кг)", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD СТАТУС", male: "Ер", female: "Әйел",
+    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", continue: "Жалғастыру", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD СТАТУС", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
     activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
   }
 };
@@ -48,16 +49,103 @@ const LanguageContext = createContext();
 const globalStyles = `
   .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
   .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
-  @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg) translateZ(0); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg) translateZ(0); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0) translateZ(0); opacity: 1; filter: brightness(1); } }
-  @keyframes floatUp { 0% { transform: translate3d(0, 150px, 0) scale(0.8); opacity: 0; } 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; } }
+  @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
+  @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
   @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
-  @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: #e0f2fe; } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: #1e3a8a; } }
-  @keyframes lightning-bolt { 0%, 100% { opacity: 0; stroke-dasharray: 500 0; } 5%, 15%, 25% { opacity: 1; stroke-dasharray: 0 500; } 10%, 20% { opacity: 0; } 26% { opacity: 1; stroke-dasharray: 500 0; } }
-  @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; stroke-dasharray: 500 0; } 6%, 16%, 26% { opacity: 1; stroke-dasharray: 0 500; } 11%, 21% { opacity: 0; } 27% { opacity: 1; stroke-dasharray: 500 0; } }
+  @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } }
+  @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } }
+  @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } }
   @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } }
+  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 `;
 
 const langMap = { ru: "Русский", en: "English", pt: "Português", fr: "Français", kk: "Қазақша" };
+
+const LightningStorm = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
+    <div className="absolute inset-0 bg-blue-500/10 animate-[lightning-bg_2s_infinite]"></div>
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M200 0 L150 300 L250 300 L180 800" stroke="#93c5fd" strokeWidth="12" fill="none" className="animate-[lightning-bolt_1.5s_infinite]" style={{ filter: 'drop-shadow(0 0 20px #93c5fd)' }} />
+      <path d="M100 0 L70 250 L150 250 L100 600" stroke="#bfdbfe" strokeWidth="6" fill="none" className="animate-[lightning-bolt-delay_2s_infinite]" style={{ filter: 'drop-shadow(0 0 10px #bfdbfe)' }} />
+      <path d="M300 100 L260 400 L340 400 L280 800" stroke="#ffffff" strokeWidth="8" fill="none" className="animate-[lightning-bolt_1.8s_infinite]" style={{ filter: 'drop-shadow(0 0 15px #ffffff)' }} />
+    </svg>
+  </div>
+);
+
+const GoldBurstAnimation = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
+    <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
+    <div className="absolute w-64 h-64 bg-yellow-300/40 blur-[40px] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+    
+    <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
+      <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
+      <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
+    </div>
+
+    <div className="absolute inset-0 z-20 flex items-center justify-center">
+      {[...Array(80)].map((_, i) => {
+        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+        const distance = 100 + Math.random() * 400;
+        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+        const size = 3 + Math.random() * 8;
+        return (
+          <div 
+            key={`l-${i}`} 
+            className="absolute bg-yellow-200 rounded-full"
+            style={{
+              width: size, height: size,
+              left: '20%', top: '50%',
+              '--tx': tx, '--ty': ty,
+              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
+              animationDelay: `${Math.random() * 0.5}s`,
+              boxShadow: '0 0 15px 3px #fcd34d'
+            }}
+          />
+        )
+      })}
+      {[...Array(80)].map((_, i) => {
+        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+        const distance = 100 + Math.random() * 400;
+        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+        const size = 3 + Math.random() * 8;
+        return (
+          <div 
+            key={`r-${i}`} 
+            className="absolute bg-yellow-200 rounded-full"
+            style={{
+              width: size, height: size,
+              left: '80%', top: '50%',
+              '--tx': tx, '--ty': ty,
+              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
+              animationDelay: `${Math.random() * 0.5}s`,
+              boxShadow: '0 0 15px 3px #fcd34d'
+            }}
+          />
+        )
+      })}
+    </div>
+  </div>
+);
+
+const FullScreenConfetti = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-30">
+    {[...Array(25)].map((_, i) => (
+      <div 
+        key={i} 
+        className="absolute w-3 h-3 rounded-full animate-[rain-fall_3s_linear_infinite]"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `-20px`,
+          backgroundColor: ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'][i % 5],
+          animationDelay: `${Math.random() * 2}s`,
+          animationDuration: `${1.5 + Math.random() * 2}s`
+        }}
+      />
+    ))}
+  </div>
+);
 
 async function fetchGeminiWithRetry(prompt, schema, base64Image = null, mimeType = null) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
@@ -99,7 +187,7 @@ async function analyzeTextToFood(text, lang) {
 const calculateLocalMacros = (profile, weight) => {
   const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
   const multipliers = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
-  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
+  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' || profile.gender === 'Masculino' || profile.gender === 'Homme' || profile.gender === 'Ер' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
   if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
   const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
   return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
@@ -108,27 +196,44 @@ const calculateLocalMacros = (profile, weight) => {
 const MOCK_CATALOG = [
   { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
   { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
+  { id: 3, name: "Творог 9%", calories_100g: 159, protein_100g: 18, fats_100g: 9, carbs_100g: 3 },
   { id: 4, name: "Молоко 2.5%", calories_100g: 54, protein_100g: 2.9, fats_100g: 2.5, carbs_100g: 4.8 },
   { id: 5, name: "Рис белый (сухой)", calories_100g: 344, protein_100g: 6.7, fats_100g: 0.7, carbs_100g: 78.9 },
   { id: 6, name: "Рис белый (отварной)", calories_100g: 116, protein_100g: 2.2, fats_100g: 0.2, carbs_100g: 25.8 },
+  { id: 7, name: "Рис бурый (отварной)", calories_100g: 111, protein_100g: 2.6, fats_100g: 0.9, carbs_100g: 22.8 },
   { id: 8, name: "Гречка (сухая)", calories_100g: 313, protein_100g: 12.6, fats_100g: 3.3, carbs_100g: 62.1 },
   { id: 9, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
   { id: 10, name: "Овсянка (сухая)", calories_100g: 366, protein_100g: 11.9, fats_100g: 7.2, carbs_100g: 69.3 },
-  { id: 16, name: "Куриная грудка (сырая)", calories_100g: 113, protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0.4 },
-  { id: 17, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
-  { id: 20, name: "Яйцо куриное (сырое)", calories_100g: 157, protein_100g: 12.7, fats_100g: 11.5, carbs_100g: 0.7 },
-  { id: 21, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 },
-  { id: 31, name: "Говядина постная (сырая)", calories_100g: 158, protein_100g: 22.3, fats_100g: 7.1, carbs_100g: 0 },
-  { id: 70, name: "Хлеб белый", calories_100g: 266, protein_100g: 8, fats_100g: 3, carbs_100g: 50 },
-  { id: 79, name: "Огурец свежий", calories_100g: 15, protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.8 },
-  { id: 80, name: "Помидор свежий", calories_100g: 18, protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 3.9 },
-  { id: 94, name: "Картофель (сырой)", calories_100g: 77, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.3 },
-  { id: 95, name: "Картофель (отварной)", calories_100g: 82, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.7 },
-  { id: 97, name: "Яблоко", calories_100g: 52, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 14 },
-  { id: 98, name: "Банан", calories_100g: 89, protein_100g: 1.1, fats_100g: 0.3, carbs_100g: 22.8 },
-  { id: 146, name: "Протеиновый батончик", calories_100g: 320, protein_100g: 33, fats_100g: 11, carbs_100g: 7 },
-  { id: 148, name: "Сывороточный протеин (Изолят)", calories_100g: 370, protein_100g: 90, fats_100g: 1, carbs_100g: 2 },
-  { id: 160, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
+  { id: 11, name: "Куриная грудка (сырая)", calories_100g: 113, protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0.4 },
+  { id: 12, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
+  { id: 13, name: "Куриная грудка (запеченная)", calories_100g: 172, protein_100g: 30.5, fats_100g: 4.2, carbs_100g: 0 },
+  { id: 14, name: "Куриное филе бедра (сырое)", calories_100g: 154, protein_100g: 20.8, fats_100g: 7.4, carbs_100g: 0 },
+  { id: 15, name: "Куриное бедро с кожей (запеченное)", calories_100g: 232, protein_100g: 24.5, fats_100g: 14.5, carbs_100g: 0 },
+  { id: 16, name: "Индейка филе грудки (сырая)", calories_100g: 104, protein_100g: 23.1, fats_100g: 1.0, carbs_100g: 0 },
+  { id: 17, name: "Индейка филе грудки (запеченная)", calories_100g: 135, protein_100g: 29.0, fats_100g: 1.8, carbs_100g: 0 },
+  { id: 18, name: "Индейка бедро (запеченное)", calories_100g: 175, protein_100g: 24.0, fats_100g: 8.5, carbs_100g: 0 },
+  { id: 19, name: "Говядина постная (сырая)", calories_100g: 158, protein_100g: 22.3, fats_100g: 7.1, carbs_100g: 0 },
+  { id: 20, name: "Говядина отварная", calories_100g: 215, protein_100g: 29.8, fats_100g: 10.2, carbs_100g: 0 },
+  { id: 21, name: "Стейк из говядины (Рибай)", calories_100g: 271, protein_100g: 24.0, fats_100g: 19.0, carbs_100g: 0 },
+  { id: 22, name: "Стейк из говядины (Стриплойн)", calories_100g: 242, protein_100g: 25.5, fats_100g: 15.0, carbs_100g: 0 },
+  { id: 23, name: "Стейк из индейки", calories_100g: 145, protein_100g: 27.0, fats_100g: 4.0, carbs_100g: 0 },
+  { id: 24, name: "Свинина вырезка", calories_100g: 143, protein_100g: 21.5, fats_100g: 6.3, carbs_100g: 0 },
+  { id: 25, name: "Фарш говяжий", calories_100g: 254, protein_100g: 17.2, fats_100g: 20.0, carbs_100g: 0 },
+  { id: 26, name: "Фарш куриный", calories_100g: 143, protein_100g: 18.0, fats_100g: 7.8, carbs_100g: 0 },
+  { id: 27, name: "Протеиновый батончик Bombbar (шоколад)", calories_100g: 371, protein_100g: 40.0, fats_100g: 11.5, carbs_100g: 6.5 },
+  { id: 28, name: "Протеиновый батончик Bombbar (кокос)", calories_100g: 358, protein_100g: 38.0, fats_100g: 12.0, carbs_100g: 7.0 },
+  { id: 29, name: "Протеиновое печенье Bombbar", calories_100g: 340, protein_100g: 35.0, fats_100g: 10.0, carbs_100g: 9.0 },
+  { id: 30, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 },
+  { id: 31, name: "Лосось запеченный", calories_100g: 228, protein_100g: 25.4, fats_100g: 13.6, carbs_100g: 0 },
+  { id: 32, name: "Хлеб белый", calories_100g: 266, protein_100g: 8, fats_100g: 3, carbs_100g: 50 },
+  { id: 33, name: "Огурец свежий", calories_100g: 15, protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.8 },
+  { id: 34, name: "Помидор свежий", calories_100g: 18, protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 3.9 },
+  { id: 35, name: "Картофель отварной", calories_100g: 82, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.7 },
+  { id: 36, name: "Яблоко", calories_100g: 52, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 14 },
+  { id: 37, name: "Банан", calories_100g: 89, protein_100g: 1.1, fats_100g: 0.3, carbs_100g: 22.8 },
+  { id: 38, name: "Макароны отварные", calories_100g: 112, protein_100g: 3.6, fats_100g: 0.4, carbs_100g: 23.5 },
+  { id: 39, name: "Сыр Российский", calories_100g: 363, protein_100g: 23.4, fats_100g: 29.5, carbs_100g: 0 },
+  { id: 40, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
 ];
 
 export default function App() {
@@ -146,54 +251,30 @@ function MainApp() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
-  
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
   const [dailyGoals, setDailyGoals] = useState(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedDate, setSelectedDate] = useState(new Date()); 
-  
   const [meals, setMeals] = useState([]);
   const [weightHistory, setWeightHistory] = useState([]);
   const [waterLogs, setWaterLogs] = useState({});
   const [customFoods, setCustomFoods] = useState([]);
   const [recentFoods, setRecentFoods] = useState([]);
   const [pendingMeal, setPendingMeal] = useState(null);
-
-  const [streakDays, setStreakDays] = useState(4);
+  const [streakDays, setStreakDays] = useState(1);
   const [showStreakPopup, setShowStreakPopup] = useState(false);
   const [subscription, setSubscription] = useState('bronze'); 
   const [scansToday, setScansToday] = useState(0); 
   const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
 
-  // PWA and Telegram WebApp integration
   useEffect(() => {
-    // 1. Telegram WebApp Script Injection
     if (!window.Telegram) {
       const tgScript = document.createElement('script');
       tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
-      tgScript.onload = () => {
-        if (window.Telegram && window.Telegram.WebApp) {
-          window.Telegram.WebApp.ready();
-          window.Telegram.WebApp.expand();
-        }
-      };
+      tgScript.onload = () => { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); } };
       document.head.appendChild(tgScript);
-    }
-
-    // 2. PWA Manifest Injection
-    if (!document.querySelector('link[rel="manifest"]')) {
-      const manifest = {
-        name: "NutriBot", short_name: "NutriBot", description: "Умный трекер КБЖУ с ИИ",
-        start_url: "/", display: "standalone", background_color: "#0f172a", theme_color: "#10b981",
-        icons: [{ src: "https://cdn-icons-png.flaticon.com/512/3014/3014400.png", sizes: "512x512", type: "image/png" }]
-      };
-      const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = URL.createObjectURL(manifestBlob);
-      document.head.appendChild(link);
     }
   }, []);
 
@@ -203,10 +284,14 @@ function MainApp() {
       try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { await signInWithCustomToken(auth, __initial_auth_token); } 
         else { await signInAnonymously(auth); }
-      } catch (e) { console.error("Auth err", e); }
+      } catch (e) { 
+        console.error("Auth err", e); 
+        setUser({ uid: 'offline-user-' + Math.random().toString(36).substring(7) });
+      } finally {
+        setAuthLoading(false);
+      }
     };
     initAuth();
-    return onAuthStateChanged(auth, (u) => { setUser(u); setAuthLoading(false); });
   }, []);
 
   useEffect(() => {
@@ -221,50 +306,47 @@ function MainApp() {
         setUserProfile(data.formData); setDailyGoals(data.goals); setIsFirstLaunch(false);
       } else { setIsFirstLaunch(true); }
       setDataLoading(false);
+    }, (err) => {
+      console.error("Profile sync error:", err);
+      if (isSubscribed) setDataLoading(false);
     });
 
     const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap) => {
       if (!isSubscribed) return;
       const items = []; snap.forEach(d => items.push(d.data())); setMeals(items);
-    });
+    }, (err) => console.error("Meals sync error:", err));
 
     const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap) => {
       if (!isSubscribed) return;
       const items = []; snap.forEach(d => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
-    });
+    }, (err) => console.error("Weight sync error:", err));
 
     const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap) => {
       if (!isSubscribed) return;
       if(docSnap.exists()) setWaterLogs(docSnap.data().logs || {});
-    });
+    }, (err) => console.error("Water sync error:", err));
 
     const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap) => {
       if (!isSubscribed) return;
       const items = []; snap.forEach(d => items.push(d.data())); setCustomFoods(items);
-    });
+    }, (err) => console.error("Custom foods sync error:", err));
 
     const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap) => {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
-        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
+        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 1);
         if(data.lastScanDate === new Date().toDateString()) {
           setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
         } else { setScansToday(0); setBarcodeScansToday(0); }
       }
-    });
+    }, (err) => console.error("Stats sync error:", err));
 
     return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight(); unsubWater(); unsubStats(); unsubCustomFoods(); };
   }, [user]);
 
-  const formattedSelectedDate = useMemo(() => {
-    const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-  }, [selectedDate]);
-  
-  const todayFormatted = useMemo(() => {
-    const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
-  }, []);
-
+  const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, [selectedDate]);
+  const todayFormatted = useMemo(() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, []);
   const currentDayMeals = useMemo(() => meals.filter(m => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
   const hasMealsToday = useMemo(() => meals.some(m => m.date === todayFormatted), [meals, todayFormatted]);
 
@@ -297,9 +379,7 @@ function MainApp() {
   const confirmAddMeal = useCallback(async (type) => {
     if(pendingMeal) {
       const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
-      const d = new Date(); 
-      // Использована безопасная локализация времени (из-за которой падал iOS)
-      const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      const d = new Date(); const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
       setMeals(prev => [...prev, newMeal]); setPendingMeal(null); setActiveTab('dashboard');
       if (willIgniteStreak) { 
@@ -332,7 +412,7 @@ function MainApp() {
 
   const currentWater = waterLogs[formattedSelectedDate] || 0;
   const handleAddWater = useCallback(async (amount) => {
-    const newAmount = (waterLogs[formattedSelectedDate] || 0) + amount;
+    const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
     const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
     setWaterLogs(newLogs);
     if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs });
@@ -364,9 +444,9 @@ function MainApp() {
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? 'bg-orange-500/20 border-orange-500/50 text-orange-400 shadow-[0_0_12px_rgba(249,115,22,0.3)]' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             <Flame size={16} className={hasMealsToday ? "fill-orange-400 animate-pulse text-orange-400" : ""} />
-            <span className="font-bold text-sm">{hasMealsToday ? streakDays + 1 : streakDays}</span>
+            <span className="font-bold text-sm">{hasMealsToday ? streakDays : streakDays}</span>
           </div>
           <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.2)]' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
@@ -390,9 +470,7 @@ function MainApp() {
             <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={() => setActiveTab('search')} />
           </div>
           <div className="w-1/5 flex justify-center relative">
-            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-gradient-to-tr from-emerald-500 to-emerald-400 text-slate-900 p-4 rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.4)] flex items-center justify-center z-30">
-              <Camera size={28} />
-            </div>
+            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-gradient-to-tr from-emerald-500 to-emerald-400 text-slate-900 p-4 rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.4)] flex items-center justify-center z-30"><Camera size={28} /></div>
           </div>
           <div className="flex w-2/5 justify-around">
             <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={() => setActiveTab('weight')} />
@@ -442,9 +520,7 @@ function MainApp() {
                <Flame size={140} className="text-orange-500 relative z-10 drop-shadow-[0_0_30px_rgba(249,115,22,1)] animate-bounce" fill="currentColor" />
             </div>
             <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-[0_0_20px_rgba(249,115,22,0.6)] mt-4">
-               🔥 {streakDays + 1}
-            </div>
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-[0_0_20px_rgba(249,115,22,0.6)] mt-4">🔥 {streakDays}</div>
           </div>
         </div>
       )}
@@ -483,9 +559,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   const formatDisplayDate = (d) => {
     const today = new Date(), yesterday = new Date(), tomorrow = new Date();
     yesterday.setDate(today.getDate() - 1); tomorrow.setDate(today.getDate() + 1);
-    if (d.toDateString() === today.toDateString()) return t.dashboard === "Сводка" ? "Сегодня" : "Today";
-    if (d.toDateString() === yesterday.toDateString()) return t.dashboard === "Сводка" ? "Вчера" : "Yesterday";
-    if (d.toDateString() === tomorrow.toDateString()) return t.dashboard === "Сводка" ? "Завтра" : "Tomorrow";
+    if (d.toDateString() === today.toDateString()) return "Сегодня";
+    if (d.toDateString() === yesterday.toDateString()) return "Вчера";
+    if (d.toDateString() === tomorrow.toDateString()) return "Завтра";
     return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
   };
 
@@ -520,7 +596,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
         <div className="h-3 w-full bg-slate-700/50 rounded-full overflow-hidden mb-4"><div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-1000 ease-out relative" style={{ width: `${getPercent(currentWater, WATER_GOAL)}%` }}><div className="absolute inset-0 bg-white/20 animate-pulse"></div></div></div>
         <div className="flex gap-3">
           <div onClick={() => addWater(250)} className="btn-glass flex-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 py-2 rounded-xl flex justify-center items-center">🥛 +250 {t.ml}</div>
-          <div onClick={() => addWater(500)} className="btn-glass flex-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 py-2 rounded-xl flex justify-center items-center">🥤 +500 {t.ml}</div>
+          <div onClick={() => addWater(-250)} className="btn-glass flex-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 py-2 rounded-xl flex justify-center items-center">🥤 -250 {t.ml}</div>
         </div>
       </div>
 
@@ -608,7 +684,8 @@ const MacroCard = React.memo(({ label, current, goal, color, g }) => {
 
 const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }) => {
   const { t, lang } = useContext(LanguageContext);
-  const [activeSubTab, setActiveSubTab] = useState('global'), [query, setQuery] = useState('');
+  const [activeSubTab, setActiveSubTab] = useState('global');
+  const [query, setQuery] = useState('');
   const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState(null);
   const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState([]), [recipeError, setRecipeError] = useState(''); 
   const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState(null), [ingWeight, setIngWeight] = useState(100);
@@ -655,11 +732,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
     if(!recipeName || recipeIngredients.length === 0) { setRecipeError(t.tryAgain); return; }
     const factor = totalRecipeWeight > 0 ? 100 / totalRecipeWeight : 0;
     const recipeItem = {
-      id: `custom-${Date.now()}`, name: String(recipeName),
-      calories_100g: Math.round(recipeIngredients.reduce((s, i) => s + i.cals, 0) * factor), 
-      protein_100g: Number((recipeIngredients.reduce((s, i) => s + i.prot, 0) * factor).toFixed(1)), 
-      fats_100g: Number((recipeIngredients.reduce((s, i) => s + i.fat, 0) * factor).toFixed(1)), 
-      carbs_100g: Number((recipeIngredients.reduce((s, i) => s + i.carbs, 0) * factor).toFixed(1))
+      id: `custom-${Date.now()}`, name: String(recipeName), calories_100g: Math.round(recipeIngredients.reduce((s, i) => s + i.cals, 0) * factor), protein_100g: Number((recipeIngredients.reduce((s, i) => s + i.prot, 0) * factor).toFixed(1)), fats_100g: Number((recipeIngredients.reduce((s, i) => s + i.fat, 0) * factor).toFixed(1)), carbs_100g: Number((recipeIngredients.reduce((s, i) => s + i.carbs, 0) * factor).toFixed(1))
     };
     saveCustomRecipeToDB(recipeItem); setIsCreatingRecipe(false); setRecipeName(''); setRecipeIngredients([]); setRecipeError(''); setActiveSubTab('custom');
   };
@@ -731,7 +804,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
             </div>
           </div>
         )}
-        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold transition-all ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-[0_5px_20px_rgba(16,185,129,0.4)]' : 'bg-slate-700 text-slate-500'}`}>{t.saveRecipe}</div>
+        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-[0_5px_20px_rgba(16,185,129,0.4)]' : 'bg-slate-700 text-slate-500'}`}>{t.saveRecipe}</div>
       </div>
     );
   }
@@ -826,9 +899,6 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
                   <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
                   <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
                 </div>
-                <div className="mb-6"><p className="text-xs font-semibold text-slate-500 mb-3 uppercase">{t.recognized}</p>
-                {result.breakdown?.map((i,x)=>(<div key={x} className="flex justify-between items-center mb-2"><span className="text-sm text-white truncate max-w-[60%]">{i.ingredient}</span><span className="text-emerald-400 font-bold">{i.calories} {t.kcal}</span></div>))}
-                </div>
                 <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
               </div>
             )}
@@ -874,36 +944,6 @@ const WeightTracker = React.memo(({ history, onAdd }) => {
     </div>
   );
 });
-
-function LightningStorm() {
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[110] overflow-hidden bg-transparent">
-      <div className="absolute inset-0 bg-blue-900 mix-blend-color-dodge animate-[lightning-bg_2.5s_ease-out_forwards]"></div>
-      <svg className="absolute w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-        <path d="M 50 0 L 42 20 L 55 35 L 35 60 L 50 70 L 40 100" fill="none" stroke="#fff" strokeWidth="1.5" className="animate-[lightning-bolt_2.5s_ease-out_forwards]" style={{ filter: 'drop-shadow(0 0 8px #60a5fa) drop-shadow(0 0 15px #fff)' }} />
-        <path d="M 42 20 L 25 35 L 35 45 L 15 65" fill="none" stroke="#fff" strokeWidth="0.8" className="animate-[lightning-bolt-delay_2.5s_ease-out_forwards]" style={{ filter: 'drop-shadow(0 0 6px #60a5fa)' }} />
-      </svg>
-      {[...Array(30)].map((_, i) => (
-        <div key={i} className="absolute w-[2px] h-12 bg-blue-100/40" style={{ left: `${Math.random() * 100}%`, top: `-${Math.random() * 20 + 10}%`, animation: `rain-fall ${0.2 + Math.random() * 0.3}s linear infinite` }} />
-      ))}
-    </div>
-  );
-}
-
-function FullScreenConfetti() {
-  const particles = useMemo(() => {
-    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-    return [...Array(60)].map((_, i) => ({ id: i, left: `${Math.random() * 100}%`, color: colors[Math.floor(Math.random() * colors.length)], animDuration: 1 + Math.random() * 2, animDelay: Math.random() * 0.5 }));
-  }, []);
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[110] overflow-hidden">
-      {particles.map(p => (
-        <div key={p.id} className="absolute top-[-10vh] w-3 h-6 rounded-sm opacity-80" style={{ left: p.left, backgroundColor: p.color, animation: `confetti-fall ${p.animDuration}s linear ${p.animDelay}s forwards` }} />
-      ))}
-    </div>
-  )
-}
 
 const UserProfile = React.memo(({ currentSub, setSubscription }) => {
   const { t, lang, setLang } = useContext(LanguageContext);
@@ -962,12 +1002,28 @@ const UserProfile = React.memo(({ currentSub, setSubscription }) => {
         </div>
       </div>
 
-      {(purchaseStatus === 'confetti' || purchaseStatus === 'success') && (purchasingTier === 'silver' ? <LightningStorm /> : <FullScreenConfetti />)}
-      {purchaseStatus !== 'idle' && (
+      {(purchaseStatus === 'confetti' || purchaseStatus === 'success') && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300 overflow-hidden">
+          {purchasingTier === 'silver' ? (
+            <div className="relative w-full h-full flex flex-col items-center justify-center">
+              <LightningStorm />
+              <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
+                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.8)] rotate-12">
+                  <Zap size={64} className="text-slate-900 -rotate-12" />
+                </div>
+                <h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2>
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full h-full flex flex-col items-center justify-center">
+              <GoldBurstAnimation />
+            </div>
+          )}
+        </div>
+      )}
+      {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          {purchaseStatus === 'loading' && (<div className="flex flex-col items-center justify-center animate-in zoom-in-50"><div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-6 shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div></div>)}
-          {purchaseStatus === 'success' && purchasingTier === 'silver' && (<div className="flex flex-col items-center justify-center relative z-20" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}><div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.6)] rotate-12"><Zap size={64} className="text-slate-900 -rotate-12" /></div><h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2></div>)}
-          {purchaseStatus === 'success' && purchasingTier === 'gold' && (<div className="flex flex-col items-center justify-center relative z-20" style={{ animation: 'floatUp 0.8s ease-out forwards' }}><div className="absolute inset-0 bg-amber-500/20 blur-[80px] rounded-full w-full h-full"></div><div className="w-32 h-32 bg-gradient-to-br from-amber-300 to-orange-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_60px_rgba(245,158,11,0.8)] relative z-10"><Crown size={64} className="text-slate-900" /></div><h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500" style={{ animation: 'shimmer 2s infinite linear', backgroundSize: '200% auto' }}>{t.goldUnlocked}</h2></div>)}
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
         </div>
       )}
     </div>
@@ -975,37 +1031,41 @@ const UserProfile = React.memo(({ currentSub, setSubscription }) => {
 });
 
 const OnboardingScreen = React.memo(({ onComplete }) => {
-  const { t, lang } = useContext(LanguageContext);
-  const [loading, setLoading] = useState(false);
+  const { t } = useContext(LanguageContext);
   const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleCalculate = () => {
     if (!formData.age || !formData.height || !formData.weight) { setErrorMsg("Заполните все поля!"); return; }
-    setErrorMsg(''); setLoading(true);
-    setTimeout(() => { onComplete(calculateLocalMacros(formData, formData.weight), formData); setLoading(false); }, 150);
+    setErrorMsg('');
+    onComplete(calculateLocalMacros(formData, formData.weight), formData);
   };
+
+  const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
+  const activityOptions = [{ id: 'min', label: t.activities.min }, { id: 'low', label: t.activities.low }, { id: 'med', label: t.activities.med }, { id: 'high', label: t.activities.high }, { id: 'ext', label: t.activities.ext }];
+  const goalOptions = [{ id: 'lose', label: t.goals.lose }, { id: 'keep', label: t.goals.keep }, { id: 'gain', label: t.goals.gain }];
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto p-4 relative overflow-y-auto pb-10">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
-      {!loading && (<div className="flex justify-start w-full pt-2 mb-4"><div onClick={handleCalculate} className="btn-glass bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2">{t.continue} <ArrowRight size={16} /></div></div>)}
       <div className="flex-1 flex flex-col justify-center">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center animate-in fade-in h-64"><div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-6"></div><h2 className="text-xl font-bold text-white">{t.makingPlan}</h2></div>
-        ) : (
-          <div className="animate-in fade-in slide-in-from-right duration-300">
-            <div className="mb-6 text-center"><Activity className="text-emerald-400 mx-auto mb-2" size={40} /><h1 className="text-3xl font-black text-white mb-1">NutriBot</h1></div>
-            {errorMsg && <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm p-3 rounded-xl mb-4 text-center">{errorMsg}</div>}
-            <div className="space-y-4">
-              <div className="bg-slate-800 p-1 rounded-xl flex gap-1"><div onClick={() => setFormData({...formData, gender: 'Мужской'})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === 'Мужской' ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{t.male}</div><div onClick={() => setFormData({...formData, gender: 'Женский'})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === 'Женский' ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{t.female}</div></div>
-              <div className="flex gap-4"><div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.age}</label><input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div><div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div></div>
-              <div className="flex gap-4"><div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.weight}</label><input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div><div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.activityLabel}</label><select value={formData.activity} onChange={e => setFormData({...formData, activity: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-2 py-3 text-white focus:border-emerald-500 outline-none appearance-none text-sm"><option value="min">{t.activities.min}</option><option value="low">{t.activities.low}</option><option value="med">{t.activities.med}</option><option value="high">{t.activities.high}</option><option value="ext">{t.activities.ext}</option></select></div></div>
-              <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{['lose', 'keep', 'gain'].map(g => (<div key={g} onClick={() => setFormData({...formData, goal: g})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-800/50 border-slate-700/50 text-slate-300'}`}>{t.goals[g]}{formData.goal === g && <CheckCircle2 size={18} />}</div>))}</div></div>
+        <div className="animate-in fade-in slide-in-from-right duration-300">
+          <div className="mb-6 text-center"><Activity className="text-emerald-400 mx-auto mb-2" size={40} /><h1 className="text-3xl font-black text-white mb-1">NutriBot</h1><p className="text-slate-400 text-sm">Умный трекер КБЖУ</p></div>
+          {errorMsg && <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm p-3 rounded-xl mb-4 text-center">{errorMsg}</div>}
+          <div className="space-y-4">
+            <div className="bg-slate-800 p-1 rounded-xl flex gap-1">{genderOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{g.label}</div>))}</div>
+            <div className="flex gap-4">
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.age}</label><input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} placeholder="25" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
             </div>
-            <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
+            <div className="flex gap-4">
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.weight}</label><input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} placeholder="70" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.activityLabel}</label><select value={formData.activity} onChange={e => setFormData({...formData, activity: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-2 py-3 text-white focus:border-emerald-500 outline-none appearance-none text-sm">{activityOptions.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}</select></div>
+            </div>
+            <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-        )}
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
+        </div>
       </div>
     </div>
   );
