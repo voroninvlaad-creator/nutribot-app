@@ -281,8 +281,10 @@ function NutriBotApp() {
             await signInAnonymously(auth); 
           }
         } catch (e: any) { 
-          console.error("Auth err", e); 
-          setUser({ uid: 'offline-user-' + Math.random().toString(36).substring(7) });
+          console.warn("Working in Offline Mode");
+          let localUid = localStorage.getItem('nutribot_uid');
+          if (!localUid) { localUid = 'offline-user-' + Math.random().toString(36).substring(7); localStorage.setItem('nutribot_uid', localUid); }
+          setUser({ uid: localUid });
           setAuthLoading(false);
         }
       }
@@ -291,9 +293,34 @@ function NutriBotApp() {
   }, []);
 
   useEffect(() => {
-    if (!user || !db) { setDataLoading(false); return; }
-    let isSubscribed = true;
+    if (!user) { setDataLoading(false); return; }
     const uid = user.uid;
+
+    if (uid.startsWith('offline-user')) {
+        const saved = localStorage.getItem('nutribot_data');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.profile) { setUserProfile(data.profile); setDailyGoals(data.goals); setIsFirstLaunch(false); }
+                if (data.meals) setMeals(data.meals);
+                if (data.weights) setWeightHistory(data.weights);
+                if (data.water) setWaterLogs(data.water);
+                if (data.customFoods) setCustomFoods(data.customFoods);
+                if (data.stats) {
+                    setSubscription(data.stats.subscription || 'bronze');
+                    setStreakDays(data.stats.streakDays || 1);
+                    if (data.stats.lastScanDate === new Date().toDateString()) {
+                        setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
+                    }
+                }
+            } catch(e){}
+        }
+        setDataLoading(false);
+        return;
+    }
+
+    if (!db) return;
+    let isSubscribed = true;
 
     const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap: any) => {
       if (!isSubscribed) return;
@@ -341,6 +368,15 @@ function NutriBotApp() {
     return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight(); unsubWater(); unsubStats(); unsubCustomFoods(); };
   }, [user]);
 
+  useEffect(() => {
+      if (user && user.uid.startsWith('offline-user') && !isFirstLaunch && userProfile) {
+          localStorage.setItem('nutribot_data', JSON.stringify({
+              profile: userProfile, goals: dailyGoals, meals, weights: weightHistory, water: waterLogs, customFoods,
+              stats: { subscription, streakDays, scansToday, barcodeScansToday, lastScanDate: new Date().toDateString() }
+          }));
+      }
+  }, [user, isFirstLaunch, userProfile, dailyGoals, meals, weightHistory, waterLogs, customFoods, subscription, streakDays, scansToday, barcodeScansToday]);
+
   const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, [selectedDate]);
   const todayFormatted = useMemo(() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, []);
   const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
@@ -358,7 +394,7 @@ function NutriBotApp() {
     const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
     setWeightHistory([wData]);
-    if(user && db) {
+    if(user && db && !user.uid.startsWith('offline-user')) {
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals }).catch(console.error);
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
     }
@@ -381,15 +417,15 @@ function NutriBotApp() {
       if (willIgniteStreak) { 
         setShowStreakPopup(true); setTimeout(() => setShowStreakPopup(false), 3500); 
         const newStreak = streakDays + 1; setStreakDays(newStreak);
-        if(user && db) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
+        if(user && db && !user.uid.startsWith('offline-user')) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
       }
-      if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal);
+      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
     }
   }, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
 
   const deleteMeal = useCallback(async (id: any) => {
     setMeals((prev: any) => prev.filter((m: any) => m.id !== id));
-    if(user && db) await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString()));
+    if(user && db && !user.uid.startsWith('offline-user')) await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString())).catch(console.error);
   }, [user]);
 
   const addWeight = useCallback(async (weightStr: any) => {
@@ -398,11 +434,11 @@ function NutriBotApp() {
     const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight };
     setWeightHistory((prev: any) => [wData, ...prev]);
-    if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
     if (userProfile) {
       const newGoals = calculateLocalMacros(userProfile, weight);
       setDailyGoals(newGoals);
-      if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true});
+      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(console.error);
     }
   }, [userProfile, user]);
 
@@ -411,24 +447,24 @@ function NutriBotApp() {
     const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
     const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
     setWaterLogs(newLogs);
-    if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs });
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs }).catch(console.error);
   }, [formattedSelectedDate, waterLogs, user]);
 
   const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
     setCustomFoods((prev: any) => [recipeItem, ...prev]);
-    if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.error);
   }, [user]);
 
   const updateSubscription = useCallback(async (level: string) => {
     setSubscription(level);
-    if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true});
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true}).catch(console.error);
   }, [user]);
 
   const incrementScan = useCallback(async (type: string) => {
     const todayStr = new Date().toDateString();
     const newStats = { lastScanDate: todayStr, scansToday: type === 'photo' ? scansToday + 1 : scansToday, barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday };
     if (type === 'photo') setScansToday(p => p+1); if (type === 'barcode') setBarcodeScansToday(p => p+1);
-    if(user && db) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true});
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
   }, [scansToday, barcodeScansToday, user]);
 
   if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
@@ -920,7 +956,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2"><Scale size={20} className="text-emerald-400" /> {t.weightTitle}</h2>
-        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button></form>
+        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-md shadow-emerald-500/30">{t.add}</button></form>
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
@@ -1019,7 +1055,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
         </div>
       )}
     </div>
@@ -1060,7 +1096,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
