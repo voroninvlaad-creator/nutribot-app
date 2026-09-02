@@ -245,7 +245,7 @@ function NutriBotApp() {
   const [customFoods, setCustomFoods] = useState<any[]>([]);
   const [recentFoods, setRecentFoods] = useState<any[]>([]);
   const [pendingMeal, setPendingMeal] = useState<any>(null);
-  const [streakDays, setStreakDays] = useState(1);
+  const [streakDays, setStreakDays] = useState(0);
   const [showStreakPopup, setShowStreakPopup] = useState(false);
   const [subscription, setSubscription] = useState('bronze'); 
   const [scansToday, setScansToday] = useState(0); 
@@ -302,7 +302,7 @@ function NutriBotApp() {
                 if (data.customFoods) setCustomFoods(data.customFoods);
                 if (data.stats) {
                     setSubscription(data.stats.subscription || 'bronze');
-                    setStreakDays(data.stats.streakDays || 1);
+                    setStreakDays(data.stats.streakDays ?? 0);
                     if (data.stats.lastScanDate === new Date().toDateString()) {
                         setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
                     }
@@ -352,7 +352,7 @@ function NutriBotApp() {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
-        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 1);
+        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays ?? 0);
         if(data.lastScanDate === new Date().toDateString()) {
           setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
         } else { setScansToday(0); setBarcodeScansToday(0); }
@@ -409,8 +409,12 @@ function NutriBotApp() {
       const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
       setMeals((prev: any) => [...prev, newMeal]); setPendingMeal(null); setActiveTab('dashboard');
       if (willIgniteStreak) { 
-        setShowStreakPopup(true); setTimeout(() => setShowStreakPopup(false), 3500); 
-        const newStreak = streakDays + 1; setStreakDays(newStreak);
+        const newStreak = streakDays + 1; 
+        setStreakDays(newStreak);
+        if ([5, 10, 30, 60, 100, 200, 400].includes(newStreak)) {
+          setShowStreakPopup(true); 
+          setTimeout(() => setShowStreakPopup(false), 3500); 
+        }
         if(user && db && !user.uid.startsWith('offline-user')) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
       }
       if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
@@ -464,15 +468,23 @@ function NutriBotApp() {
   if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
   if (isFirstLaunch || !dailyGoals) return <OnboardingScreen onComplete={handleOnboardingComplete} />;
 
+  const getStreakColorClasses = (days: number) => {
+    if (days >= 400) return { bg: 'bg-cyan-500', text: 'text-cyan-400', fill: 'fill-cyan-400', border: 'border-cyan-500/50', shadow: 'shadow-cyan-500/30', gradient: 'from-cyan-400 to-blue-500' };
+    if (days >= 100) return { bg: 'bg-red-500', text: 'text-red-500', fill: 'fill-red-500', border: 'border-red-500/50', shadow: 'shadow-red-500/30', gradient: 'from-red-500 to-rose-600' };
+    if (days >= 30) return { bg: 'bg-purple-500', text: 'text-purple-400', fill: 'fill-purple-400', border: 'border-purple-500/50', shadow: 'shadow-purple-500/30', gradient: 'from-purple-500 to-fuchsia-500' };
+    return { bg: 'bg-orange-500', text: 'text-orange-400', fill: 'fill-orange-400', border: 'border-orange-500/50', shadow: 'shadow-orange-500/30', gradient: 'from-orange-500 to-amber-500' };
+  };
+  const streakColors = getStreakColorClasses(streakDays);
+
   return (
     <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? 'bg-orange-500/20 border-orange-500/50 text-orange-400 shadow-md shadow-orange-500/30' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
-            <Flame size={16} className={hasMealsToday ? "fill-orange-400 animate-pulse text-orange-400" : ""} />
-            <span className="font-bold text-sm">{hasMealsToday ? streakDays : streakDays}</span>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakColors.bg}/20 ${streakColors.border} ${streakColors.text} shadow-md ${streakColors.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+            <Flame size={16} className={hasMealsToday ? `${streakColors.fill} animate-pulse ${streakColors.text}` : ""} />
+            <span className="font-bold text-sm">{streakDays}</span>
           </div>
           <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
@@ -542,11 +554,11 @@ function NutriBotApp() {
         <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
           <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
             <div className="relative mb-6">
-               <div className="absolute w-40 h-40 bg-orange-500 rounded-full blur-[60px] opacity-70 animate-pulse"></div>
-               <Flame size={140} className="text-orange-500 relative z-10 drop-shadow-[0_0_30px_rgba(249,115,22,1)] animate-bounce" fill="currentColor" />
+               <div className={`absolute w-40 h-40 ${streakColors.bg} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
+               <Flame size={140} className={`${streakColors.text} relative z-10 animate-bounce`} fill="currentColor" style={{ filter: 'drop-shadow(0 0 30px currentColor)' }} />
             </div>
             <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl shadow-orange-500/60 mt-4">🔥 {streakDays}</div>
+            <div className={`bg-gradient-to-r ${streakColors.gradient} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakColors.shadow} mt-4`}>🔥 {streakDays}</div>
           </div>
         </div>
       )}
