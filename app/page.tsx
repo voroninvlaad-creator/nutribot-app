@@ -22,10 +22,7 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
-
-// 👇👇👇 ВАЖНО: ВСТАВЬ СЮДА СВОЙ КЛЮЧ ОТ GEMINI API 👇👇👇
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""; 
-// 👆👆👆 БЕЗ НЕГО ИИ-ДИЕТОЛОГ И СКАНЕР НЕ БУДУТ РАБОТАТЬ 👆👆👆
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || "";
 
 const translations = {
   ru: {
@@ -135,8 +132,11 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
-// СТАБИЛЬНАЯ ВЕРСИЯ НЕЙРОСЕТИ (1.5-flash) И ЛОГИРОВАНИЕ ОШИБОК
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
+  if (!apiKey || apiKey === "ТВОЙ_КЛЮЧ_ЗДЕСЬ" || apiKey.trim() === "") {
+    throw new Error("ОШИБКА: API ключ Gemini не установлен. Добавьте его в Vercel.");
+  }
+  
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
@@ -147,14 +147,16 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
     try {
       const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const result = await response.json();
+      
       if (!response.ok) {
-        console.error("Gemini API Error:", result);
-        throw new Error(result?.error?.message || 'HTTP error');
+        console.error("Gemini API Error details:", result);
+        throw new Error(result?.error?.message || `Ошибка сервера Google (код ${response.status})`);
       }
+      
       return JSON.parse(result.candidates[0].content.parts[0].text);
     } catch (error: any) { 
       retries--; 
-      console.error("Gemini Request Failed. Retries left:", retries, error);
+      console.error(`Попытка не удалась, осталось ${retries}. Ошибка:`, error.message);
       if (retries === 0) throw error; 
       await new Promise(r => setTimeout(r, 1000)); 
     }
@@ -577,7 +579,7 @@ const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(null);
 
   const WATER_GOAL = 2000, getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
   const remaining = { calories: Math.max((goals?.calories || 2000) - current.calories, 0), protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0), fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0), carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0) };
@@ -585,14 +587,28 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   const handleAskAI = async () => {
     if (!checkAccess('gold')) return;
     setShowAdviceModal(true); setLoadingAdvice(true);
-    try { setAdviceData((await getAIAdviceForRemaining(remaining, lang)).suggestions); } catch { setAdviceData([{ title: "Fallback", description: "Error fetching.", calories: 250, protein: 25, fat: 5, carbs: 15 }]); }
+    try { 
+      const response = await getAIAdviceForRemaining(remaining, lang);
+      setAdviceData(response.suggestions); 
+    } catch (error: any) { 
+      setAdviceData([{ 
+        title: "Ошибка нейросети", 
+        description: error.message || "Проверьте API ключ в Vercel", 
+        calories: 0, protein: 0, fat: 0, carbs: 0 
+      }]); 
+    }
     setLoadingAdvice(false);
   };
 
   const handleVoiceSubmit = async () => {
     if(!voiceText.trim()) return;
-    setIsAnalyzingVoice(true); setVoiceError(false);
-    try { const result = await analyzeTextToFood(voiceText, lang); setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); } catch { setVoiceError(true); }
+    setIsAnalyzingVoice(true); setVoiceError(null);
+    try { 
+      const result = await analyzeTextToFood(voiceText, lang); 
+      setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); 
+    } catch (error: any) { 
+      setVoiceError(error.message || t.tryAgain); 
+    }
     setIsAnalyzingVoice(false);
   };
 
@@ -671,7 +687,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
           <div className="bg-slate-800/95 w-full rounded-3xl p-6 border border-white/10 slide-in-from-bottom-8">
             <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-bold text-white flex items-center gap-2"><Mic className="text-emerald-400"/> {t.recordVoice}</h3><div onClick={() => setIsVoiceModalOpen(false)} className="btn-glass p-2 bg-slate-700/50 rounded-full text-slate-400"><X size={20}/></div></div>
             <p className="text-sm text-slate-300 mb-4">{t.dictatePrompt}</p>
-            {voiceError && <p className="text-red-400 text-xs mb-3 text-center">{t.tryAgain}</p>}
+            {voiceError && <p className="text-red-400 text-xs mb-3 text-center">{voiceError}</p>}
             <div className="flex gap-2 mb-4">
               <input type="text" value={voiceText} onChange={e => setVoiceText(String(e.target?.value || ''))} placeholder={t.dictatePlaceholder} className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500"/>
               <div onClick={handleVoiceSubmit} className={`btn-glass bg-emerald-500 text-slate-900 rounded-xl px-4 flex justify-center items-center ${isAnalyzingVoice || !voiceText ? 'opacity-50 pointer-events-none' : ''}`}>{isAnalyzingVoice ? <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"/> : <Send size={20} />}</div>
@@ -694,9 +710,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
                         <div className="text-center"><span className="block text-emerald-400 font-bold">{advice?.calories}</span><span className="text-[10px] text-slate-500">ККАЛ</span></div>
-                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}г</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
-                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}г</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
-                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}г</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
+                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
+                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
+                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
                       </div>
                       <div onClick={() => { setShowAdviceModal(false); requestAddMeal({ dish_name: advice?.title, total: { calories: advice?.calories, protein: advice?.protein, fat: advice?.fat, carbs: advice?.carbs } }); }} className="btn-glass w-full mt-4 bg-emerald-500/20 text-emerald-400 py-2 rounded-xl text-center text-sm font-bold border border-emerald-500/30"><Plus size={16} className="inline mr-1 mb-0.5"/> {t.addToDiary}</div>
                     </div>
@@ -729,7 +745,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState<any>(null);
   const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState<any[]>([]), [recipeError, setRecipeError] = useState(''); 
   const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState<any>(null), [ingWeight, setIngWeight] = useState(100);
-  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle');
+  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle'), [scanErrorMsg, setScanErrorMsg] = useState('');
 
   const safeQuery = String(query || ''); const safeIngQuery = String(ingQuery || '');
 
@@ -780,13 +796,15 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const handleBarcodeFile = async (e: any) => {
     if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setIsScanning(true); setScanStatus('loading');
+    setIsScanning(true); setScanStatus('loading'); setScanErrorMsg('');
     try {
       const aiData = await analyzeImageWithGemini(file, true, lang);
       setScanStatus('idle'); setIsScanning(false);
       if (subscription === 'bronze') incrementScan('barcode');
       handleSelect({ id: Date.now(), name: String(aiData?.name || "Product"), calories_100g: aiData?.calories_100g || 0, protein_100g: aiData?.protein_100g || 0, fats_100g: aiData?.fats_100g || 0, carbs_100g: aiData?.carbs_100g || 0 }); 
-    } catch (e: any) { setScanStatus('error'); setIsScanning(false); }
+    } catch (e: any) { 
+      setScanStatus('error'); setIsScanning(false); setScanErrorMsg(e.message);
+    }
   };
 
   if (isSearchingIngredient) {
@@ -871,7 +889,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
           </div>
           {activeSubTab === 'global' && subscription === 'bronze' && <div className="text-xs text-slate-500 mb-4 px-2 font-medium">{t.bronzeF2}: {barcodeScansToday}/7</div>}
           
-          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm"><AlertCircle size={18} className="shrink-0 mt-0.5" /> <p>{t.recognitionError}</p></div>}
+          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm flex-col"><div className="flex items-center gap-2 mb-1"><AlertCircle size={18} className="shrink-0" /> <b>{t.recognitionError}</b></div><p className="text-xs opacity-80">{scanErrorMsg}</p></div>}
 
           <div className="flex-1 overflow-y-auto pb-10 space-y-2">
             {activeSubTab === 'custom' && safeQuery.trim() === '' && <div onClick={() => setIsCreatingRecipe(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-4 rounded-xl flex justify-center items-center gap-2 mb-4 font-semibold"><Plus size={20}/> {t.constructor}</div>}
@@ -897,18 +915,18 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
 
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
-  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
+  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null), [scanErrorMsg, setScanErrorMsg] = useState('');
   
   const handleFileChange = async (e: any) => {
     if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setImagePreview(URL.createObjectURL(file)); setStatus('scanning');
+    setImagePreview(URL.createObjectURL(file)); setStatus('scanning'); setScanErrorMsg('');
     try {
       const aiData = await analyzeImageWithGemini(file, false, lang);
-      if (!aiData || !aiData.dish_name) throw new Error("Invalid");
+      if (!aiData || !aiData.dish_name) throw new Error("Сервер не вернул данные блюда");
       setResult(aiData); setStatus('result');
       if (subscription === 'silver') incrementScan('photo');
-    } catch (e: any) { setStatus('error'); }
+    } catch (e: any) { setStatus('error'); setScanErrorMsg(e.message); }
   };
 
   return (
@@ -923,7 +941,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
           </div>
         )}
         {status === 'error' && (
-          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
+          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-xs text-red-400 opacity-80">{scanErrorMsg}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
         )}
         {(status === 'scanning' || status === 'result') && imagePreview && (
           <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
@@ -964,7 +982,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2"><Scale size={20} className="text-emerald-400" /> {t.weightTitle}</h2>
-        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-md shadow-emerald-500/30">{t.add}</button></form>
+        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button></form>
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
@@ -1037,7 +1055,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'gold' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF1}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF2}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF3}</span></li></ul>)}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-amber-500/40 text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
       </div>
@@ -1048,7 +1066,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="relative w-full h-full flex flex-col items-center justify-center">
               <LightningStorm />
               <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/80 rotate-12">
+                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.8)] rotate-12">
                   <Zap size={64} className="text-slate-900 -rotate-12" />
                 </div>
                 <h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2>
@@ -1063,7 +1081,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
         </div>
       )}
     </div>
@@ -1104,7 +1122,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
