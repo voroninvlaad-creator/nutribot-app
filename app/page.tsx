@@ -22,7 +22,6 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
-
 const translations = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
@@ -61,6 +60,128 @@ const globalStyles = `
 `;
 
 const langMap: any = { ru: "Русский", en: "English", pt: "Português", fr: "Français", kk: "Қазақша" };
+
+const MOCK_CATALOG = [
+  { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
+  { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
+  { id: 3, name: "Творог 9%", calories_100g: 159, protein_100g: 18, fats_100g: 9, carbs_100g: 3 },
+  { id: 4, name: "Молоко 2.5%", calories_100g: 54, protein_100g: 2.9, fats_100g: 2.5, carbs_100g: 4.8 },
+  { id: 5, name: "Рис белый (сухой)", calories_100g: 344, protein_100g: 6.7, fats_100g: 0.7, carbs_100g: 78.9 },
+  { id: 6, name: "Рис белый (отварной)", calories_100g: 116, protein_100g: 2.2, fats_100g: 0.2, carbs_100g: 25.8 },
+  { id: 7, name: "Рис бурый (отварной)", calories_100g: 111, protein_100g: 2.6, fats_100g: 0.9, carbs_100g: 22.8 },
+  { id: 8, name: "Гречка (сухая)", calories_100g: 313, protein_100g: 12.6, fats_100g: 3.3, carbs_100g: 62.1 },
+  { id: 9, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
+  { id: 10, name: "Овсянка (сухая)", calories_100g: 366, protein_100g: 11.9, fats_100g: 7.2, carbs_100g: 69.3 },
+  { id: 11, name: "Куриная грудка (сырая)", calories_100g: 113, protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0.4 },
+  { id: 12, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
+  { id: 13, name: "Куриная грудка (запеченная)", calories_100g: 172, protein_100g: 30.5, fats_100g: 4.2, carbs_100g: 0 },
+  { id: 14, name: "Куриное филе бедра (сырое)", calories_100g: 154, protein_100g: 20.8, fats_100g: 7.4, carbs_100g: 0 },
+  { id: 15, name: "Куриное бедро с кожей (запеченное)", calories_100g: 232, protein_100g: 24.5, fats_100g: 14.5, carbs_100g: 0 },
+  { id: 16, name: "Индейка филе грудки (сырая)", calories_100g: 104, protein_100g: 23.1, fats_100g: 1.0, carbs_100g: 0 },
+  { id: 17, name: "Индейка филе грудки (запеченная)", calories_100g: 135, protein_100g: 29.0, fats_100g: 1.8, carbs_100g: 0 },
+  { id: 18, name: "Индейка бедро (запеченное)", calories_100g: 175, protein_100g: 24.0, fats_100g: 8.5, carbs_100g: 0 },
+  { id: 19, name: "Говядина постная (сырая)", calories_100g: 158, protein_100g: 22.3, fats_100g: 7.1, carbs_100g: 0 },
+  { id: 20, name: "Говядина отварная", calories_100g: 215, protein_100g: 29.8, fats_100g: 10.2, carbs_100g: 0 },
+  { id: 21, name: "Стейк из говядины (Рибай)", calories_100g: 271, protein_100g: 24.0, fats_100g: 19.0, carbs_100g: 0 },
+  { id: 22, name: "Стейк из говядины (Стриплойн)", calories_100g: 242, protein_100g: 25.5, fats_100g: 15.0, carbs_100g: 0 },
+  { id: 23, name: "Стейк из индейки", calories_100g: 145, protein_100g: 27.0, fats_100g: 4.0, carbs_100g: 0 },
+  { id: 24, name: "Свинина вырезка", calories_100g: 143, protein_100g: 21.5, fats_100g: 6.3, carbs_100g: 0 },
+  { id: 25, name: "Фарш говяжий", calories_100g: 254, protein_100g: 17.2, fats_100g: 20.0, carbs_100g: 0 },
+  { id: 26, name: "Фарш куриный", calories_100g: 143, protein_100g: 18.0, fats_100g: 7.8, carbs_100g: 0 },
+  { id: 27, name: "Протеиновый батончик Bombbar (шоколад)", calories_100g: 371, protein_100g: 40.0, fats_100g: 11.5, carbs_100g: 6.5 },
+  { id: 28, name: "Протеиновый батончик Bombbar (кокос)", calories_100g: 358, protein_100g: 38.0, fats_100g: 12.0, carbs_100g: 7.0 },
+  { id: 29, name: "Протеиновое печенье Bombbar", calories_100g: 340, protein_100g: 35.0, fats_100g: 10.0, carbs_100g: 9.0 },
+  { id: 30, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 },
+  { id: 31, name: "Лосось запеченный", calories_100g: 228, protein_100g: 25.4, fats_100g: 13.6, carbs_100g: 0 },
+  { id: 32, name: "Хлеб белый", calories_100g: 266, protein_100g: 8, fats_100g: 3, carbs_100g: 50 },
+  { id: 33, name: "Огурец свежий", calories_100g: 15, protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.8 },
+  { id: 34, name: "Помидор свежий", calories_100g: 18, protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 3.9 },
+  { id: 35, name: "Картофель отварной", calories_100g: 82, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.7 },
+  { id: 36, name: "Яблоко", calories_100g: 52, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 14 },
+  { id: 37, name: "Банан", calories_100g: 89, protein_100g: 1.1, fats_100g: 0.3, carbs_100g: 22.8 },
+  { id: 38, name: "Макароны отварные", calories_100g: 112, protein_100g: 3.6, fats_100g: 0.4, carbs_100g: 23.5 },
+  { id: 39, name: "Сыр Российский", calories_100g: 363, protein_100g: 23.4, fats_100g: 29.5, carbs_100g: 0 },
+  { id: 40, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
+];
+
+async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
+  const parts: any[] = [{ text: prompt }];
+  if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
+  const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
+
+  let retries = 3;
+  while (retries > 0) {
+    try {
+      const response = await fetch('/api/gemini', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Ошибка сервера');
+      if (result.error) throw new Error(result.error);
+      return JSON.parse(result.candidates[0].content.parts[0].text);
+    } catch (error: any) { 
+      retries--; 
+      if (retries === 0) throw error; 
+      await new Promise(r => setTimeout(r, 1000)); 
+    }
+  }
+}
+
+async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: string) {
+  const base64Image = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event: any) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 600; // Сжимаем до 600px для мгновенной загрузки
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+        } else {
+          if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.drawImage(img, 0, 0, width, height);
+        // Получаем легкий JPEG
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        resolve(dataUrl.split(',')[1]);
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+
+  const schema = isBarcode ? { type: "OBJECT", properties: { name: { type: "STRING" }, calories_100g: { type: "INTEGER" }, protein_100g: { type: "NUMBER" }, fats_100g: { type: "NUMBER" }, carbs_100g: { type: "NUMBER" } }, required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"] } : { type: "OBJECT", properties: { dish_name: { type: "STRING" }, confidence_score: { type: "NUMBER" }, breakdown: { type: "ARRAY", items: { type: "OBJECT", properties: { ingredient: { type: "STRING" }, weight_g: { type: "INTEGER" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, required: ["dish_name", "confidence_score", "breakdown", "total"] };
+  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang]}` : `Analyze food photo. Return dish name, ingredients, weights, macros. Language: ${langMap[lang]}`;
+  return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
+}
+
+async function getAIAdviceForRemaining(remaining: any, lang: string) {
+  const schema = { type: "OBJECT", properties: { suggestions: { type: "ARRAY", items: { type: "OBJECT", properties: { title: { type: "STRING" }, description: { type: "STRING" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } }, required: ["title", "description", "calories", "protein", "fat", "carbs"] } } }, required: ["suggestions"] };
+  return await fetchGeminiWithRetry(`User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang]}`, schema);
+}
+
+async function analyzeTextToFood(text: string, lang: string) {
+  const schema = { type: "OBJECT", properties: { dish_name: { type: "STRING" }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, required: ["dish_name", "total"] };
+  return await fetchGeminiWithRetry(`Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang]}`, schema);
+}
+
+const calculateLocalMacros = (profile: any, weight: any) => {
+  const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
+  const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
+  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' || profile.gender === 'Masculino' || profile.gender === 'Homme' || profile.gender === 'Ер' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
+  if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
+  const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
+  return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
+};
 
 const LightningStorm = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
@@ -130,494 +251,26 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
-// Запросы на прокси-сервер Vercel
-async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
-  const parts: any[] = [{ text: prompt }];
-  if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
-  const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
-
-  let retries = 3;
-  while (retries > 0) {
-    try {
-      const response = await fetch('/api/gemini', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify(payload) 
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Ошибка сервера');
-      return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error: any) { 
-      retries--; 
-      if (retries === 0) throw error; 
-      await new Promise(r => setTimeout(r, 1000)); 
-    }
-  }
-}
-
-// Сжатие изображения перед отправкой на сервер (решает проблему с весом фото с телефона)
-async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: string) {
-  const base64Image = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event: any) => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_SIZE = 600; // Ультра-быстрое сжатие до 600 пикселей (хватает для ИИ)
-        let width = img.width;
-        let height = img.height;
-        if (width > height) {
-          if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
-        } else {
-          if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) ctx.drawImage(img, 0, 0, width, height);
-        // Сжимаем сильнее (0.7) для мгновенной загрузки при плохом интернете
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-        resolve(dataUrl.split(',')[1]); // Отсекаем 'data:image/jpeg;base64,'
-      };
-      img.onerror = reject;
-    };
-    reader.onerror = reject;
-  });
-
-  const schema = isBarcode ? { type: "OBJECT", properties: { name: { type: "STRING" }, calories_100g: { type: "INTEGER" }, protein_100g: { type: "NUMBER" }, fats_100g: { type: "NUMBER" }, carbs_100g: { type: "NUMBER" } }, required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"] } : { type: "OBJECT", properties: { dish_name: { type: "STRING" }, confidence_score: { type: "NUMBER" }, breakdown: { type: "ARRAY", items: { type: "OBJECT", properties: { ingredient: { type: "STRING" }, weight_g: { type: "INTEGER" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, required: ["dish_name", "confidence_score", "breakdown", "total"] };
-  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang]}` : `Analyze food photo. Return dish name, ingredients, weights, macros. Language: ${langMap[lang]}`;
-  return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
-}
-
-async function getAIAdviceForRemaining(remaining: any, lang: string) {
-  const schema = { type: "OBJECT", properties: { suggestions: { type: "ARRAY", items: { type: "OBJECT", properties: { title: { type: "STRING" }, description: { type: "STRING" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } }, required: ["title", "description", "calories", "protein", "fat", "carbs"] } } }, required: ["suggestions"] };
-  return await fetchGeminiWithRetry(`User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang]}`, schema);
-}
-
-async function analyzeTextToFood(text: string, lang: string) {
-  const schema = { type: "OBJECT", properties: { dish_name: { type: "STRING" }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, required: ["dish_name", "total"] };
-  return await fetchGeminiWithRetry(`Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang]}`, schema);
-}
-
-const calculateLocalMacros = (profile: any, weight: any) => {
-  const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
-  const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
-  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' || profile.gender === 'Masculino' || profile.gender === 'Homme' || profile.gender === 'Ер' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
-  if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
-  const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
-  return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
-};
-
-const MOCK_CATALOG = [
-  { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
-  { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
-  { id: 3, name: "Творог 9%", calories_100g: 159, protein_100g: 18, fats_100g: 9, carbs_100g: 3 },
-  { id: 4, name: "Молоко 2.5%", calories_100g: 54, protein_100g: 2.9, fats_100g: 2.5, carbs_100g: 4.8 },
-  { id: 5, name: "Рис белый (сухой)", calories_100g: 344, protein_100g: 6.7, fats_100g: 0.7, carbs_100g: 78.9 },
-  { id: 6, name: "Рис белый (отварной)", calories_100g: 116, protein_100g: 2.2, fats_100g: 0.2, carbs_100g: 25.8 },
-  { id: 7, name: "Рис бурый (отварной)", calories_100g: 111, protein_100g: 2.6, fats_100g: 0.9, carbs_100g: 22.8 },
-  { id: 8, name: "Гречка (сухая)", calories_100g: 313, protein_100g: 12.6, fats_100g: 3.3, carbs_100g: 62.1 },
-  { id: 9, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
-  { id: 10, name: "Овсянка (сухая)", calories_100g: 366, protein_100g: 11.9, fats_100g: 7.2, carbs_100g: 69.3 },
-  { id: 11, name: "Куриная грудка (сырая)", calories_100g: 113, protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0.4 },
-  { id: 12, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
-  { id: 13, name: "Куриная грудка (запеченная)", calories_100g: 172, protein_100g: 30.5, fats_100g: 4.2, carbs_100g: 0 },
-  { id: 14, name: "Куриное филе бедра (сырое)", calories_100g: 154, protein_100g: 20.8, fats_100g: 7.4, carbs_100g: 0 },
-  { id: 15, name: "Куриное бедро с кожей (запеченное)", calories_100g: 232, protein_100g: 24.5, fats_100g: 14.5, carbs_100g: 0 },
-  { id: 16, name: "Индейка филе грудки (сырая)", calories_100g: 104, protein_100g: 23.1, fats_100g: 1.0, carbs_100g: 0 },
-  { id: 17, name: "Индейка филе грудки (запеченная)", calories_100g: 135, protein_100g: 29.0, fats_100g: 1.8, carbs_100g: 0 },
-  { id: 18, name: "Индейка бедро (запеченное)", calories_100g: 175, protein_100g: 24.0, fats_100g: 8.5, carbs_100g: 0 },
-  { id: 19, name: "Говядина постная (сырая)", calories_100g: 158, protein_100g: 22.3, fats_100g: 7.1, carbs_100g: 0 },
-  { id: 20, name: "Говядина отварная", calories_100g: 215, protein_100g: 29.8, fats_100g: 10.2, carbs_100g: 0 },
-  { id: 21, name: "Стейк из говядины (Рибай)", calories_100g: 271, protein_100g: 24.0, fats_100g: 19.0, carbs_100g: 0 },
-  { id: 22, name: "Стейк из говядины (Стриплойн)", calories_100g: 242, protein_100g: 25.5, fats_100g: 15.0, carbs_100g: 0 },
-  { id: 23, name: "Стейк из индейки", calories_100g: 145, protein_100g: 27.0, fats_100g: 4.0, carbs_100g: 0 },
-  { id: 24, name: "Свинина вырезка", calories_100g: 143, protein_100g: 21.5, fats_100g: 6.3, carbs_100g: 0 },
-  { id: 25, name: "Фарш говяжий", calories_100g: 254, protein_100g: 17.2, fats_100g: 20.0, carbs_100g: 0 },
-  { id: 26, name: "Фарш куриный", calories_100g: 143, protein_100g: 18.0, fats_100g: 7.8, carbs_100g: 0 },
-  { id: 27, name: "Протеиновый батончик Bombbar (шоколад)", calories_100g: 371, protein_100g: 40.0, fats_100g: 11.5, carbs_100g: 6.5 },
-  { id: 28, name: "Протеиновый батончик Bombbar (кокос)", calories_100g: 358, protein_100g: 38.0, fats_100g: 12.0, carbs_100g: 7.0 },
-  { id: 29, name: "Протеиновое печенье Bombbar", calories_100g: 340, protein_100g: 35.0, fats_100g: 10.0, carbs_100g: 9.0 },
-  { id: 30, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 },
-  { id: 31, name: "Лосось запеченный", calories_100g: 228, protein_100g: 25.4, fats_100g: 13.6, carbs_100g: 0 },
-  { id: 32, name: "Хлеб белый", calories_100g: 266, protein_100g: 8, fats_100g: 3, carbs_100g: 50 },
-  { id: 33, name: "Огурец свежий", calories_100g: 15, protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.8 },
-  { id: 34, name: "Помидор свежий", calories_100g: 18, protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 3.9 },
-  { id: 35, name: "Картофель отварной", calories_100g: 82, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.7 },
-  { id: 36, name: "Яблоко", calories_100g: 52, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 14 },
-  { id: 37, name: "Банан", calories_100g: 89, protein_100g: 1.1, fats_100g: 0.3, carbs_100g: 22.8 },
-  { id: 38, name: "Макароны отварные", calories_100g: 112, protein_100g: 3.6, fats_100g: 0.4, carbs_100g: 23.5 },
-  { id: 39, name: "Сыр Российский", calories_100g: 363, protein_100g: 23.4, fats_100g: 29.5, carbs_100g: 0 },
-  { id: 40, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
-];
-
-export default function Page() {
-  const [lang, setLang] = useState('ru');
+const NavButton = React.memo(function NavButton({ icon, label, isActive, onClick }: any) {
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t: translations[lang as keyof typeof translations] || translations['en'] }}>
-      <NutriBotApp />
-    </LanguageContext.Provider>
-  );
-}
-
-function NutriBotApp() {
-  const { t, lang } = useContext(LanguageContext);
-  
-  const [user, setUser] = useState<any>(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [dataLoading, setDataLoading] = useState(true);
-  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [dailyGoals, setDailyGoals] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedDate, setSelectedDate] = useState(new Date()); 
-  const [meals, setMeals] = useState<any[]>([]);
-  const [weightHistory, setWeightHistory] = useState<any[]>([]);
-  const [waterLogs, setWaterLogs] = useState<any>({});
-  const [customFoods, setCustomFoods] = useState<any[]>([]);
-  const [recentFoods, setRecentFoods] = useState<any[]>([]);
-  const [pendingMeal, setPendingMeal] = useState<any>(null);
-  const [streakDays, setStreakDays] = useState(0); // Начинаем с 0
-  const [showStreakPopup, setShowStreakPopup] = useState(false);
-  const [subscription, setSubscription] = useState('bronze'); 
-  const [scansToday, setScansToday] = useState(0); 
-  const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
-  const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
-
-  // --- Оптимизация навигации (предотвращает лишние зависания интерфейса) ---
-  const goToDashboard = useCallback(() => setActiveTab('dashboard'), []);
-  const goToSearch = useCallback(() => setActiveTab('search'), []);
-  const goToCamera = useCallback(() => { if(checkAccess('silver')) setActiveTab('camera') }, [checkAccess]);
-  const goToWeight = useCallback(() => setActiveTab('weight'), []);
-  const goToProfile = useCallback(() => setActiveTab('profile'), []);
-
-  useEffect(() => {
-    if (!(window as any).Telegram) {
-      const tgScript = document.createElement('script');
-      tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
-      tgScript.onload = () => { if ((window as any).Telegram && (window as any).Telegram.WebApp) { (window as any).Telegram.WebApp.ready(); (window as any).Telegram.WebApp.expand(); } };
-      document.head.appendChild(tgScript);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        setAuthLoading(false);
-      } else {
-        try {
-          if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { 
-            await signInWithCustomToken(auth, (window as any).__initial_auth_token); 
-          } else { 
-            await signInAnonymously(auth); 
-          }
-        } catch (e: any) { 
-          console.warn("Working in Offline Mode");
-          let localUid = localStorage.getItem('nutribot_uid');
-          if (!localUid) { localUid = 'offline-user-' + Math.random().toString(36).substring(7); localStorage.setItem('nutribot_uid', localUid); }
-          setUser({ uid: localUid });
-          setAuthLoading(false);
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!user) { setDataLoading(false); return; }
-    const uid = user.uid;
-
-    if (uid.startsWith('offline-user')) {
-        const saved = localStorage.getItem('nutribot_data');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.profile) { setUserProfile(data.profile); setDailyGoals(data.goals); setIsFirstLaunch(false); }
-                if (data.meals) setMeals(data.meals);
-                if (data.weights) setWeightHistory(data.weights);
-                if (data.water) setWaterLogs(data.water);
-                if (data.customFoods) setCustomFoods(data.customFoods);
-                if (data.stats) {
-                    setSubscription(data.stats.subscription || 'bronze');
-                    setStreakDays(data.stats.streakDays || 0);
-                    if (data.stats.lastScanDate === new Date().toDateString()) {
-                        setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
-                    }
-                }
-            } catch(e){}
-        }
-        setDataLoading(false);
-        return;
-    }
-
-    if (!db) return;
-    let isSubscribed = true;
-
-    const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap: any) => {
-      if (!isSubscribed) return;
-      if(docSnap.exists()) {
-        const data = docSnap.data();
-        setUserProfile(data.formData); setDailyGoals(data.goals); setIsFirstLaunch(false);
-      } else { setIsFirstLaunch(true); }
-      setDataLoading(false);
-    }, (err: any) => {
-      console.error("Profile sync error:", err);
-      if (isSubscribed) setDataLoading(false);
-    });
-
-    const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap: any) => {
-      if (!isSubscribed) return;
-      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setMeals(items);
-    }, (err: any) => console.error("Meals sync error:", err));
-
-    const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
-      if (!isSubscribed) return;
-      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
-    }, (err: any) => console.error("Weight sync error:", err));
-
-    const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
-      if (!isSubscribed) return;
-      if(docSnap.exists()) setWaterLogs(docSnap.data().logs || {});
-    }, (err: any) => console.error("Water sync error:", err));
-
-    const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap: any) => {
-      if (!isSubscribed) return;
-      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setCustomFoods(items);
-    }, (err: any) => console.error("Custom foods sync error:", err));
-
-    const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
-      if (!isSubscribed) return;
-      if(docSnap.exists()) {
-        const data = docSnap.data();
-        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
-        if(data.lastScanDate === new Date().toDateString()) {
-          setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
-        } else { setScansToday(0); setBarcodeScansToday(0); }
-      }
-    }, (err: any) => console.error("Stats sync error:", err));
-
-    return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight(); unsubWater(); unsubStats(); unsubCustomFoods(); };
-  }, [user]);
-
-  useEffect(() => {
-      if (user && user.uid.startsWith('offline-user') && !isFirstLaunch && userProfile) {
-          localStorage.setItem('nutribot_data', JSON.stringify({
-              profile: userProfile, goals: dailyGoals, meals, weights: weightHistory, water: waterLogs, customFoods,
-              stats: { subscription, streakDays, scansToday, barcodeScansToday, lastScanDate: new Date().toDateString() }
-          }));
-      }
-  }, [user, isFirstLaunch, userProfile, dailyGoals, meals, weightHistory, waterLogs, customFoods, subscription, streakDays, scansToday, barcodeScansToday]);
-
-  const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, [selectedDate]);
-  const todayFormatted = useMemo(() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, []);
-  const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
-  const hasMealsToday = useMemo(() => meals.some((m: any) => m.date === todayFormatted), [meals, todayFormatted]);
-
-  const current = useMemo(() => currentDayMeals.reduce(
-    (acc: any, meal: any) => ({
-      calories: acc.calories + (meal.total?.calories || 0), protein: acc.protein + (meal.total?.protein || 0),
-      fat: acc.fat + (meal.total?.fat || 0), carbs: acc.carbs + (meal.total?.carbs || 0),
-    }), { calories: 0, protein: 0, fat: 0, carbs: 0 }
-  ), [currentDayMeals]);
-
-  const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
-    setUserProfile(formData); setDailyGoals(goals); setIsFirstLaunch(false);
-    const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
-    const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
-    setWeightHistory([wData]);
-    if(user && db && !user.uid.startsWith('offline-user')) {
-      await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals }).catch(console.error);
-      await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
-    }
-  }, [user]);
-
-  const checkAccess = useCallback((requiredTier: string) => {
-    const tiers: any = { bronze: 0, silver: 1, gold: 2 };
-    if (tiers[subscription] >= tiers[requiredTier]) return true;
-    setUpgradePrompt({ show: true, required: requiredTier }); return false;
-  }, [subscription]);
-
-  const requestAddMeal = useCallback((mealData: any) => setPendingMeal(mealData), []);
-
-  const confirmAddMeal = useCallback(async (type: string) => {
-    if(pendingMeal) {
-      const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
-      const d = new Date(); const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-      const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
-      setMeals((prev: any) => [...prev, newMeal]); setPendingMeal(null); setActiveTab('dashboard');
-      
-      if (willIgniteStreak) { 
-        const newStreak = streakDays + 1; 
-        setStreakDays(newStreak);
-        // Анимация только на юбилейные дни
-        if ([5, 10, 30, 60, 100, 200, 400].includes(newStreak)) {
-          setShowStreakPopup(true); 
-          setTimeout(() => setShowStreakPopup(false), 3500); 
-        }
-        if(user && db && !user.uid.startsWith('offline-user')) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
-      }
-      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
-    }
-  }, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
-
-  const deleteMeal = useCallback(async (id: any) => {
-    setMeals((prev: any) => prev.filter((m: any) => m.id !== id));
-    if(user && db && !user.uid.startsWith('offline-user')) await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString())).catch(console.error);
-  }, [user]);
-
-  const addWeight = useCallback(async (weightStr: any) => {
-    const weight = parseFloat(String(weightStr).replace(',', '.'));
-    if(isNaN(weight)) return;
-    const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
-    const wData = { id: Date.now(), date: today, weight };
-    setWeightHistory((prev: any) => [wData, ...prev]);
-    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
-    if (userProfile) {
-      const newGoals = calculateLocalMacros(userProfile, weight);
-      setDailyGoals(newGoals);
-      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(console.error);
-    }
-  }, [userProfile, user]);
-
-  const currentWater = waterLogs[formattedSelectedDate] || 0;
-  const handleAddWater = useCallback(async (amount: number) => {
-    const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
-    const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
-    setWaterLogs(newLogs);
-    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs }).catch(console.error);
-  }, [formattedSelectedDate, waterLogs, user]);
-
-  const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
-    setCustomFoods((prev: any) => [recipeItem, ...prev]);
-    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.error);
-  }, [user]);
-
-  const updateSubscription = useCallback(async (level: string) => {
-    setSubscription(level);
-    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true}).catch(console.error);
-  }, [user]);
-
-  const incrementScan = useCallback(async (type: string) => {
-    const todayStr = new Date().toDateString();
-    const newStats = { lastScanDate: todayStr, scansToday: type === 'photo' ? scansToday + 1 : scansToday, barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday };
-    if (type === 'photo') setScansToday(p => p+1); if (type === 'barcode') setBarcodeScansToday(p => p+1);
-    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
-  }, [scansToday, barcodeScansToday, user]);
-
-  // Стилистика огонька в зависимости от количества дней
-  const getStreakStyles = (days: number) => {
-    if (days < 30) return { text: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/50', icon: 'fill-orange-400 text-orange-400', popupBg: 'from-orange-500 to-amber-500', popupShadow: 'shadow-orange-500/60', glow: 'rgba(249,115,22,1)', blur: 'bg-orange-500' };
-    if (days < 100) return { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/50', icon: 'fill-purple-400 text-purple-400', popupBg: 'from-purple-500 to-fuchsia-500', popupShadow: 'shadow-purple-500/60', glow: 'rgba(168,85,247,1)', blur: 'bg-purple-500' };
-    if (days < 400) return { text: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: 'fill-red-400 text-red-400', popupBg: 'from-red-500 to-rose-500', popupShadow: 'shadow-red-500/60', glow: 'rgba(239,68,68,1)', blur: 'bg-red-500' };
-    return { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/50', icon: 'fill-cyan-400 text-cyan-400', popupBg: 'from-cyan-400 to-teal-400', popupShadow: 'shadow-cyan-500/60', glow: 'rgba(34,211,238,1)', blur: 'bg-cyan-400' };
-  };
-
-  const streakStyles = getStreakStyles(streakDays);
-
-  if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
-  if (isFirstLaunch || !dailyGoals) return <OnboardingScreen onComplete={handleOnboardingComplete} />;
-
-  return (
-    <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
-      <style dangerouslySetInnerHTML={{__html: globalStyles}} />
-      <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
-        <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
-        <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakStyles.bg} ${streakStyles.border} ${streakStyles.text} shadow-md` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
-            <Flame size={16} className={hasMealsToday ? `${streakStyles.icon} animate-pulse` : ""} />
-            <span className="font-bold text-sm">{streakDays}</span>
-          </div>
-          <div onClick={goToProfile} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
-            {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
-            <span className="font-bold tracking-wide">{subscription.toUpperCase()}</span>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 overflow-y-auto pb-24 relative">
-        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={goToSearch} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
-        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={goToDashboard} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
-        {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
-        {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
-        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
-      </main>
-
-      <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
-        <div className="flex justify-between items-end px-2 pb-2">
-          <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={goToDashboard} />
-            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={goToSearch} />
-          </div>
-          <div className="w-1/5 flex justify-center relative">
-            <div onClick={goToCamera} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
-          </div>
-          <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={goToWeight} />
-            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={goToProfile} />
-          </div>
-        </div>
-      </nav>
-
-      {upgradePrompt.show && (
-        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${upgradePrompt.required === 'gold' ? 'bg-amber-500/20' : 'bg-slate-400/20'}`}>
-              {upgradePrompt.required === 'gold' ? <Crown size={40} className="text-amber-400" /> : <Zap size={40} className="text-blue-400" />}
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">{t.reqSub} {upgradePrompt.required.toUpperCase()}</h3>
-            <p className="text-slate-300 text-sm mb-6">{t.reqSubDesc}</p>
-            <div className="flex gap-3">
-              <div onClick={() => setUpgradePrompt({ show: false, required: '' })} className="btn-glass flex-1 py-3 rounded-xl bg-slate-700/50 text-white font-medium text-center">{t.cancel}</div>
-              <div onClick={() => { setUpgradePrompt({ show: false, required: '' }); setActiveTab('profile'); }} className="btn-glass flex-1 py-3 rounded-xl bg-emerald-500 text-slate-900 font-bold text-center">{t.toProfile}</div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {pendingMeal && (
-        <div className="absolute inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="bg-slate-800/95 w-full rounded-3xl p-6 shadow-2xl border border-white/10 animate-in slide-in-from-bottom-8 duration-300">
-            <div className="w-12 h-1.5 bg-slate-600 rounded-full mx-auto mb-6"></div>
-            <h3 className="text-xl font-bold text-white mb-2 text-center">{t.whereToSave}</h3>
-            <p className="text-slate-400 text-sm text-center mb-6">{t.date}: {`${selectedDate.getDate()}.${selectedDate.getMonth()+1}.${selectedDate.getFullYear()}`}</p>
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div onClick={() => confirmAddMeal('breakfast')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌅</span> {t.breakfast}</div>
-              <div onClick={() => confirmAddMeal('lunch')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">☀️</span> {t.lunch}</div>
-              <div onClick={() => confirmAddMeal('dinner')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌙</span> {t.dinner}</div>
-              <div onClick={() => confirmAddMeal('snack')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🍎</span> {t.snack}</div>
-            </div>
-            <div onClick={() => setPendingMeal(null)} className="btn-glass w-full mt-2 py-4 text-slate-400 font-medium bg-slate-800 rounded-xl text-center">{t.cancel}</div>
-          </div>
-        </div>
-      )}
-
-      {showStreakPopup && (
-        <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
-          <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
-            <div className="relative mb-6">
-               <div className={`absolute w-40 h-40 ${streakStyles.blur} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
-               <Flame size={140} className={`${streakStyles.text} relative z-10 animate-bounce`} style={{ filter: `drop-shadow(0 0 30px ${streakStyles.glow})` }} fill="currentColor" />
-            </div>
-            <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className={`bg-gradient-to-r ${streakStyles.popupBg} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyles.popupShadow} mt-4`}>🔥 {streakDays}</div>
-          </div>
-        </div>
-      )}
+    <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
+      {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
     </div>
   );
-}
+});
 
-const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
-  <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
-    {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
-  </div>
-));
+const MacroCard = React.memo(function MacroCard({ label, current, goal, color, g }: any) {
+  const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
+  return (
+    <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-xl border border-white/5 flex flex-col shadow-lg">
+      <span className="text-xs text-slate-400 mb-1">{label}</span>
+      <span className="font-bold text-sm mb-2 text-white">{Math.round(current)} / {goal}{g}</span>
+      <div className="h-1.5 w-full bg-slate-700/50 rounded-full mt-auto overflow-hidden"><div className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}`} style={{ width: `${percent}%` }} /></div>
+    </div>
+  );
+});
 
-const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
+const Dashboard = React.memo(function Dashboard({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) {
   const { t, lang } = useContext(LanguageContext);
   const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(false);
@@ -640,7 +293,12 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   const handleVoiceSubmit = async () => {
     if(!voiceText.trim()) return;
     setIsAnalyzingVoice(true); setVoiceError(false);
-    try { const result = await analyzeTextToFood(voiceText, lang); setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); } catch (err: any) { setVoiceError(err.message || t.tryAgain); }
+    try { 
+      const result = await analyzeTextToFood(voiceText, lang); 
+      setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); 
+    } catch (err: any) { 
+      setVoiceError(err.message || t.tryAgain); 
+    }
     setIsAnalyzingVoice(false);
   };
 
@@ -739,7 +397,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                 <div className="space-y-4">
                   {adviceData?.isError ? (
                     <div className="bg-slate-800/80 p-5 rounded-2xl border border-red-500/30 shadow-lg text-center">
-                      <h4 className="font-bold text-xl text-white mb-2">Ошибка нейросети</h4>
+                      <h4 className="font-bold text-xl text-white mb-2">Ошибка</h4>
                       <p className="text-sm text-slate-400">{adviceData.message}</p>
                     </div>
                   ) : adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
@@ -764,18 +422,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   );
 });
 
-const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
-  const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
-  return (
-    <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-xl border border-white/5 flex flex-col shadow-lg">
-      <span className="text-xs text-slate-400 mb-1">{label}</span>
-      <span className="font-bold text-sm mb-2 text-white">{Math.round(current)} / {goal}{g}</span>
-      <div className="h-1.5 w-full bg-slate-700/50 rounded-full mt-auto overflow-hidden"><div className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}`} style={{ width: `${percent}%` }} /></div>
-    </div>
-  );
-});
-
-const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
+const FoodSearch = React.memo(function FoodSearch({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) {
   const { t, lang } = useContext(LanguageContext);
   const [activeSubTab, setActiveSubTab] = useState('global');
   const [query, setQuery] = useState('');
@@ -948,7 +595,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   );
 });
 
-const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
+const CameraScanner = React.memo(function CameraScanner({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) {
   const { t, lang } = useContext(LanguageContext);
   const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
   const [errorDetails, setErrorDetails] = useState('');
@@ -1006,7 +653,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
   );
 });
 
-const WeightTracker = React.memo(({ history, onAdd }: any) => {
+const WeightTracker = React.memo(function WeightTracker({ history, onAdd }: any) {
   const { t } = useContext(LanguageContext);
   const [inputWeight, setInputWeight] = useState('');
   const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
@@ -1042,7 +689,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
   );
 });
 
-const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
+const UserProfile = React.memo(function UserProfile({ currentSub, setSubscription }: any) {
   const { t, lang, setLang } = useContext(LanguageContext);
   const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState<any>(null), [purchasingTier, setPurchasingTier] = useState<any>(null);
 
@@ -1225,7 +872,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
   );
 });
 
-const OnboardingScreen = React.memo(({ onComplete }: any) => {
+const OnboardingScreen = React.memo(function OnboardingScreen({ onComplete }: any) {
   const { t } = useContext(LanguageContext);
   const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
@@ -1265,3 +912,358 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
     </div>
   );
 });
+
+function NutriBotApp() {
+  const { t, lang } = useContext(LanguageContext);
+  
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [dailyGoals, setDailyGoals] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedDate, setSelectedDate] = useState(new Date()); 
+  const [meals, setMeals] = useState<any[]>([]);
+  const [weightHistory, setWeightHistory] = useState<any[]>([]);
+  const [waterLogs, setWaterLogs] = useState<any>({});
+  const [customFoods, setCustomFoods] = useState<any[]>([]);
+  const [recentFoods, setRecentFoods] = useState<any[]>([]);
+  const [pendingMeal, setPendingMeal] = useState<any>(null);
+  const [streakDays, setStreakDays] = useState(0); // Начинаем с 0
+  const [showStreakPopup, setShowStreakPopup] = useState(false);
+  const [subscription, setSubscription] = useState('bronze'); 
+  const [scansToday, setScansToday] = useState(0); 
+  const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
+  const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
+
+  // Оптимизация навигации
+  const goToDashboard = useCallback(() => setActiveTab('dashboard'), []);
+  const goToSearch = useCallback(() => setActiveTab('search'), []);
+  const goToCamera = useCallback(() => { if(checkAccess('silver')) setActiveTab('camera') }, [subscription]);
+  const goToWeight = useCallback(() => setActiveTab('weight'), []);
+  const goToProfile = useCallback(() => setActiveTab('profile'), []);
+
+  useEffect(() => {
+    if (!(window as any).Telegram) {
+      const tgScript = document.createElement('script');
+      tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
+      tgScript.onload = () => { if ((window as any).Telegram && (window as any).Telegram.WebApp) { (window as any).Telegram.WebApp.ready(); (window as any).Telegram.WebApp.expand(); } };
+      document.head.appendChild(tgScript);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setAuthLoading(false);
+      } else {
+        try {
+          if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { 
+            await signInWithCustomToken(auth, (window as any).__initial_auth_token); 
+          } else { 
+            await signInAnonymously(auth); 
+          }
+        } catch (e: any) { 
+          console.warn("Working in Offline Mode");
+          let localUid = localStorage.getItem('nutribot_uid');
+          if (!localUid) { localUid = 'offline-user-' + Math.random().toString(36).substring(7); localStorage.setItem('nutribot_uid', localUid); }
+          setUser({ uid: localUid });
+          setAuthLoading(false);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!user) { setDataLoading(false); return; }
+    const uid = user.uid;
+
+    if (uid.startsWith('offline-user')) {
+        const saved = localStorage.getItem('nutribot_data');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.profile) { setUserProfile(data.profile); setDailyGoals(data.goals); setIsFirstLaunch(false); }
+                if (data.meals) setMeals(data.meals);
+                if (data.weights) setWeightHistory(data.weights);
+                if (data.water) setWaterLogs(data.water);
+                if (data.customFoods) setCustomFoods(data.customFoods);
+                if (data.stats) {
+                    setSubscription(data.stats.subscription || 'bronze');
+                    setStreakDays(data.stats.streakDays || 0);
+                    if (data.stats.lastScanDate === new Date().toDateString()) {
+                        setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
+                    }
+                }
+            } catch(e){}
+        }
+        setDataLoading(false);
+        return;
+    }
+
+    if (!db) return;
+    let isSubscribed = true;
+
+    const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap: any) => {
+      if (!isSubscribed) return;
+      if(docSnap.exists()) {
+        const data = docSnap.data();
+        setUserProfile(data.formData); setDailyGoals(data.goals); setIsFirstLaunch(false);
+      } else { setIsFirstLaunch(true); }
+      setDataLoading(false);
+    }, (err: any) => {
+      console.error("Profile sync error:", err);
+      if (isSubscribed) setDataLoading(false);
+    });
+
+    const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap: any) => {
+      if (!isSubscribed) return;
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setMeals(items);
+    }, (err: any) => console.error("Meals sync error:", err));
+
+    const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
+      if (!isSubscribed) return;
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
+    }, (err: any) => console.error("Weight sync error:", err));
+
+    const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
+      if (!isSubscribed) return;
+      if(docSnap.exists()) setWaterLogs(docSnap.data().logs || {});
+    }, (err: any) => console.error("Water sync error:", err));
+
+    const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap: any) => {
+      if (!isSubscribed) return;
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setCustomFoods(items);
+    }, (err: any) => console.error("Custom foods sync error:", err));
+
+    const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
+      if (!isSubscribed) return;
+      if(docSnap.exists()) {
+        const data = docSnap.data();
+        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
+        if(data.lastScanDate === new Date().toDateString()) {
+          setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
+        } else { setScansToday(0); setBarcodeScansToday(0); }
+      }
+    }, (err: any) => console.error("Stats sync error:", err));
+
+    return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight(); unsubWater(); unsubStats(); unsubCustomFoods(); };
+  }, [user]);
+
+  useEffect(() => {
+      if (user && user.uid.startsWith('offline-user') && !isFirstLaunch && userProfile) {
+          localStorage.setItem('nutribot_data', JSON.stringify({
+              profile: userProfile, goals: dailyGoals, meals, weights: weightHistory, water: waterLogs, customFoods,
+              stats: { subscription, streakDays, scansToday, barcodeScansToday, lastScanDate: new Date().toDateString() }
+          }));
+      }
+  }, [user, isFirstLaunch, userProfile, dailyGoals, meals, weightHistory, waterLogs, customFoods, subscription, streakDays, scansToday, barcodeScansToday]);
+
+  const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, [selectedDate]);
+  const todayFormatted = useMemo(() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, []);
+  const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
+  const hasMealsToday = useMemo(() => meals.some((m: any) => m.date === todayFormatted), [meals, todayFormatted]);
+
+  const current = useMemo(() => currentDayMeals.reduce(
+    (acc: any, meal: any) => ({
+      calories: acc.calories + (meal.total?.calories || 0), protein: acc.protein + (meal.total?.protein || 0),
+      fat: acc.fat + (meal.total?.fat || 0), carbs: acc.carbs + (meal.total?.carbs || 0),
+    }), { calories: 0, protein: 0, fat: 0, carbs: 0 }
+  ), [currentDayMeals]);
+
+  const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
+    setUserProfile(formData); setDailyGoals(goals); setIsFirstLaunch(false);
+    const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+    const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
+    setWeightHistory([wData]);
+    if(user && db && !user.uid.startsWith('offline-user')) {
+      await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals }).catch(console.error);
+      await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
+    }
+  }, [user]);
+
+  const checkAccess = useCallback((requiredTier: string) => {
+    const tiers: any = { bronze: 0, silver: 1, gold: 2 };
+    if (tiers[subscription] >= tiers[requiredTier]) return true;
+    setUpgradePrompt({ show: true, required: requiredTier }); return false;
+  }, [subscription]);
+
+  const requestAddMeal = useCallback((mealData: any) => setPendingMeal(mealData), []);
+
+  const confirmAddMeal = useCallback(async (type: string) => {
+    if(pendingMeal) {
+      const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
+      const d = new Date(); const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
+      setMeals((prev: any) => [...prev, newMeal]); setPendingMeal(null); setActiveTab('dashboard');
+      
+      if (willIgniteStreak) { 
+        const newStreak = streakDays + 1; 
+        setStreakDays(newStreak);
+        if ([5, 10, 30, 60, 100, 200, 400].includes(newStreak)) {
+          setShowStreakPopup(true); setTimeout(() => setShowStreakPopup(false), 3500); 
+        }
+        if(user && db && !user.uid.startsWith('offline-user')) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
+      }
+      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
+    }
+  }, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
+
+  const deleteMeal = useCallback(async (id: any) => {
+    setMeals((prev: any) => prev.filter((m: any) => m.id !== id));
+    if(user && db && !user.uid.startsWith('offline-user')) await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString())).catch(console.error);
+  }, [user]);
+
+  const addWeight = useCallback(async (weightStr: any) => {
+    const weight = parseFloat(String(weightStr).replace(',', '.'));
+    if(isNaN(weight)) return;
+    const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+    const wData = { id: Date.now(), date: today, weight };
+    setWeightHistory((prev: any) => [wData, ...prev]);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
+    if (userProfile) {
+      const newGoals = calculateLocalMacros(userProfile, weight);
+      setDailyGoals(newGoals);
+      if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(console.error);
+    }
+  }, [userProfile, user]);
+
+  const currentWater = waterLogs[formattedSelectedDate] || 0;
+  const handleAddWater = useCallback(async (amount: number) => {
+    const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
+    const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
+    setWaterLogs(newLogs);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs }).catch(console.error);
+  }, [formattedSelectedDate, waterLogs, user]);
+
+  const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
+    setCustomFoods((prev: any) => [recipeItem, ...prev]);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.error);
+  }, [user]);
+
+  const updateSubscription = useCallback(async (level: string) => {
+    setSubscription(level);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true}).catch(console.error);
+  }, [user]);
+
+  const incrementScan = useCallback(async (type: string) => {
+    const todayStr = new Date().toDateString();
+    const newStats = { lastScanDate: todayStr, scansToday: type === 'photo' ? scansToday + 1 : scansToday, barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday };
+    if (type === 'photo') setScansToday(p => p+1); if (type === 'barcode') setBarcodeScansToday(p => p+1);
+    if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
+  }, [scansToday, barcodeScansToday, user]);
+
+  const getStreakStyles = (days: number) => {
+    if (days < 30) return { text: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/50', icon: 'fill-orange-400 text-orange-400', popupBg: 'from-orange-500 to-amber-500', popupShadow: 'shadow-orange-500/60', glow: 'rgba(249,115,22,1)', blur: 'bg-orange-500' };
+    if (days < 100) return { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/50', icon: 'fill-purple-400 text-purple-400', popupBg: 'from-purple-500 to-fuchsia-500', popupShadow: 'shadow-purple-500/60', glow: 'rgba(168,85,247,1)', blur: 'bg-purple-500' };
+    if (days < 400) return { text: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: 'fill-red-400 text-red-400', popupBg: 'from-red-500 to-rose-500', popupShadow: 'shadow-red-500/60', glow: 'rgba(239,68,68,1)', blur: 'bg-red-500' };
+    return { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/50', icon: 'fill-cyan-400 text-cyan-400', popupBg: 'from-cyan-400 to-teal-400', popupShadow: 'shadow-cyan-500/60', glow: 'rgba(34,211,238,1)', blur: 'bg-cyan-400' };
+  };
+
+  const streakStyles = getStreakStyles(streakDays);
+
+  if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
+  if (isFirstLaunch || !dailyGoals) return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+
+  return (
+    <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
+      <style dangerouslySetInnerHTML={{__html: globalStyles}} />
+      <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
+        <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
+        <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakStyles.bg} ${streakStyles.border} ${streakStyles.text} shadow-md` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+            <Flame size={16} className={hasMealsToday ? `${streakStyles.icon} animate-pulse` : ""} />
+            <span className="font-bold text-sm">{streakDays}</span>
+          </div>
+          <div onClick={goToProfile} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+            {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
+            <span className="font-bold tracking-wide">{subscription.toUpperCase()}</span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 overflow-y-auto pb-24 relative">
+        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={goToSearch} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
+        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={goToDashboard} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
+        {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
+        {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
+        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
+      </main>
+
+      <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
+        <div className="flex justify-between items-end px-2 pb-2">
+          <div className="flex w-2/5 justify-around">
+            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={goToDashboard} />
+            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={goToSearch} />
+          </div>
+          <div className="w-1/5 flex justify-center relative">
+            <div onClick={goToCamera} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
+          </div>
+          <div className="flex w-2/5 justify-around">
+            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={goToWeight} />
+            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={goToProfile} />
+          </div>
+        </div>
+      </nav>
+
+      {upgradePrompt.show && (
+        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${upgradePrompt.required === 'gold' ? 'bg-amber-500/20' : 'bg-slate-400/20'}`}>
+              {upgradePrompt.required === 'gold' ? <Crown size={40} className="text-amber-400" /> : <Zap size={40} className="text-blue-400" />}
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">{t.reqSub} {upgradePrompt.required.toUpperCase()}</h3>
+            <p className="text-slate-300 text-sm mb-6">{t.reqSubDesc}</p>
+            <div className="flex gap-3">
+              <div onClick={() => setUpgradePrompt({ show: false, required: '' })} className="btn-glass flex-1 py-3 rounded-xl bg-slate-700/50 text-white font-medium text-center">{t.cancel}</div>
+              <div onClick={() => { setUpgradePrompt({ show: false, required: '' }); setActiveTab('profile'); }} className="btn-glass flex-1 py-3 rounded-xl bg-emerald-500 text-slate-900 font-bold text-center">{t.toProfile}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pendingMeal && (
+        <div className="absolute inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-800/95 w-full rounded-3xl p-6 shadow-2xl border border-white/10 animate-in slide-in-from-bottom-8 duration-300">
+            <div className="w-12 h-1.5 bg-slate-600 rounded-full mx-auto mb-6"></div>
+            <h3 className="text-xl font-bold text-white mb-2 text-center">{t.whereToSave}</h3>
+            <p className="text-slate-400 text-sm text-center mb-6">{t.date}: {`${selectedDate.getDate()}.${selectedDate.getMonth()+1}.${selectedDate.getFullYear()}`}</p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div onClick={() => confirmAddMeal('breakfast')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌅</span> {t.breakfast}</div>
+              <div onClick={() => confirmAddMeal('lunch')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">☀️</span> {t.lunch}</div>
+              <div onClick={() => confirmAddMeal('dinner')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌙</span> {t.dinner}</div>
+              <div onClick={() => confirmAddMeal('snack')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🍎</span> {t.snack}</div>
+            </div>
+            <div onClick={() => setPendingMeal(null)} className="btn-glass w-full mt-2 py-4 text-slate-400 font-medium bg-slate-800 rounded-xl text-center">{t.cancel}</div>
+          </div>
+        </div>
+      )}
+
+      {showStreakPopup && (
+        <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
+          <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
+            <div className="relative mb-6">
+               <div className={`absolute w-40 h-40 ${streakStyles.blur} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
+               <Flame size={140} className={`${streakStyles.text} relative z-10 animate-bounce`} style={{ filter: `drop-shadow(0 0 30px ${streakStyles.glow})` }} fill="currentColor" />
+            </div>
+            <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
+            <div className={`bg-gradient-to-r ${streakStyles.popupBg} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyles.popupShadow} mt-4`}>🔥 {streakDays}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Page() {
+  const [lang, setLang] = useState('ru');
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t: translations[lang as keyof typeof translations] || translations['en'] }}>
+      <NutriBotApp />
+    </LanguageContext.Provider>
+  );
+}
