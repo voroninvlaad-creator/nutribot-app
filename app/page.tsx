@@ -24,24 +24,70 @@ try {
 
 const translations = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
-    activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (kg)",
+    activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" },
+    bronzeDesc: "Базовый тариф для старта ведения дневника питания.",
+    silverDesc: "Продвинутый тариф для активного контроля рациона с лимитами AI.",
+    goldDesc: "Максимальный тариф без каких-либо ограничений для лучших результатов.",
+    featuresList: {
+      b1: "Базовый каталог продуктов питания и поиск",
+      b2: "Сканер штрихкодов продуктов (до 7 сканирований в день)",
+      b3: "Ручной учет воды, веса и КБЖУ",
+      b4: "Конструктор собственных рецептов и блюд",
+      b5: "AI-сканирование блюд по фото и голосовой ввод недоступны",
+      s1: "Всё, что входит в тариф Bronze",
+      s2: "AI-сканирование еды по фото (до 10 раз в день)",
+      s3: "Безлимитный сканер штрихкодов в супермаркетах",
+      s4: "Голосовой ввод съеденного в дневник",
+      s5: "Советы ИИ-диетолога недоступны",
+      g1: "Всё, что входит в тарифы Bronze и Silver",
+      g2: "Безлимитное AI-сканирование еды по фото без ограничений",
+      g3: "Персональный ИИ-диетолог: подбор блюд под остаток КБЖУ",
+      g4: "Приоритетная высокая скорость обработки запросов нейросетью",
+      g5: "Эксклюзивные золотые темы оформления и анимации"
+    }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
-    activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
+    activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" },
+    bronzeDesc: "Basic plan to start tracking your food diary.",
+    silverDesc: "Advanced plan for active tracking with AI limits.",
+    goldDesc: "Ultimate plan with zero restrictions for best results.",
+    featuresList: {
+      b1: "Basic food catalog and search",
+      b2: "Barcode scanner (up to 7 scans per day)",
+      b3: "Manual tracking for water, weight, and macros",
+      b4: "Custom recipe and meal constructor",
+      b5: "AI photo food scanning and voice input unavailable",
+      s1: "Everything included in Bronze",
+      s2: "AI food scanning by photo (up to 10 times per day)",
+      s3: "Unlimited grocery barcode scanner",
+      s4: "Voice diary input",
+      s5: "Smart AI Dietitian tips unavailable",
+      g1: "Everything included in Bronze and Silver",
+      g2: "Unlimited AI food scanning with no limits",
+      g3: "Personal AI Dietitian: remaining macro meal planning",
+      g4: "Priority high-speed AI request processing",
+      g5: "Exclusive gold themes and animations"
+    }
   },
   pt: {
-    dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que comeu.", dictatePlaceholder: "ex: 200g arroz", aiThinking: "Analisando...", aiCreating: "Criando...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada encontrado", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro", tryAgain: "Tentar de novo", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Precisa mais um", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", bronzeF1: "Busca básica", bronzeF2: "scans código", bronzeF3: "IA indisponível", silverF1: "Tudo do Bronze", silverF2: "fotos IA/dia", silverF3: "Código ilimitado", goldF1: "Acesso total", goldF2: "IA ilimitada", goldF3: "Dicas de IA", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "GOLD", male: "Masculino", female: "Feminino", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)",
-    activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" }
+    dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que comeu.", dictatePlaceholder: "ex: 200g arroz", aiThinking: "Analisando...", aiCreating: "Criando...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada encontrado", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro", tryAgain: "Tentar de novo", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Precisa mais um", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "GOLD", male: "Masculino", female: "Feminino", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)",
+    activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" },
+    bronzeDesc: "Plano básico.", silverDesc: "Plano avançado com limites de IA.", goldDesc: "Acesso total.",
+    featuresList: { b1: "Busca básica", b2: "Barcode 7/dia", b3: "Água/peso", b4: "Construtor", b5: "Sem IA", s1: "Tudo Bronze", s2: "IA foto 10/dia", s3: "Barcode ilimitado", s4: "Voz", s5: "Sem dietista", g1: "Tudo Silver", g2: "IA ilimitada", g3: "Dietista IA", g4: "Prioridade", g5: "Temas" }
   },
   fr: {
-    dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom recette", addIngredient: "Ajouter ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Fonctions", hideDetails: "Masquer", bronzeF1: "Recherche", bronzeF2: "scans codes-barres", bronzeF3: "IA indisponible", silverF1: "Tout de Bronze", silverF2: "scans photos/j", silverF3: "Codes-barres illimités", goldF1: "Accès total", goldF2: "IA illimité", goldF3: "Conseils Diététicien", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", makingPlan: "Création...", accountSetup: "Configurer NutriBot", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "GOLD", male: "Homme", female: "Femme", age: "Âge", height: "Taille (cm)", weight: "Poids (kg)",
-    activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
+    dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom recette", addIngredient: "Ajouter ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Fonctions", hideDetails: "Masquer", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", makingPlan: "Création...", accountSetup: "Configurer NutriBot", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "GOLD", male: "Homme", female: "Femme", age: "Âge", height: "Taille (cm)", weight: "Poids (kg)",
+    activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" },
+    bronzeDesc: "Plan de base.", silverDesc: "Plan avancé.", goldDesc: "Accès total.",
+    featuresList: { b1: "Recherche", b2: "Code 7/j", b3: "Eau", b4: "Constructeur", b5: "Sans IA", s1: "Tout Bronze", s2: "IA 10/j", s3: "Code ilimité", s4: "Voix", s5: "Sans diététicien", g1: "Tout Silver", g2: "IA illimitée", g3: "Diététicien", g4: "Priorité", g5: "Thèmes" }
   },
   kk: {
-    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", bronzeF1: "Іздеу", bronzeF2: "штрих-код", bronzeF3: "AI қолжетімсіз", silverF1: "Bronze барлығы", silverF2: "күніне AI-фото", silverF3: "Шексіз штрихкод", goldF1: "Толық рұқсат", goldF2: "Шексіз сканер", goldF3: "ЖИ-диетолог", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
-    activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
+    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
+    activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" },
+    bronzeDesc: "Бастапқы тегін тариф.", silverDesc: "Жоғары деңгейлі тариф.", goldDesc: "Шексіз мүмкіндіктер.",
+    featuresList: { b1: "Іздеу", b2: "Штрихкод 7/күн", b3: "Су", b4: "Рецепт", b5: "AI жоқ", s1: "Bronze бәрі", s2: "AI фото 10/күн", s3: "Шексіз код", s4: "Дауыс", s5: "Диетолог жоқ", g1: "Silver бәрі", g2: "Шексіз AI", g3: "Диетолог", g4: "Жылдам", g5: "Түстер" }
   }
 };
 
@@ -138,7 +184,6 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   let retries = 3;
   while (retries > 0) {
     try {
-      // Теперь мы обращаемся на свой собственный сервер Vercel, а не в Google!
       const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Ошибка сервера API');
@@ -706,9 +751,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
                         <div className="text-center"><span className="block text-emerald-400 font-bold">{advice?.calories}</span><span className="text-[10px] text-slate-500">ККАЛ</span></div>
-                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
-                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
-                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
+                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}г</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
+                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}г</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
+                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}г</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
                       </div>
                       <div onClick={() => { setShowAdviceModal(false); requestAddMeal({ dish_name: advice?.title, total: { calories: advice?.calories, protein: advice?.protein, fat: advice?.fat, carbs: advice?.carbs } }); }} className="btn-glass w-full mt-4 bg-emerald-500/20 text-emerald-400 py-2 rounded-xl text-center text-sm font-bold border border-emerald-500/30"><Plus size={16} className="inline mr-1 mb-0.5"/> {t.addToDiary}</div>
                     </div>
@@ -741,7 +786,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState<any>(null);
   const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState<any[]>([]), [recipeError, setRecipeError] = useState(''); 
   const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState<any>(null), [ingWeight, setIngWeight] = useState(100);
-  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle'), [scanErrorMsg, setScanErrorMsg] = useState('');
+  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle');
 
   const safeQuery = String(query || ''); const safeIngQuery = String(ingQuery || '');
 
@@ -792,15 +837,13 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const handleBarcodeFile = async (e: any) => {
     if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setIsScanning(true); setScanStatus('loading'); setScanErrorMsg('');
+    setIsScanning(true); setScanStatus('loading');
     try {
       const aiData = await analyzeImageWithGemini(file, true, lang);
       setScanStatus('idle'); setIsScanning(false);
       if (subscription === 'bronze') incrementScan('barcode');
       handleSelect({ id: Date.now(), name: String(aiData?.name || "Product"), calories_100g: aiData?.calories_100g || 0, protein_100g: aiData?.protein_100g || 0, fats_100g: aiData?.fats_100g || 0, carbs_100g: aiData?.carbs_100g || 0 }); 
-    } catch (e: any) { 
-      setScanStatus('error'); setIsScanning(false); setScanErrorMsg(e.message);
-    }
+    } catch (e: any) { setScanStatus('error'); setIsScanning(false); }
   };
 
   if (isSearchingIngredient) {
@@ -885,7 +928,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
           </div>
           {activeSubTab === 'global' && subscription === 'bronze' && <div className="text-xs text-slate-500 mb-4 px-2 font-medium">{t.bronzeF2}: {barcodeScansToday}/7</div>}
           
-          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm flex-col"><div className="flex items-center gap-2 mb-1"><AlertCircle size={18} className="shrink-0" /> <b>{t.recognitionError}</b></div><p className="text-xs opacity-80">{scanErrorMsg}</p></div>}
+          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm"><AlertCircle size={18} className="shrink-0 mt-0.5" /> <p>{t.recognitionError}</p></div>}
 
           <div className="flex-1 overflow-y-auto pb-10 space-y-2">
             {activeSubTab === 'custom' && safeQuery.trim() === '' && <div onClick={() => setIsCreatingRecipe(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-4 rounded-xl flex justify-center items-center gap-2 mb-4 font-semibold"><Plus size={20}/> {t.constructor}</div>}
@@ -911,18 +954,18 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
 
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
-  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null), [scanErrorMsg, setScanErrorMsg] = useState('');
+  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
   
   const handleFileChange = async (e: any) => {
     if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setImagePreview(URL.createObjectURL(file)); setStatus('scanning'); setScanErrorMsg('');
+    setImagePreview(URL.createObjectURL(file)); setStatus('scanning');
     try {
       const aiData = await analyzeImageWithGemini(file, false, lang);
-      if (!aiData || !aiData.dish_name) throw new Error("Сервер не вернул данные блюда");
+      if (!aiData || !aiData.dish_name) throw new Error("Invalid");
       setResult(aiData); setStatus('result');
       if (subscription === 'silver') incrementScan('photo');
-    } catch (e: any) { setStatus('error'); setScanErrorMsg(e.message); }
+    } catch (e: any) { setStatus('error'); }
   };
 
   return (
@@ -937,7 +980,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
           </div>
         )}
         {status === 'error' && (
-          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-xs text-red-400 opacity-80">{scanErrorMsg}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
+          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
         )}
         {(status === 'scanning' || status === 'result') && imagePreview && (
           <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
@@ -1029,28 +1072,79 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
 
       <h3 className="font-bold text-lg px-1 mt-8 mb-4">{t.subsLevels}</h3>
       <div className="space-y-4">
+        {/* BRONZE */}
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-[2px] rounded-2xl">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full transition-all">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-[#cd7f32] flex items-center gap-2"><Shield size={20} /> Bronze</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">{currentSub === 'bronze' ? t.current : t.free}</span></div>
-            <div onClick={() => setExpandedTier(expandedTier === 'bronze' ? null : 'bronze')} className="btn-glass flex items-center gap-1 text-slate-400 text-sm mb-2 w-full justify-between">{expandedTier === 'bronze' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'bronze' ? 'rotate-180' : ''}`} size={16}/></div>
-            {expandedTier === 'bronze' && (<ul className="text-sm text-slate-300 space-y-3 mb-4 mt-4 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2"><Check size={16} className="text-emerald-500 mt-0.5 shrink-0"/> <span>{t.bronzeF1}</span></li><li className="flex items-start gap-2"><Check size={16} className="text-emerald-500 mt-0.5 shrink-0"/> <span>{t.bronzeF2} <b>(7)</b></span></li><li className="flex items-start gap-2 opacity-50"><Minus size={16} className="mt-0.5 shrink-0"/> <span>{t.bronzeF3}</span></li></ul>)}
+            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-[#cd7f32] flex items-center gap-2"><Shield size={20} /> Bronze</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">{currentSub === 'bronze' ? t.current : t.free}</span></div>
+            <div 
+              onClick={() => setExpandedTier(expandedTier === 'bronze' ? null : 'bronze')} 
+              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-2 w-full justify-between py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
+              role="button"
+            >
+              <span>{expandedTier === 'bronze' ? t.hideDetails : t.allFeatures}</span> 
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'bronze' ? 'rotate-180' : ''}`} size={18}/>
+            </div>
+            {expandedTier === 'bronze' && (
+              <ul className="text-sm space-y-3 mb-4 mt-4 animate-in slide-in-from-top-2 fade-in">
+                {t.featuresList.bronze.map((feat: any, idx: number) => (
+                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-200' : 'text-slate-500'}`}>
+                    {feat.included ? <Check size={18} className="text-emerald-500 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+                    <span className="leading-snug">{feat.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
+        {/* SILVER */}
         <div className="bg-gradient-to-br from-slate-400 via-slate-300 to-slate-500 p-[2px] rounded-2xl shadow-lg">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span></div>
-            <div onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} className="btn-glass flex items-center gap-1 text-slate-400 text-sm mb-4 w-full justify-between">{expandedTier === 'silver' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180' : ''}`} size={16}/></div>
-            {expandedTier === 'silver' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2"><Check size={16} className="text-emerald-500 mt-0.5 shrink-0"/> <span>{t.silverF1}</span></li><li className="flex items-start gap-2"><Check size={16} className="text-emerald-500 mt-0.5 shrink-0"/> <span>{t.silverF2} <b>(10)</b></span></li><li className="flex items-start gap-2"><Check size={16} className="text-emerald-500 mt-0.5 shrink-0"/> <span>{t.silverF3}</span></li></ul>)}
+            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span></div>
+            <div 
+              onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} 
+              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-4 w-full justify-between py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
+              role="button"
+            >
+              <span>{expandedTier === 'silver' ? t.hideDetails : t.allFeatures}</span> 
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180' : ''}`} size={18}/>
+            </div>
+            {expandedTier === 'silver' && (
+              <ul className="text-sm space-y-3 mb-6 animate-in slide-in-from-top-2 fade-in">
+                {t.featuresList.silver.map((feat: any, idx: number) => (
+                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-200' : 'text-slate-500'}`}>
+                    {feat.included ? <Check size={18} className="text-emerald-500 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+                    <span className="leading-snug">{feat.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
             {currentSub !== 'silver' && currentSub !== 'gold' ? (<div onClick={() => handlePurchase('silver')} className="btn-glass w-full bg-slate-700 text-white font-medium py-3 rounded-xl text-center">{t.buySilver}</div>) : (currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>)}
           </div>
         </div>
 
+        {/* GOLD */}
         <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-[2px] rounded-2xl shadow-xl shadow-amber-500/20">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
-            <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
-            {expandedTier === 'gold' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF1}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF2}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF3}</span></li></ul>)}
+            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
+            <div 
+              onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} 
+              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-4 w-full justify-between py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
+              role="button"
+            >
+              <span>{expandedTier === 'gold' ? t.hideDetails : t.allFeatures}</span> 
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={18}/>
+            </div>
+            {expandedTier === 'gold' && (
+              <ul className="text-sm space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in">
+                {t.featuresList.gold.map((feat: any, idx: number) => (
+                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-100' : 'text-slate-500'}`}>
+                    {feat.included ? <Check size={18} className="text-amber-400 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+                    <span className="leading-snug">{feat.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
             {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
@@ -1077,7 +1171,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
         </div>
       )}
     </div>
@@ -1110,7 +1204,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             <div className="bg-slate-800 p-1 rounded-xl flex gap-1">{genderOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{g.label}</div>))}</div>
             <div className="flex gap-4">
               <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.age}</label><input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} placeholder="25" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
-              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 nil-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
             </div>
             <div className="flex gap-4">
               <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.weight}</label><input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} placeholder="70" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
@@ -1118,7 +1212,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
