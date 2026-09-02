@@ -11,8 +11,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'API ключ не найден на сервере Vercel' }, { status: 500 });
     }
 
-    // Сервер Vercel обращается к Google от своего имени (обходя региональные блокировки)
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+    // Сервер Vercel обращается к Google от своего имени (через сервер в США)
+    // Используем самую актуальную, быструю и экономную модель
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
