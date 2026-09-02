@@ -165,7 +165,7 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 800; // Сжимаем до 800 пикселей для экономии трафика
+        const MAX_SIZE = 600; // Ультра-быстрое сжатие до 600 пикселей (хватает для ИИ)
         let width = img.width;
         let height = img.height;
         if (width > height) {
@@ -177,8 +177,8 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (ctx) ctx.drawImage(img, 0, 0, width, height);
-        // Получаем легкий JPEG
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        // Сжимаем сильнее (0.7) для мгновенной загрузки при плохом интернете
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
         resolve(dataUrl.split(',')[1]); // Отсекаем 'data:image/jpeg;base64,'
       };
       img.onerror = reject;
@@ -285,6 +285,13 @@ function NutriBotApp() {
   const [scansToday, setScansToday] = useState(0); 
   const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
+
+  // --- Оптимизация навигации (предотвращает лишние зависания интерфейса) ---
+  const goToDashboard = useCallback(() => setActiveTab('dashboard'), []);
+  const goToSearch = useCallback(() => setActiveTab('search'), []);
+  const goToCamera = useCallback(() => { if(checkAccess('silver')) setActiveTab('camera') }, [checkAccess]);
+  const goToWeight = useCallback(() => setActiveTab('weight'), []);
+  const goToProfile = useCallback(() => setActiveTab('profile'), []);
 
   useEffect(() => {
     if (!(window as any).Telegram) {
@@ -524,7 +531,7 @@ function NutriBotApp() {
             <Flame size={16} className={hasMealsToday ? `${streakStyles.icon} animate-pulse` : ""} />
             <span className="font-bold text-sm">{streakDays}</span>
           </div>
-          <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div onClick={goToProfile} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
             <span className="font-bold tracking-wide">{subscription.toUpperCase()}</span>
           </div>
@@ -532,8 +539,8 @@ function NutriBotApp() {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-24 relative">
-        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
-        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
+        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={goToSearch} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
+        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={goToDashboard} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
         {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
         {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
         {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
@@ -542,15 +549,15 @@ function NutriBotApp() {
       <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
         <div className="flex justify-between items-end px-2 pb-2">
           <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
-            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={() => setActiveTab('search')} />
+            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={goToDashboard} />
+            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={goToSearch} />
           </div>
           <div className="w-1/5 flex justify-center relative">
-            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
+            <div onClick={goToCamera} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
           </div>
           <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={() => setActiveTab('weight')} />
-            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
+            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={goToWeight} />
+            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={goToProfile} />
           </div>
         </div>
       </nav>
