@@ -133,11 +133,7 @@ const GoldBurstAnimation = () => (
 );
 
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
-  if (!apiKey || apiKey === "ТВОЙ_КЛЮЧ_ЗДЕСЬ" || apiKey.trim() === "") {
-    throw new Error("ОШИБКА: API ключ Gemini не установлен. Добавьте его в Vercel.");
-  }
-  
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
   const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
@@ -147,19 +143,9 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
     try {
       const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const result = await response.json();
-      
-      if (!response.ok) {
-        console.error("Gemini API Error details:", result);
-        throw new Error(result?.error?.message || `Ошибка сервера Google (код ${response.status})`);
-      }
-      
+      if (!response.ok) throw new Error(result?.error?.message || 'Ошибка сервера API');
       return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error: any) { 
-      retries--; 
-      console.error(`Попытка не удалась, осталось ${retries}. Ошибка:`, error.message);
-      if (retries === 0) throw error; 
-      await new Promise(r => setTimeout(r, 1000)); 
-    }
+    } catch (error: any) { retries--; if (retries === 0) throw error; await new Promise(r => setTimeout(r, 1000)); }
   }
 }
 
