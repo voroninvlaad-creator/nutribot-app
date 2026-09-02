@@ -24,9 +24,8 @@ try {
 
 
 // 👇👇👇 ВАЖНО: ВСТАВЬ СЮДА СВОЙ КЛЮЧ ОТ GEMINI API 👇👇👇
-const apiKey = ""; 
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""; 
 // 👆👆👆 БЕЗ НЕГО ИИ-ДИЕТОЛОГ И СКАНЕР НЕ БУДУТ РАБОТАТЬ 👆👆👆
-
 
 const translations = {
   ru: {
