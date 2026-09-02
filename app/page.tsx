@@ -22,6 +22,7 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
+
 const translations = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
@@ -130,6 +131,7 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
+// 👇 Функция теперь делает запрос на наш безопасный прокси-сервер Vercel 👇
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
@@ -138,12 +140,19 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   let retries = 3;
   while (retries > 0) {
     try {
-      // Теперь мы обращаемся на свой собственный сервер Vercel, а не в Google!
-      const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const response = await fetch('/api/gemini', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Ошибка сервера API');
+      if (!response.ok) throw new Error(result.error || 'Ошибка сервера');
       return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error: any) { retries--; if (retries === 0) throw error; await new Promise(r => setTimeout(r, 1000)); }
+    } catch (error: any) { 
+      retries--; 
+      if (retries === 0) throw error; 
+      await new Promise(r => setTimeout(r, 1000)); 
+    }
   }
 }
 
@@ -563,7 +572,7 @@ const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(null);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState(false);
 
   const WATER_GOAL = 2000, getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
   const remaining = { calories: Math.max((goals?.calories || 2000) - current.calories, 0), protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0), fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0), carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0) };
@@ -571,28 +580,14 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   const handleAskAI = async () => {
     if (!checkAccess('gold')) return;
     setShowAdviceModal(true); setLoadingAdvice(true);
-    try { 
-      const response = await getAIAdviceForRemaining(remaining, lang);
-      setAdviceData(response.suggestions); 
-    } catch (error: any) { 
-      setAdviceData([{ 
-        title: "Ошибка нейросети", 
-        description: error.message || "Проверьте API ключ в Vercel", 
-        calories: 0, protein: 0, fat: 0, carbs: 0 
-      }]); 
-    }
+    try { setAdviceData((await getAIAdviceForRemaining(remaining, lang)).suggestions); } catch { setAdviceData([{ title: "Fallback", description: "Error fetching.", calories: 250, protein: 25, fat: 5, carbs: 15 }]); }
     setLoadingAdvice(false);
   };
 
   const handleVoiceSubmit = async () => {
     if(!voiceText.trim()) return;
-    setIsAnalyzingVoice(true); setVoiceError(null);
-    try { 
-      const result = await analyzeTextToFood(voiceText, lang); 
-      setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); 
-    } catch (error: any) { 
-      setVoiceError(error.message || t.tryAgain); 
-    }
+    setIsAnalyzingVoice(true); setVoiceError(false);
+    try { const result = await analyzeTextToFood(voiceText, lang); setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); } catch { setVoiceError(true); }
     setIsAnalyzingVoice(false);
   };
 
@@ -671,7 +666,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
           <div className="bg-slate-800/95 w-full rounded-3xl p-6 border border-white/10 slide-in-from-bottom-8">
             <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-bold text-white flex items-center gap-2"><Mic className="text-emerald-400"/> {t.recordVoice}</h3><div onClick={() => setIsVoiceModalOpen(false)} className="btn-glass p-2 bg-slate-700/50 rounded-full text-slate-400"><X size={20}/></div></div>
             <p className="text-sm text-slate-300 mb-4">{t.dictatePrompt}</p>
-            {voiceError && <p className="text-red-400 text-xs mb-3 text-center">{voiceError}</p>}
+            {voiceError && <p className="text-red-400 text-xs mb-3 text-center">{t.tryAgain}</p>}
             <div className="flex gap-2 mb-4">
               <input type="text" value={voiceText} onChange={e => setVoiceText(String(e.target?.value || ''))} placeholder={t.dictatePlaceholder} className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500"/>
               <div onClick={handleVoiceSubmit} className={`btn-glass bg-emerald-500 text-slate-900 rounded-xl px-4 flex justify-center items-center ${isAnalyzingVoice || !voiceText ? 'opacity-50 pointer-events-none' : ''}`}>{isAnalyzingVoice ? <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"/> : <Send size={20} />}</div>
@@ -694,9 +689,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
                         <div className="text-center"><span className="block text-emerald-400 font-bold">{advice?.calories}</span><span className="text-[10px] text-slate-500">ККАЛ</span></div>
-                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
-                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
-                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
+                        <div className="text-center"><span className="block text-blue-400 font-bold">{advice?.protein}г</span><span className="text-[10px] text-slate-500">БЕЛКИ</span></div>
+                        <div className="text-center"><span className="block text-amber-400 font-bold">{advice?.fat}г</span><span className="text-[10px] text-slate-500">ЖИРЫ</span></div>
+                        <div className="text-center"><span className="block text-purple-400 font-bold">{advice?.carbs}г</span><span className="text-[10px] text-slate-500">УГЛЕВОДЫ</span></div>
                       </div>
                       <div onClick={() => { setShowAdviceModal(false); requestAddMeal({ dish_name: advice?.title, total: { calories: advice?.calories, protein: advice?.protein, fat: advice?.fat, carbs: advice?.carbs } }); }} className="btn-glass w-full mt-4 bg-emerald-500/20 text-emerald-400 py-2 rounded-xl text-center text-sm font-bold border border-emerald-500/30"><Plus size={16} className="inline mr-1 mb-0.5"/> {t.addToDiary}</div>
                     </div>
@@ -729,7 +724,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState<any>(null);
   const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState<any[]>([]), [recipeError, setRecipeError] = useState(''); 
   const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState<any>(null), [ingWeight, setIngWeight] = useState(100);
-  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle'), [scanErrorMsg, setScanErrorMsg] = useState('');
+  const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle');
 
   const safeQuery = String(query || ''); const safeIngQuery = String(ingQuery || '');
 
@@ -780,15 +775,13 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const handleBarcodeFile = async (e: any) => {
     if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setIsScanning(true); setScanStatus('loading'); setScanErrorMsg('');
+    setIsScanning(true); setScanStatus('loading');
     try {
       const aiData = await analyzeImageWithGemini(file, true, lang);
       setScanStatus('idle'); setIsScanning(false);
       if (subscription === 'bronze') incrementScan('barcode');
       handleSelect({ id: Date.now(), name: String(aiData?.name || "Product"), calories_100g: aiData?.calories_100g || 0, protein_100g: aiData?.protein_100g || 0, fats_100g: aiData?.fats_100g || 0, carbs_100g: aiData?.carbs_100g || 0 }); 
-    } catch (e: any) { 
-      setScanStatus('error'); setIsScanning(false); setScanErrorMsg(e.message);
-    }
+    } catch (e: any) { setScanStatus('error'); setIsScanning(false); }
   };
 
   if (isSearchingIngredient) {
@@ -873,7 +866,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
           </div>
           {activeSubTab === 'global' && subscription === 'bronze' && <div className="text-xs text-slate-500 mb-4 px-2 font-medium">{t.bronzeF2}: {barcodeScansToday}/7</div>}
           
-          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm flex-col"><div className="flex items-center gap-2 mb-1"><AlertCircle size={18} className="shrink-0" /> <b>{t.recognitionError}</b></div><p className="text-xs opacity-80">{scanErrorMsg}</p></div>}
+          {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm"><AlertCircle size={18} className="shrink-0 mt-0.5" /> <p>{t.recognitionError}</p></div>}
 
           <div className="flex-1 overflow-y-auto pb-10 space-y-2">
             {activeSubTab === 'custom' && safeQuery.trim() === '' && <div onClick={() => setIsCreatingRecipe(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-4 rounded-xl flex justify-center items-center gap-2 mb-4 font-semibold"><Plus size={20}/> {t.constructor}</div>}
@@ -899,18 +892,18 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
 
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
-  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null), [scanErrorMsg, setScanErrorMsg] = useState('');
+  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
   
   const handleFileChange = async (e: any) => {
     if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
     const file = e.target.files[0]; if (!file) return;
-    setImagePreview(URL.createObjectURL(file)); setStatus('scanning'); setScanErrorMsg('');
+    setImagePreview(URL.createObjectURL(file)); setStatus('scanning');
     try {
       const aiData = await analyzeImageWithGemini(file, false, lang);
-      if (!aiData || !aiData.dish_name) throw new Error("Сервер не вернул данные блюда");
+      if (!aiData || !aiData.dish_name) throw new Error("Invalid");
       setResult(aiData); setStatus('result');
       if (subscription === 'silver') incrementScan('photo');
-    } catch (e: any) { setStatus('error'); setScanErrorMsg(e.message); }
+    } catch (e: any) { setStatus('error'); }
   };
 
   return (
@@ -925,7 +918,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
           </div>
         )}
         {status === 'error' && (
-          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-xs text-red-400 opacity-80">{scanErrorMsg}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
+          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
         )}
         {(status === 'scanning' || status === 'result') && imagePreview && (
           <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
