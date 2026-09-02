@@ -136,8 +136,9 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
+// СТАБИЛЬНАЯ ВЕРСИЯ НЕЙРОСЕТИ (1.5-flash) И ЛОГИРОВАНИЕ ОШИБОК
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
   const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
@@ -146,10 +147,18 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   while (retries > 0) {
     try {
       const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!response.ok) throw new Error('HTTP error');
       const result = await response.json();
+      if (!response.ok) {
+        console.error("Gemini API Error:", result);
+        throw new Error(result?.error?.message || 'HTTP error');
+      }
       return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error: any) { retries--; if (retries === 0) throw error; await new Promise(r => setTimeout(r, 1000)); }
+    } catch (error: any) { 
+      retries--; 
+      console.error("Gemini Request Failed. Retries left:", retries, error);
+      if (retries === 0) throw error; 
+      await new Promise(r => setTimeout(r, 1000)); 
+    }
   }
 }
 
@@ -1029,7 +1038,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'gold' && (<ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in"><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF1}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF2}</span></li><li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>{t.goldF3}</span></li></ul>)}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-amber-500/40 text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
       </div>
@@ -1040,7 +1049,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             <div className="relative w-full h-full flex flex-col items-center justify-center">
               <LightningStorm />
               <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-[0_0_50px_rgba(59,130,246,0.8)] rotate-12">
+                <div className="w-32 h-32 bg-gradient-to-br from-slate-300 to-blue-300 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/80 rotate-12">
                   <Zap size={64} className="text-slate-900 -rotate-12" />
                 </div>
                 <h2 className="text-4xl font-black mb-2 text-center uppercase text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-blue-200">{t.silverUnlocked}</h2>
