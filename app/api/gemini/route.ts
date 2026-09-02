@@ -1,17 +1,16 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge'; // Включаем режим Edge для мгновенных ответов без холодных стартов
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
-    // Берем ключ из защищенных настроек Vercel
     const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return NextResponse.json({ error: 'API ключ не найден в настройках Vercel' }, { status: 500 });
     }
 
-    // 🔥 ИСПОЛЬЗУЕМ САМУЮ СВЕЖУЮ, ЭКОНОМНУЮ И БЕСПЛАТНУЮ МОДЕЛЬ 3-го ПОКОЛЕНИЯ 🔥
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
@@ -25,7 +24,7 @@ export async function POST(req: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      return NextResponse.json({ error: data.error?.message || 'Ошибка от Google API' }, { status: response.status });
+      return NextResponse.json({ error: data.error?.message || 'Ошибка Google API' }, { status: response.status });
     }
 
     return NextResponse.json(data);
