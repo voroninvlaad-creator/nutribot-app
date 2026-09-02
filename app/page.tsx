@@ -133,7 +133,7 @@ const GoldBurstAnimation = () => (
 );
 
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
   const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
