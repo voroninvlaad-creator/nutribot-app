@@ -22,72 +22,27 @@ try {
   }
 } catch (e: any) { console.error("Firebase init:", e); }
 
+
 const translations = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (kg)",
-    activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" },
-    bronzeDesc: "Базовый тариф для старта ведения дневника питания.",
-    silverDesc: "Продвинутый тариф для активного контроля рациона с лимитами AI.",
-    goldDesc: "Максимальный тариф без каких-либо ограничений для лучших результатов.",
-    featuresList: {
-      b1: "Базовый каталог продуктов питания и поиск",
-      b2: "Сканер штрихкодов продуктов (до 7 сканирований в день)",
-      b3: "Ручной учет воды, веса и КБЖУ",
-      b4: "Конструктор собственных рецептов и блюд",
-      b5: "AI-сканирование блюд по фото и голосовой ввод недоступны",
-      s1: "Всё, что входит в тариф Bronze",
-      s2: "AI-сканирование еды по фото (до 10 раз в день)",
-      s3: "Безлимитный сканер штрихкодов в супермаркетах",
-      s4: "Голосовой ввод съеденного в дневник",
-      s5: "Советы ИИ-диетолога недоступны",
-      g1: "Всё, что входит в тарифы Bronze и Silver",
-      g2: "Безлимитное AI-сканирование еды по фото без ограничений",
-      g3: "Персональный ИИ-диетолог: подбор блюд под остаток КБЖУ",
-      g4: "Приоритетная высокая скорость обработки запросов нейросетью",
-      g5: "Эксклюзивные золотые темы оформления и анимации"
-    }
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
+    activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
     dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
-    activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" },
-    bronzeDesc: "Basic plan to start tracking your food diary.",
-    silverDesc: "Advanced plan for active tracking with AI limits.",
-    goldDesc: "Ultimate plan with zero restrictions for best results.",
-    featuresList: {
-      b1: "Basic food catalog and search",
-      b2: "Barcode scanner (up to 7 scans per day)",
-      b3: "Manual tracking for water, weight, and macros",
-      b4: "Custom recipe and meal constructor",
-      b5: "AI photo food scanning and voice input unavailable",
-      s1: "Everything included in Bronze",
-      s2: "AI food scanning by photo (up to 10 times per day)",
-      s3: "Unlimited grocery barcode scanner",
-      s4: "Voice diary input",
-      s5: "Smart AI Dietitian tips unavailable",
-      g1: "Everything included in Bronze and Silver",
-      g2: "Unlimited AI food scanning with no limits",
-      g3: "Personal AI Dietitian: remaining macro meal planning",
-      g4: "Priority high-speed AI request processing",
-      g5: "Exclusive gold themes and animations"
-    }
+    activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   },
   pt: {
     dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que comeu.", dictatePlaceholder: "ex: 200g arroz", aiThinking: "Analisando...", aiCreating: "Criando...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada encontrado", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro", tryAgain: "Tentar de novo", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Precisa mais um", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "GOLD", male: "Masculino", female: "Feminino", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)",
-    activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" },
-    bronzeDesc: "Plano básico.", silverDesc: "Plano avançado com limites de IA.", goldDesc: "Acesso total.",
-    featuresList: { b1: "Busca básica", b2: "Barcode 7/dia", b3: "Água/peso", b4: "Construtor", b5: "Sem IA", s1: "Tudo Bronze", s2: "IA foto 10/dia", s3: "Barcode ilimitado", s4: "Voz", s5: "Sem dietista", g1: "Tudo Silver", g2: "IA ilimitada", g3: "Dietista IA", g4: "Prioridade", g5: "Temas" }
+    activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" }
   },
   fr: {
     dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom recette", addIngredient: "Ajouter ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Fonctions", hideDetails: "Masquer", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", makingPlan: "Création...", accountSetup: "Configurer NutriBot", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "GOLD", male: "Homme", female: "Femme", age: "Âge", height: "Taille (cm)", weight: "Poids (kg)",
-    activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" },
-    bronzeDesc: "Plan de base.", silverDesc: "Plan avancé.", goldDesc: "Accès total.",
-    featuresList: { b1: "Recherche", b2: "Code 7/j", b3: "Eau", b4: "Constructeur", b5: "Sans IA", s1: "Tout Bronze", s2: "IA 10/j", s3: "Code ilimité", s4: "Voix", s5: "Sans diététicien", g1: "Tout Silver", g2: "IA illimitée", g3: "Diététicien", g4: "Priorité", g5: "Thèmes" }
+    activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
   },
   kk: {
     dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
-    activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" },
-    bronzeDesc: "Бастапқы тегін тариф.", silverDesc: "Жоғары деңгейлі тариф.", goldDesc: "Шексіз мүмкіндіктер.",
-    featuresList: { b1: "Іздеу", b2: "Штрихкод 7/күн", b3: "Су", b4: "Рецепт", b5: "AI жоқ", s1: "Bronze бәрі", s2: "AI фото 10/күн", s3: "Шексіз код", s4: "Дауыс", s5: "Диетолог жоқ", g1: "Silver бәрі", g2: "Шексіз AI", g3: "Диетолог", g4: "Жылдам", g5: "Түстер" }
+    activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
   }
 };
 
@@ -176,6 +131,7 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
+// Функция теперь делает запрос на наш безопасный прокси-сервер Vercel
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
   const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
@@ -184,11 +140,19 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   let retries = 3;
   while (retries > 0) {
     try {
-      const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const response = await fetch('/api/gemini', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Ошибка сервера API');
+      if (!response.ok) throw new Error(result.error || 'Ошибка сервера');
       return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error: any) { retries--; if (retries === 0) throw error; await new Promise(r => setTimeout(r, 1000)); }
+    } catch (error: any) { 
+      retries--; 
+      if (retries === 0) throw error; 
+      await new Promise(r => setTimeout(r, 1000)); 
+    }
   }
 }
 
@@ -290,7 +254,7 @@ function NutriBotApp() {
   const [customFoods, setCustomFoods] = useState<any[]>([]);
   const [recentFoods, setRecentFoods] = useState<any[]>([]);
   const [pendingMeal, setPendingMeal] = useState<any>(null);
-  const [streakDays, setStreakDays] = useState(0);
+  const [streakDays, setStreakDays] = useState(0); // Начинаем с 0
   const [showStreakPopup, setShowStreakPopup] = useState(false);
   const [subscription, setSubscription] = useState('bronze'); 
   const [scansToday, setScansToday] = useState(0); 
@@ -347,7 +311,7 @@ function NutriBotApp() {
                 if (data.customFoods) setCustomFoods(data.customFoods);
                 if (data.stats) {
                     setSubscription(data.stats.subscription || 'bronze');
-                    setStreakDays(data.stats.streakDays ?? 0);
+                    setStreakDays(data.stats.streakDays || 0);
                     if (data.stats.lastScanDate === new Date().toDateString()) {
                         setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
                     }
@@ -397,7 +361,7 @@ function NutriBotApp() {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
-        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays ?? 0);
+        setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
         if(data.lastScanDate === new Date().toDateString()) {
           setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
         } else { setScansToday(0); setBarcodeScansToday(0); }
@@ -453,9 +417,11 @@ function NutriBotApp() {
       const d = new Date(); const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
       setMeals((prev: any) => [...prev, newMeal]); setPendingMeal(null); setActiveTab('dashboard');
+      
       if (willIgniteStreak) { 
         const newStreak = streakDays + 1; 
         setStreakDays(newStreak);
+        // Анимация только на юбилейные дни
         if ([5, 10, 30, 60, 100, 200, 400].includes(newStreak)) {
           setShowStreakPopup(true); 
           setTimeout(() => setShowStreakPopup(false), 3500); 
@@ -510,16 +476,18 @@ function NutriBotApp() {
     if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
   }, [scansToday, barcodeScansToday, user]);
 
+  // Стилистика огонька в зависимости от количества дней
+  const getStreakStyles = (days: number) => {
+    if (days < 30) return { text: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/50', icon: 'fill-orange-400 text-orange-400', popupBg: 'from-orange-500 to-amber-500', popupShadow: 'shadow-orange-500/60', glow: 'rgba(249,115,22,1)', blur: 'bg-orange-500' };
+    if (days < 100) return { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/50', icon: 'fill-purple-400 text-purple-400', popupBg: 'from-purple-500 to-fuchsia-500', popupShadow: 'shadow-purple-500/60', glow: 'rgba(168,85,247,1)', blur: 'bg-purple-500' };
+    if (days < 400) return { text: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: 'fill-red-400 text-red-400', popupBg: 'from-red-500 to-rose-500', popupShadow: 'shadow-red-500/60', glow: 'rgba(239,68,68,1)', blur: 'bg-red-500' };
+    return { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/50', icon: 'fill-cyan-400 text-cyan-400', popupBg: 'from-cyan-400 to-teal-400', popupShadow: 'shadow-cyan-500/60', glow: 'rgba(34,211,238,1)', blur: 'bg-cyan-400' };
+  };
+
+  const streakStyles = getStreakStyles(streakDays);
+
   if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
   if (isFirstLaunch || !dailyGoals) return <OnboardingScreen onComplete={handleOnboardingComplete} />;
-
-  const getStreakColorClasses = (days: number) => {
-    if (days >= 400) return { bg: 'bg-cyan-500', text: 'text-cyan-400', fill: 'fill-cyan-400', border: 'border-cyan-500/50', shadow: 'shadow-cyan-500/30', gradient: 'from-cyan-400 to-blue-500' };
-    if (days >= 100) return { bg: 'bg-red-500', text: 'text-red-500', fill: 'fill-red-500', border: 'border-red-500/50', shadow: 'shadow-red-500/30', gradient: 'from-red-500 to-rose-600' };
-    if (days >= 30) return { bg: 'bg-purple-500', text: 'text-purple-400', fill: 'fill-purple-400', border: 'border-purple-500/50', shadow: 'shadow-purple-500/30', gradient: 'from-purple-500 to-fuchsia-500' };
-    return { bg: 'bg-orange-500', text: 'text-orange-400', fill: 'fill-orange-400', border: 'border-orange-500/50', shadow: 'shadow-orange-500/30', gradient: 'from-orange-500 to-amber-500' };
-  };
-  const streakColors = getStreakColorClasses(streakDays);
 
   return (
     <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
@@ -527,8 +495,8 @@ function NutriBotApp() {
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakColors.bg}/20 ${streakColors.border} ${streakColors.text} shadow-md ${streakColors.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
-            <Flame size={16} className={hasMealsToday ? `${streakColors.fill} animate-pulse ${streakColors.text}` : ""} />
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakStyles.bg} ${streakStyles.border} ${streakStyles.text} shadow-md` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+            <Flame size={16} className={hasMealsToday ? `${streakStyles.icon} animate-pulse` : ""} />
             <span className="font-bold text-sm">{streakDays}</span>
           </div>
           <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
@@ -599,11 +567,11 @@ function NutriBotApp() {
         <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
           <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
             <div className="relative mb-6">
-               <div className={`absolute w-40 h-40 ${streakColors.bg} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
-               <Flame size={140} className={`${streakColors.text} relative z-10 animate-bounce`} fill="currentColor" style={{ filter: 'drop-shadow(0 0 30px currentColor)' }} />
+               <div className={`absolute w-40 h-40 ${streakStyles.blur} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
+               <Flame size={140} className={`${streakStyles.text} relative z-10 animate-bounce`} style={{ filter: `drop-shadow(0 0 30px ${streakStyles.glow})` }} fill="currentColor" />
             </div>
             <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className={`bg-gradient-to-r ${streakColors.gradient} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakColors.shadow} mt-4`}>🔥 {streakDays}</div>
+            <div className={`bg-gradient-to-r ${streakStyles.popupBg} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyles.popupShadow} mt-4`}>🔥 {streakDays}</div>
           </div>
         </div>
       )}
@@ -620,36 +588,27 @@ const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(null);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(false);
 
   const WATER_GOAL = 2000, getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
   const remaining = { calories: Math.max((goals?.calories || 2000) - current.calories, 0), protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0), fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0), carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0) };
 
   const handleAskAI = async () => {
     if (!checkAccess('gold')) return;
-    setShowAdviceModal(true); setLoadingAdvice(true);
+    setShowAdviceModal(true); setLoadingAdvice(true); setAdviceData(null);
     try { 
-      const response = await getAIAdviceForRemaining(remaining, lang);
-      setAdviceData(response.suggestions); 
-    } catch (error: any) { 
-      setAdviceData([{ 
-        title: "Ошибка", 
-        description: error.message || "Связь с сервером прервалась", 
-        calories: 0, protein: 0, fat: 0, carbs: 0 
-      }]); 
+        const result = await getAIAdviceForRemaining(remaining, lang);
+        setAdviceData(result.suggestions); 
+    } catch(err: any) { 
+        setAdviceData({ isError: true, message: err.message }); 
     }
     setLoadingAdvice(false);
   };
 
   const handleVoiceSubmit = async () => {
     if(!voiceText.trim()) return;
-    setIsAnalyzingVoice(true); setVoiceError(null);
-    try { 
-      const result = await analyzeTextToFood(voiceText, lang); 
-      setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); 
-    } catch (error: any) { 
-      setVoiceError(error.message || t.tryAgain); 
-    }
+    setIsAnalyzingVoice(true); setVoiceError(false);
+    try { const result = await analyzeTextToFood(voiceText, lang); setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); } catch (err: any) { setVoiceError(err.message || t.tryAgain); }
     setIsAnalyzingVoice(false);
   };
 
@@ -746,7 +705,12 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                 <div className="flex flex-col items-center justify-center mt-20"><div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-amber-400 animate-pulse font-medium">{t.aiCreating}</p></div>
               ) : (
                 <div className="space-y-4">
-                  {adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
+                  {adviceData?.isError ? (
+                    <div className="bg-slate-800/80 p-5 rounded-2xl border border-red-500/30 shadow-lg text-center">
+                      <h4 className="font-bold text-xl text-white mb-2">Ошибка нейросети</h4>
+                      <p className="text-sm text-slate-400">{adviceData.message}</p>
+                    </div>
+                  ) : adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
                     <div key={idx} className="bg-slate-800/80 p-5 rounded-2xl border border-white/5 shadow-lg">
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
@@ -1072,23 +1036,36 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
 
       <h3 className="font-bold text-lg px-1 mt-8 mb-4">{t.subsLevels}</h3>
       <div className="space-y-4">
-        {/* BRONZE */}
+        
+        {/* Bronze */}
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-[2px] rounded-2xl">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full transition-all">
-            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-[#cd7f32] flex items-center gap-2"><Shield size={20} /> Bronze</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">{currentSub === 'bronze' ? t.current : t.free}</span></div>
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-bold text-lg text-[#cd7f32] flex items-center gap-2"><Shield size={20} /> Bronze</h4>
+              <span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">{currentSub === 'bronze' ? t.current : t.free}</span>
+            </div>
+            
             <div 
               onClick={() => setExpandedTier(expandedTier === 'bronze' ? null : 'bronze')} 
-              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-2 w-full justify-between py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
-              role="button"
+              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
             >
-              <span>{expandedTier === 'bronze' ? t.hideDetails : t.allFeatures}</span> 
-              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'bronze' ? 'rotate-180' : ''}`} size={18}/>
+              <span className="text-sm">{expandedTier === 'bronze' ? t.hideDetails : t.allFeatures}</span>
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'bronze' ? 'rotate-180 text-emerald-400' : 'text-slate-500'}`} size={20}/>
             </div>
+            
             {expandedTier === 'bronze' && (
-              <ul className="text-sm space-y-3 mb-4 mt-4 animate-in slide-in-from-top-2 fade-in">
-                {t.featuresList.bronze.map((feat: any, idx: number) => (
-                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-200' : 'text-slate-500'}`}>
-                    {feat.included ? <Check size={18} className="text-emerald-500 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+              <ul className="text-sm text-slate-300 space-y-3 mt-4 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
+                {[
+                  { text: "Базовый каталог продуктов питания и поиск", included: true },
+                  { text: "Сканер штрихкодов продуктов (до 7 раз в день)", included: true },
+                  { text: "Учет выпитой воды, веса и КБЖУ", included: true },
+                  { text: "Конструктор собственных рецептов", included: true },
+                  { text: "AI-сканирование блюд по фото", included: false },
+                  { text: "Голосовой ввод съеденного", included: false },
+                  { text: "Умный ИИ-диетолог", included: false }
+                ].map((feat, i) => (
+                  <li key={i} className={`flex items-start gap-3 ${!feat.included ? 'opacity-50' : ''}`}>
+                    {feat.included ? <Check size={18} className="text-emerald-500 mt-0.5 shrink-0"/> : <Minus size={18} className="text-slate-500 mt-0.5 shrink-0"/>}
                     <span className="leading-snug">{feat.text}</span>
                   </li>
                 ))}
@@ -1097,55 +1074,90 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
           </div>
         </div>
 
-        {/* SILVER */}
+        {/* Silver */}
         <div className="bg-gradient-to-br from-slate-400 via-slate-300 to-slate-500 p-[2px] rounded-2xl shadow-lg">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span></div>
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4>
+              <span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span>
+            </div>
+            
             <div 
               onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} 
-              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-4 w-full justify-between py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
-              role="button"
+              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
             >
-              <span>{expandedTier === 'silver' ? t.hideDetails : t.allFeatures}</span> 
-              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180' : ''}`} size={18}/>
+              <span className="text-sm">{expandedTier === 'silver' ? t.hideDetails : t.allFeatures}</span>
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180 text-blue-400' : 'text-slate-500'}`} size={20}/>
             </div>
+            
             {expandedTier === 'silver' && (
-              <ul className="text-sm space-y-3 mb-6 animate-in slide-in-from-top-2 fade-in">
-                {t.featuresList.silver.map((feat: any, idx: number) => (
-                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-200' : 'text-slate-500'}`}>
-                    {feat.included ? <Check size={18} className="text-emerald-500 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+              <ul className="text-sm text-slate-300 space-y-3 mt-4 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
+                {[
+                  { text: "Всё, что входит в тариф Bronze", included: true },
+                  { text: "AI-сканирование еды по фото (до 10 раз в день)", included: true },
+                  { text: "Безлимитный сканер штрихкодов", included: true },
+                  { text: "Голосовой ввод съеденного", included: true },
+                  { text: "Умный ИИ-диетолог", included: false },
+                  { text: "Безлимитное AI-сканирование", included: false }
+                ].map((feat, i) => (
+                  <li key={i} className={`flex items-start gap-3 ${!feat.included ? 'opacity-50' : ''}`}>
+                    {feat.included ? <Check size={18} className="text-blue-400 mt-0.5 shrink-0"/> : <Minus size={18} className="text-slate-500 mt-0.5 shrink-0"/>}
                     <span className="leading-snug">{feat.text}</span>
                   </li>
                 ))}
               </ul>
             )}
-            {currentSub !== 'silver' && currentSub !== 'gold' ? (<div onClick={() => handlePurchase('silver')} className="btn-glass w-full bg-slate-700 text-white font-medium py-3 rounded-xl text-center">{t.buySilver}</div>) : (currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>)}
+            
+            <div className="mt-6">
+              {currentSub !== 'silver' && currentSub !== 'gold' ? (
+                <div onClick={() => handlePurchase('silver')} className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center">{t.buySilver}</div>
+              ) : (
+                currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* GOLD */}
+        {/* Gold */}
         <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-[2px] rounded-2xl shadow-xl shadow-amber-500/20">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-4"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
+            <div className="flex justify-between items-center mb-4">
+              <h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4>
+              <span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span>
+            </div>
+            
             <div 
               onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} 
-              className="flex items-center gap-2 text-slate-200 text-sm font-medium mb-4 w-full justify-between py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 transition-colors cursor-pointer select-none border border-white/5 shadow-sm"
-              role="button"
+              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
             >
-              <span>{expandedTier === 'gold' ? t.hideDetails : t.allFeatures}</span> 
-              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={18}/>
+              <span className="text-sm">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures}</span>
+              <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180 text-amber-400' : 'text-slate-500'}`} size={20}/>
             </div>
+            
             {expandedTier === 'gold' && (
-              <ul className="text-sm space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in">
-                {t.featuresList.gold.map((feat: any, idx: number) => (
-                  <li key={idx} className={`flex items-start gap-2 ${feat.included ? 'text-slate-100' : 'text-slate-500'}`}>
-                    {feat.included ? <Check size={18} className="text-amber-400 mt-0.5 shrink-0"/> : <X size={18} className="text-red-400 mt-0.5 shrink-0"/>}
+              <ul className="text-sm text-slate-300 space-y-3 mt-4 relative z-10 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
+                {[
+                  { text: "Всё, что входит в тарифы Bronze и Silver", included: true },
+                  { text: "Безлимитное AI-сканирование еды по фото", included: true },
+                  { text: "ИИ-диетолог: персональный подбор блюд", included: true },
+                  { text: "Высокая скорость обработки нейросетью", included: true },
+                  { text: "Эксклюзивные GOLD анимации", included: true }
+                ].map((feat, i) => (
+                  <li key={i} className={`flex items-start gap-3 text-white`}>
+                    <Check size={18} className="text-amber-400 mt-0.5 shrink-0"/>
                     <span className="leading-snug">{feat.text}</span>
                   </li>
                 ))}
               </ul>
             )}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            
+            <div className="mt-6">
+              {currentSub !== 'gold' ? (
+                <div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>
+              ) : (
+                <div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -1171,7 +1183,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-lg shadow-emerald-500/50"></div>
+          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
         </div>
       )}
     </div>
@@ -1204,7 +1216,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             <div className="bg-slate-800 p-1 rounded-xl flex gap-1">{genderOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{g.label}</div>))}</div>
             <div className="flex gap-4">
               <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.age}</label><input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} placeholder="25" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
-              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 nil-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
+              <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.height}</label><input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
             </div>
             <div className="flex gap-4">
               <div className="flex-1"><label className="text-xs text-slate-400 block mb-1 ml-1">{t.weight}</label><input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} placeholder="70" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/></div>
@@ -1212,7 +1224,7 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
             </div>
             <div><label className="text-xs text-slate-400 block mb-1 ml-1">{t.goalLabel}</label><div className="flex flex-col gap-2">{goalOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={`btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}`}>{g.label}{formData.goal === g.id && <CheckCircle2 size={18} />}</div>))}</div></div>
           </div>
-          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/40 text-lg text-center">{t.startUsing}</div>
+          <div onClick={handleCalculate} className="btn-glass mt-8 w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-lg text-center">{t.startUsing}</div>
         </div>
       </div>
     </div>
