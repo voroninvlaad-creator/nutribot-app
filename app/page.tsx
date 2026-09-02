@@ -24,7 +24,7 @@ try {
 
 
 // 👇👇👇 ВАЖНО: ВСТАВЬ СЮДА СВОЙ КЛЮЧ ОТ GEMINI API 👇👇👇
-const apiKey = "AQ.Ab8RN6LJtXgkJWS8UygpSEB0b4MLycCu2XPwYcfqFjZoBjNLRg"; 
+const apiKey = ""; 
 // 👆👆👆 БЕЗ НЕГО ИИ-ДИЕТОЛОГ И СКАНЕР НЕ БУДУТ РАБОТАТЬ 👆👆👆
 
 
