@@ -11,6 +11,7 @@ import {
   ImagePlus, ArrowRight, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
+// === ФАЙРБЕЙЗ И НАСТРОЙКИ ===
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
 try {
   if (typeof window !== 'undefined') {
@@ -24,24 +25,12 @@ try {
 
 const translations = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
-  },
-  pt: {
-    dashboard: "Resumo", searchTab: "Buscar", weightTab: "Peso", profileTab: "Perfil", calsLeft: "Restantes", eatenToday: "Comido", from: "de", kcal: "kcal", aiDietitian: "Dietista IA: O que comer?", proteins: "Proteínas", fats: "Gorduras", carbs: "Carbos", g: "g", waterConsumed: "Água", ml: "ml", addFood: "Adicionar comida", breakfast: "Café da manhã", lunch: "Almoço", dinner: "Jantar", snack: "Lanche", recordVoice: "Gravação", dictatePrompt: "Dite o que comeu.", dictatePlaceholder: "ex: 200g arroz", aiThinking: "Analisando...", aiCreating: "Criando...", whereToSave: "Onde salvar?", date: "Data", cancel: "Cancelar", base: "Base", myRecipes: "Receitas", searchPlaceholder: "Buscar...", recentAdded: "Recentes", notFound: "Nada encontrado", ingredient: "Ingrediente", constructor: "Construtor", recipeName: "Nome da receita", addIngredient: "Adicionar ingrediente", saveRecipe: "Salvar receita", kbju100g: "Macros (100g)", addToDiary: "Adicionar ao diário", weightInfo: "gramas", aiScanner: "Scanner IA", takePhoto: "Tirar foto", fromGallery: "Da galeria", recognitionError: "Erro", tryAgain: "Tentar de novo", recognized: "Produtos", weightTitle: "Registrar peso", weightPlaceholder: "ex. 75.5", add: "Adicionar", chart: "Gráfico", needMoreData: "Precisa mais um", history: "Histórico", start: "Início", inSystemSince: "Membro", subsLevels: "Assinaturas", current: "Atual", free: "Grátis", allFeatures: "Funções", hideDetails: "Ocultar", buySilver: "Mudar para Silver", buyGold: "Obter Gold", yourTier: "Seu plano", proActive: "PRO Ativo", makingPlan: "Criando plano...", accountSetup: "Configurar NutriBot", activityLabel: "Atividade", goalLabel: "Objetivo", startUsing: "Começar", language: "Idioma", loadingData: "Carregando...", reqSub: "Assinatura Necessária", reqSubDesc: "Atualize no perfil.", toProfile: "Perfil", silverUnlocked: "SILVER DESBLOQUEADO", goldUnlocked: "GOLD", male: "Masculino", female: "Feminino", age: "Idade", height: "Altura (cm)", weight: "Peso (kg)",
-    activities: { min: "Mínima", low: "Leve", med: "Moderada", high: "Alta", ext: "Extrema" }, goals: { lose: "Emagrecimento", keep: "Manter peso", gain: "Ganho de massa" }
-  },
-  fr: {
-    dashboard: "Résumé", searchTab: "Recherche", weightTab: "Poids", profileTab: "Profil", calsLeft: "Restantes", eatenToday: "Mangé", from: "sur", kcal: "kcal", aiDietitian: "Diététicien IA", proteins: "Protéines", fats: "Lipides", carbs: "Glucides", g: "g", waterConsumed: "Eau", ml: "ml", addFood: "Ajouter repas", breakfast: "Petit-déjeuner", lunch: "Déjeuner", dinner: "Dîner", snack: "Collation", recordVoice: "Voix", dictatePrompt: "Dictez ce que vous avez mangé.", dictatePlaceholder: "ex: 200g riz", aiThinking: "Analyse...", aiCreating: "Création...", whereToSave: "Où enregistrer?", date: "Date", cancel: "Annuler", base: "Base", myRecipes: "Recettes", searchPlaceholder: "Rechercher...", recentAdded: "Récents", notFound: "Rien trouvé", ingredient: "Ingrédient", constructor: "Constructeur", recipeName: "Nom recette", addIngredient: "Ajouter ingrédient", saveRecipe: "Enregistrer", kbju100g: "Macros (100g)", addToDiary: "Ajouter au journal", weightInfo: "grammes", aiScanner: "Scanner IA", takePhoto: "Prendre photo", fromGallery: "Galerie", recognitionError: "Erreur", tryAgain: "Réessayer", recognized: "Reconnus", weightTitle: "Enregistrer poids", weightPlaceholder: "ex. 75.5", add: "Ajouter", chart: "Graphique", needMoreData: "Besoin de données", history: "Historique", start: "Début", inSystemSince: "Membre", subsLevels: "Abonnements", current: "Actuel", free: "Gratuit", allFeatures: "Fonctions", hideDetails: "Masquer", buySilver: "Passer à Silver", buyGold: "Obtenir Gold", yourTier: "Votre forfait", proActive: "PRO Actif", makingPlan: "Création...", accountSetup: "Configurer NutriBot", activityLabel: "Activité", goalLabel: "Objectif", startUsing: "Commencer", language: "Langue", loadingData: "Chargement...", reqSub: "Abonnement Requis", reqSubDesc: "Mettez à niveau dans le profil.", toProfile: "Profil", silverUnlocked: "SILVER DÉBLOQUÉ", goldUnlocked: "GOLD", male: "Homme", female: "Femme", age: "Âge", height: "Taille (cm)", weight: "Poids (kg)",
-    activities: { min: "Minimale", low: "Légère", med: "Moyenne", high: "Élevée", ext: "Extrême" }, goals: { lose: "Perte de poids", keep: "Maintien", gain: "Prise de masse" }
-  },
-  kk: {
-    dashboard: "Жиынтық", searchTab: "Іздеу", weightTab: "Салмақ", profileTab: "Профиль", calsLeft: "Қалған калория", eatenToday: "Желінген", from: "барлығы", kcal: "ккал", aiDietitian: "ЖИ-диетолог", proteins: "Ақуыз", fats: "Май", carbs: "Көмірсу", g: "г", waterConsumed: "Ішілген су", ml: "мл", addFood: "Тамақ қосу", breakfast: "Таңғы ас", lunch: "Түскі ас", dinner: "Кешкі ас", snack: "Тіскебасар", recordVoice: "Дауыс жазу", dictatePrompt: "Не жегеніңізді жазыңыз.", dictatePlaceholder: "мыс: 200г күріш", aiThinking: "Талдауда...", aiCreating: "Құруда...", whereToSave: "Қайда сақтау керек?", date: "Күні", cancel: "Болдырмау", base: "База", myRecipes: "Рецепттерім", searchPlaceholder: "Іздеу...", recentAdded: "Жақында", notFound: "Табылмады", ingredient: "Құрамдас", constructor: "Конструктор", recipeName: "Атауы", addIngredient: "Құрамдас қосу", saveRecipe: "Сақтау", kbju100g: "КБЖУ (100г)", addToDiary: "Күнделікке қосу", weightInfo: "грамм", aiScanner: "AI Сканері", takePhoto: "Суретке түсіру", fromGallery: "Галереядан", recognitionError: "Қате", tryAgain: "Қайта көру", recognized: "Танылған өнімдер", weightTitle: "Салмақ жазу", weightPlaceholder: "мыс. 75.5", add: "Қосу", chart: "График", needMoreData: "Тағы өлшем қажет", history: "Тарихы", start: "Бастапқы", inSystemSince: "Жүйеде", subsLevels: "Жазылымдар", current: "Ағымдағы", free: "Тегін", allFeatures: "Мүмкіндіктер", hideDetails: "Жасыру", buySilver: "Silver-ге өту", buyGold: "Gold алу", yourTier: "Тарифіңіз", proActive: "PRO белсенді", makingPlan: "Жоспар құруда...", accountSetup: "NutriBot баптау", activityLabel: "Белсенділік", goalLabel: "Мақсатыңыз", startUsing: "Бастау", language: "Тілі", loadingData: "Жүктеу...", reqSub: "Жазылым қажет", reqSubDesc: "Шектеуді алу үшін профильге өтіңіз.", toProfile: "Профильге", silverUnlocked: "SILVER РҰҚСАТ", goldUnlocked: "GOLD", male: "Ер", female: "Әйел", age: "Жасы", height: "Бойы (см)", weight: "Салмағы (кг)",
-    activities: { min: "Минималды", low: "Төмен", med: "Орташа", high: "Жоғары", ext: "Экстремалды" }, goals: { lose: "Арықтау", keep: "Сақтау", gain: "Бұлшықет жинау" }
   }
 };
 
@@ -52,57 +41,12 @@ const globalStyles = `
   .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
   @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
   @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-  @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
-  @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } }
-  @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } }
-  @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } }
   @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
 `;
 
-const langMap: any = { ru: "Русский", en: "English", pt: "Português", fr: "Français", kk: "Қазақша" };
+const langMap: any = { ru: "Русский", en: "English" };
 
-const MOCK_CATALOG = [
-  { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
-  { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
-  { id: 3, name: "Творог 9%", calories_100g: 159, protein_100g: 18, fats_100g: 9, carbs_100g: 3 },
-  { id: 4, name: "Молоко 2.5%", calories_100g: 54, protein_100g: 2.9, fats_100g: 2.5, carbs_100g: 4.8 },
-  { id: 5, name: "Рис белый (сухой)", calories_100g: 344, protein_100g: 6.7, fats_100g: 0.7, carbs_100g: 78.9 },
-  { id: 6, name: "Рис белый (отварной)", calories_100g: 116, protein_100g: 2.2, fats_100g: 0.2, carbs_100g: 25.8 },
-  { id: 7, name: "Рис бурый (отварной)", calories_100g: 111, protein_100g: 2.6, fats_100g: 0.9, carbs_100g: 22.8 },
-  { id: 8, name: "Гречка (сухая)", calories_100g: 313, protein_100g: 12.6, fats_100g: 3.3, carbs_100g: 62.1 },
-  { id: 9, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
-  { id: 10, name: "Овсянка (сухая)", calories_100g: 366, protein_100g: 11.9, fats_100g: 7.2, carbs_100g: 69.3 },
-  { id: 11, name: "Куриная грудка (сырая)", calories_100g: 113, protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0.4 },
-  { id: 12, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
-  { id: 13, name: "Куриная грудка (запеченная)", calories_100g: 172, protein_100g: 30.5, fats_100g: 4.2, carbs_100g: 0 },
-  { id: 14, name: "Куриное филе бедра (сырое)", calories_100g: 154, protein_100g: 20.8, fats_100g: 7.4, carbs_100g: 0 },
-  { id: 15, name: "Куриное бедро с кожей (запеченное)", calories_100g: 232, protein_100g: 24.5, fats_100g: 14.5, carbs_100g: 0 },
-  { id: 16, name: "Индейка филе грудки (сырая)", calories_100g: 104, protein_100g: 23.1, fats_100g: 1.0, carbs_100g: 0 },
-  { id: 17, name: "Индейка филе грудки (запеченная)", calories_100g: 135, protein_100g: 29.0, fats_100g: 1.8, carbs_100g: 0 },
-  { id: 18, name: "Индейка бедро (запеченное)", calories_100g: 175, protein_100g: 24.0, fats_100g: 8.5, carbs_100g: 0 },
-  { id: 19, name: "Говядина постная (сырая)", calories_100g: 158, protein_100g: 22.3, fats_100g: 7.1, carbs_100g: 0 },
-  { id: 20, name: "Говядина отварная", calories_100g: 215, protein_100g: 29.8, fats_100g: 10.2, carbs_100g: 0 },
-  { id: 21, name: "Стейк из говядины (Рибай)", calories_100g: 271, protein_100g: 24.0, fats_100g: 19.0, carbs_100g: 0 },
-  { id: 22, name: "Стейк из говядины (Стриплойн)", calories_100g: 242, protein_100g: 25.5, fats_100g: 15.0, carbs_100g: 0 },
-  { id: 23, name: "Стейк из индейки", calories_100g: 145, protein_100g: 27.0, fats_100g: 4.0, carbs_100g: 0 },
-  { id: 24, name: "Свинина вырезка", calories_100g: 143, protein_100g: 21.5, fats_100g: 6.3, carbs_100g: 0 },
-  { id: 25, name: "Фарш говяжий", calories_100g: 254, protein_100g: 17.2, fats_100g: 20.0, carbs_100g: 0 },
-  { id: 26, name: "Фарш куриный", calories_100g: 143, protein_100g: 18.0, fats_100g: 7.8, carbs_100g: 0 },
-  { id: 27, name: "Протеиновый батончик Bombbar (шоколад)", calories_100g: 371, protein_100g: 40.0, fats_100g: 11.5, carbs_100g: 6.5 },
-  { id: 28, name: "Протеиновый батончик Bombbar (кокос)", calories_100g: 358, protein_100g: 38.0, fats_100g: 12.0, carbs_100g: 7.0 },
-  { id: 29, name: "Протеиновое печенье Bombbar", calories_100g: 340, protein_100g: 35.0, fats_100g: 10.0, carbs_100g: 9.0 },
-  { id: 30, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 },
-  { id: 31, name: "Лосось запеченный", calories_100g: 228, protein_100g: 25.4, fats_100g: 13.6, carbs_100g: 0 },
-  { id: 32, name: "Хлеб белый", calories_100g: 266, protein_100g: 8, fats_100g: 3, carbs_100g: 50 },
-  { id: 33, name: "Огурец свежий", calories_100g: 15, protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.8 },
-  { id: 34, name: "Помидор свежий", calories_100g: 18, protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 3.9 },
-  { id: 35, name: "Картофель отварной", calories_100g: 82, protein_100g: 2, fats_100g: 0.4, carbs_100g: 16.7 },
-  { id: 36, name: "Яблоко", calories_100g: 52, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 14 },
-  { id: 37, name: "Банан", calories_100g: 89, protein_100g: 1.1, fats_100g: 0.3, carbs_100g: 22.8 },
-  { id: 38, name: "Макароны отварные", calories_100g: 112, protein_100g: 3.6, fats_100g: 0.4, carbs_100g: 23.5 },
-  { id: 39, name: "Сыр Российский", calories_100g: 363, protein_100g: 23.4, fats_100g: 29.5, carbs_100g: 0 },
-  { id: 40, name: "Гамбургер", calories_100g: 264, protein_100g: 13, fats_100g: 10, carbs_100g: 31 }
-];
+// === ФУНКЦИИ И API ===
 
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
   const parts: any[] = [{ text: prompt }];
@@ -118,7 +62,7 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
         body: JSON.stringify(payload) 
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Ошибка сервера');
+      if (!response.ok) throw new Error(result.error || 'Ошибка сервера Vercel');
       if (result.error) throw new Error(result.error);
       return JSON.parse(result.candidates[0].content.parts[0].text);
     } catch (error: any) { 
@@ -129,6 +73,7 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   }
 }
 
+// УЛЬТРА-ОПТИМИЗИРОВАННАЯ ФУНКЦИЯ СКАНИРОВАНИЯ
 async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: string) {
   const base64Image = await new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -138,7 +83,8 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 600; // Сжимаем до 600px для мгновенной загрузки
+        // Жесткое сжатие для невероятной скорости
+        const MAX_SIZE = 500; 
         let width = img.width;
         let height = img.height;
         if (width > height) {
@@ -150,8 +96,8 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (ctx) ctx.drawImage(img, 0, 0, width, height);
-        // Получаем легкий JPEG
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        // Снижаем качество JPEG до 60%
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
         resolve(dataUrl.split(',')[1]);
       };
       img.onerror = reject;
@@ -159,8 +105,17 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
     reader.onerror = reject;
   });
 
-  const schema = isBarcode ? { type: "OBJECT", properties: { name: { type: "STRING" }, calories_100g: { type: "INTEGER" }, protein_100g: { type: "NUMBER" }, fats_100g: { type: "NUMBER" }, carbs_100g: { type: "NUMBER" } }, required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"] } : { type: "OBJECT", properties: { dish_name: { type: "STRING" }, confidence_score: { type: "NUMBER" }, breakdown: { type: "ARRAY", items: { type: "OBJECT", properties: { ingredient: { type: "STRING" }, weight_g: { type: "INTEGER" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } }, required: ["dish_name", "confidence_score", "breakdown", "total"] };
-  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang]}` : `Analyze food photo. Return dish name, ingredients, weights, macros. Language: ${langMap[lang]}`;
+  // Урезанная схема, чтобы ИИ не тратил время на ингредиенты
+  const schema = isBarcode ? { 
+    type: "OBJECT", properties: { name: { type: "STRING" }, calories_100g: { type: "INTEGER" }, protein_100g: { type: "NUMBER" }, fats_100g: { type: "NUMBER" }, carbs_100g: { type: "NUMBER" } }, required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"] 
+  } : { 
+    type: "OBJECT", properties: { 
+      dish_name: { type: "STRING" }, 
+      total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } } } 
+    }, required: ["dish_name", "total"] 
+  };
+  
+  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang]}` : `Analyze food photo. Identify dish and estimate total macros for the whole portion. Be extremely fast. Language: ${langMap[lang]}`;
   return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
 }
 
@@ -177,89 +132,21 @@ async function analyzeTextToFood(text: string, lang: string) {
 const calculateLocalMacros = (profile: any, weight: any) => {
   const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
   const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
-  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' || profile.gender === 'Masculino' || profile.gender === 'Homme' || profile.gender === 'Ер' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
+  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
   if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
   const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
   return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
 };
 
-const LightningStorm = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
-    <div className="absolute inset-0 bg-blue-500/10 animate-[lightning-bg_2s_infinite]"></div>
-    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M200 0 L150 300 L250 300 L180 800" stroke="#93c5fd" strokeWidth="12" fill="none" className="animate-[lightning-bolt_1.5s_infinite]" style={{ filter: 'drop-shadow(0 0 20px #93c5fd)' }} />
-      <path d="M100 0 L70 250 L150 250 L100 600" stroke="#bfdbfe" strokeWidth="6" fill="none" className="animate-[lightning-bolt-delay_2s_infinite]" style={{ filter: 'drop-shadow(0 0 10px #bfdbfe)' }} />
-      <path d="M300 100 L260 400 L340 400 L280 800" stroke="#ffffff" strokeWidth="8" fill="none" className="animate-[lightning-bolt_1.8s_infinite]" style={{ filter: 'drop-shadow(0 0 15px #ffffff)' }} />
-    </svg>
+// === КОМПОНЕНТЫ ИНТЕРФЕЙСА ===
+
+const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
+  <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
+    {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
   </div>
-);
+));
 
-const GoldBurstAnimation = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
-    <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
-    <div className="absolute w-64 h-64 bg-yellow-300/40 blur-[40px] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-    
-    <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
-      <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
-      <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
-    </div>
-
-    <div className="absolute inset-0 z-20 flex items-center justify-center">
-      {[...Array(80)].map((_, i) => {
-        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 400;
-        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
-        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
-        const size = 3 + Math.random() * 8;
-        return (
-          <div 
-            key={`l-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
-            style={{
-              width: `${size}px`, height: `${size}px`,
-              left: '20%', top: '50%',
-              '--tx': tx, '--ty': ty,
-              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.5}s`,
-              boxShadow: '0 0 15px 3px #fcd34d'
-            }}
-          />
-        )
-      })}
-      {[...Array(80)].map((_, i) => {
-        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 400;
-        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
-        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
-        const size = 3 + Math.random() * 8;
-        return (
-          <div 
-            key={`r-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
-            style={{
-              width: `${size}px`, height: `${size}px`,
-              left: '80%', top: '50%',
-              '--tx': tx, '--ty': ty,
-              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.5}s`,
-              boxShadow: '0 0 15px 3px #fcd34d'
-            }}
-          />
-        )
-      })}
-    </div>
-  </div>
-);
-
-const NavButton = React.memo(function NavButton({ icon, label, isActive, onClick }: any) {
-  return (
-    <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
-      {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
-    </div>
-  );
-});
-
-const MacroCard = React.memo(function MacroCard({ label, current, goal, color, g }: any) {
+const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
   const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
   return (
     <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-xl border border-white/5 flex flex-col shadow-lg">
@@ -270,34 +157,36 @@ const MacroCard = React.memo(function MacroCard({ label, current, goal, color, g
   );
 });
 
-const Dashboard = React.memo(function Dashboard({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) {
+// ГЛАВНАЯ СВОДКА (С ОБРАБОТКОЙ ОШИБОК ИИ)
+const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState(''), [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [voiceError, setVoiceError] = useState<any>(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false), [voiceText, setVoiceText] = useState('');
+  const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false), [aiErrorMsg, setAiErrorMsg] = useState('');
 
   const WATER_GOAL = 2000, getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
   const remaining = { calories: Math.max((goals?.calories || 2000) - current.calories, 0), protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0), fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0), carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0) };
 
   const handleAskAI = async () => {
     if (!checkAccess('gold')) return;
-    setShowAdviceModal(true); setLoadingAdvice(true); setAdviceData(null);
+    setShowAdviceModal(true); setLoadingAdvice(true); setAiErrorMsg('');
     try { 
-        const result = await getAIAdviceForRemaining(remaining, lang);
-        setAdviceData(result.suggestions); 
-    } catch(err: any) { 
-        setAdviceData({ isError: true, message: err.message }); 
+      const res = await getAIAdviceForRemaining(remaining, lang);
+      setAdviceData(res.suggestions); 
+    } catch (e: any) { 
+      setAiErrorMsg(e.message || "Ошибка соединения");
     }
     setLoadingAdvice(false);
   };
 
   const handleVoiceSubmit = async () => {
     if(!voiceText.trim()) return;
-    setIsAnalyzingVoice(true); setVoiceError(false);
+    setIsAnalyzingVoice(true); setAiErrorMsg('');
     try { 
       const result = await analyzeTextToFood(voiceText, lang); 
       setIsVoiceModalOpen(false); setVoiceText(''); requestAddMeal(result); 
-    } catch (err: any) { 
-      setVoiceError(err.message || t.tryAgain); 
+    } catch (e: any) { 
+      setAiErrorMsg(e.message || "Ошибка распознавания голоса"); 
     }
     setIsAnalyzingVoice(false);
   };
@@ -377,7 +266,7 @@ const Dashboard = React.memo(function Dashboard({ current, goals, meals, onAddCl
           <div className="bg-slate-800/95 w-full rounded-3xl p-6 border border-white/10 slide-in-from-bottom-8">
             <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-bold text-white flex items-center gap-2"><Mic className="text-emerald-400"/> {t.recordVoice}</h3><div onClick={() => setIsVoiceModalOpen(false)} className="btn-glass p-2 bg-slate-700/50 rounded-full text-slate-400"><X size={20}/></div></div>
             <p className="text-sm text-slate-300 mb-4">{t.dictatePrompt}</p>
-            {voiceError && <p className="text-red-400 text-xs mb-3 text-center">{voiceError}</p>}
+            {aiErrorMsg && <p className="text-red-400 text-xs mb-3 text-center bg-red-500/10 p-2 rounded-xl">{aiErrorMsg}</p>}
             <div className="flex gap-2 mb-4">
               <input type="text" value={voiceText} onChange={e => setVoiceText(String(e.target?.value || ''))} placeholder={t.dictatePlaceholder} className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white outline-none focus:border-emerald-500"/>
               <div onClick={handleVoiceSubmit} className={`btn-glass bg-emerald-500 text-slate-900 rounded-xl px-4 flex justify-center items-center ${isAnalyzingVoice || !voiceText ? 'opacity-50 pointer-events-none' : ''}`}>{isAnalyzingVoice ? <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"/> : <Send size={20} />}</div>
@@ -393,14 +282,15 @@ const Dashboard = React.memo(function Dashboard({ current, goals, meals, onAddCl
             <div className="flex-1 overflow-y-auto p-5">
               {loadingAdvice ? (
                 <div className="flex flex-col items-center justify-center mt-20"><div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-amber-400 animate-pulse font-medium">{t.aiCreating}</p></div>
+              ) : aiErrorMsg ? (
+                <div className="bg-red-500/10 border border-red-500/50 p-6 rounded-2xl text-center">
+                  <h3 className="text-xl font-bold text-white mb-2">Ошибка нейросети</h3>
+                  <p className="text-slate-400 text-sm mb-6 break-words">{aiErrorMsg}</p>
+                  <div onClick={() => setShowAdviceModal(false)} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl">Закрыть</div>
+                </div>
               ) : (
                 <div className="space-y-4">
-                  {adviceData?.isError ? (
-                    <div className="bg-slate-800/80 p-5 rounded-2xl border border-red-500/30 shadow-lg text-center">
-                      <h4 className="font-bold text-xl text-white mb-2">Ошибка</h4>
-                      <p className="text-sm text-slate-400">{adviceData.message}</p>
-                    </div>
-                  ) : adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
+                  {adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
                     <div key={idx} className="bg-slate-800/80 p-5 rounded-2xl border border-white/5 shadow-lg">
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
@@ -422,7 +312,67 @@ const Dashboard = React.memo(function Dashboard({ current, goals, meals, onAddCl
   );
 });
 
-const FoodSearch = React.memo(function FoodSearch({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) {
+// СКАНЕР (С ОБРАБОТКОЙ ОШИБОК)
+const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
+  const { t, lang } = useContext(LanguageContext);
+  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
+  const [errorDetails, setErrorDetails] = useState('');
+  
+  const handleFileChange = async (e: any) => {
+    if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
+    const file = e.target.files[0]; if (!file) return;
+    setImagePreview(URL.createObjectURL(file)); setStatus('scanning'); setErrorDetails('');
+    try {
+      const aiData = await analyzeImageWithGemini(file, false, lang);
+      if (!aiData || !aiData.dish_name) throw new Error("Не удалось распознать еду");
+      setResult(aiData); setStatus('result');
+      if (subscription === 'silver') incrementScan('photo');
+    } catch (e: any) { 
+      setErrorDetails(e.message || "Ошибка сервера");
+      setStatus('error'); 
+    }
+  };
+
+  return (
+    <div className="h-full flex flex-col bg-slate-900 absolute inset-0 z-40 animate-in slide-in-from-bottom duration-300 overflow-y-auto">
+      <div className="flex items-center justify-between p-4 bg-slate-800/80 backdrop-blur-md shadow-md sticky top-0 z-10 border-b border-white/5"><div onClick={onCancel} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div><h2 className="font-semibold text-lg text-white">{t.aiScanner}</h2><div className="w-10"></div></div>
+      <div className="flex-1 p-4 flex flex-col items-center justify-start min-h-full">
+        {status === 'idle' && (
+          <div className="text-center w-full max-w-sm mt-10 space-y-4">
+            {subscription === 'silver' && <div className="bg-slate-800/80 text-sm text-slate-400 p-2 rounded-xl mb-4 border border-white/5">Доступно: <span className="text-white font-bold">{10 - scansToday}/10</span></div>}
+            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileChange} /><div className="bg-emerald-500/20 p-4 rounded-full inline-block"><Camera size={32} className="text-emerald-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.takePhoto}</p></div></label>
+            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-blue-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" className="hidden" onChange={handleFileChange} /><div className="bg-blue-500/20 p-4 rounded-full inline-block"><ImagePlus size={32} className="text-blue-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.fromGallery}</p></div></label>
+          </div>
+        )}
+        {status === 'error' && (
+          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-red-400/80 text-sm mb-4 bg-black/20 p-2 rounded-lg break-words">{errorDetails}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
+        )}
+        {(status === 'scanning' || status === 'result') && imagePreview && (
+          <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
+            <div className="relative w-full aspect-square rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-2xl bg-black"><img src={imagePreview} alt="Еда" className="w-full h-full object-contain" />
+              {status === 'scanning' && <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center"><div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-white font-medium text-lg">{t.aiThinking}</p></div>}
+            </div>
+            {status === 'result' && result && (
+              <div className="w-full bg-slate-800/90 backdrop-blur-md rounded-2xl p-5 border border-white/10 shadow-xl">
+                <h3 className="text-xl font-bold text-white mb-4">{result.dish_name}</h3>
+                <div className="grid grid-cols-4 gap-2 mb-6 bg-slate-900/80 rounded-xl p-3 border border-white/5">
+                  <div className="text-center"><div className="text-sm font-bold text-emerald-400">{Math.round(result.total?.calories || 0)}</div></div>
+                  <div className="text-center"><div className="text-sm font-bold text-blue-400">{Math.round(result.total?.protein || 0)}г</div></div>
+                  <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
+                  <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
+                </div>
+                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
+
+// ОСТАЛЬНЫЕ КОМПОНЕНТЫ
+const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [activeSubTab, setActiveSubTab] = useState('global');
   const [query, setQuery] = useState('');
@@ -595,65 +545,7 @@ const FoodSearch = React.memo(function FoodSearch({ customFoods, saveCustomRecip
   );
 });
 
-const CameraScanner = React.memo(function CameraScanner({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) {
-  const { t, lang } = useContext(LanguageContext);
-  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
-  const [errorDetails, setErrorDetails] = useState('');
-  
-  const handleFileChange = async (e: any) => {
-    if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
-    const file = e.target.files[0]; if (!file) return;
-    setImagePreview(URL.createObjectURL(file)); setStatus('scanning'); setErrorDetails('');
-    try {
-      const aiData = await analyzeImageWithGemini(file, false, lang);
-      if (!aiData || !aiData.dish_name) throw new Error("Не удалось распознать еду");
-      setResult(aiData); setStatus('result');
-      if (subscription === 'silver') incrementScan('photo');
-    } catch (e: any) { 
-      setErrorDetails(e.message || "Ошибка сервера");
-      setStatus('error'); 
-    }
-  };
-
-  return (
-    <div className="h-full flex flex-col bg-slate-900 absolute inset-0 z-40 animate-in slide-in-from-bottom duration-300 overflow-y-auto">
-      <div className="flex items-center justify-between p-4 bg-slate-800/80 backdrop-blur-md shadow-md sticky top-0 z-10 border-b border-white/5"><div onClick={onCancel} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div><h2 className="font-semibold text-lg text-white">{t.aiScanner}</h2><div className="w-10"></div></div>
-      <div className="flex-1 p-4 flex flex-col items-center justify-start min-h-full">
-        {status === 'idle' && (
-          <div className="text-center w-full max-w-sm mt-10 space-y-4">
-            {subscription === 'silver' && <div className="bg-slate-800/80 text-sm text-slate-400 p-2 rounded-xl mb-4 border border-white/5">Доступно: <span className="text-white font-bold">{10 - scansToday}/10</span></div>}
-            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileChange} /><div className="bg-emerald-500/20 p-4 rounded-full inline-block"><Camera size={32} className="text-emerald-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.takePhoto}</p></div></label>
-            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-blue-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" className="hidden" onChange={handleFileChange} /><div className="bg-blue-500/20 p-4 rounded-full inline-block"><ImagePlus size={32} className="text-blue-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.fromGallery}</p></div></label>
-          </div>
-        )}
-        {status === 'error' && (
-          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-red-400/80 text-sm mb-4 bg-black/20 p-2 rounded-lg">{errorDetails}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
-        )}
-        {(status === 'scanning' || status === 'result') && imagePreview && (
-          <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
-            <div className="relative w-full aspect-square rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-2xl bg-black"><img src={imagePreview} alt="Еда" className="w-full h-full object-contain" />
-              {status === 'scanning' && <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center"><div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-white font-medium text-lg">{t.aiThinking}</p></div>}
-            </div>
-            {status === 'result' && result && (
-              <div className="w-full bg-slate-800/90 backdrop-blur-md rounded-2xl p-5 border border-white/10 shadow-xl">
-                <h3 className="text-xl font-bold text-white mb-4">{result.dish_name}</h3>
-                <div className="grid grid-cols-4 gap-2 mb-6 bg-slate-900/80 rounded-xl p-3 border border-white/5">
-                  <div className="text-center"><div className="text-sm font-bold text-emerald-400">{Math.round(result.total?.calories || 0)}</div></div>
-                  <div className="text-center"><div className="text-sm font-bold text-blue-400">{Math.round(result.total?.protein || 0)}г</div></div>
-                  <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
-                  <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
-                </div>
-                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-});
-
-const WeightTracker = React.memo(function WeightTracker({ history, onAdd }: any) {
+const WeightTracker = React.memo(({ history, onAdd }: any) => {
   const { t } = useContext(LanguageContext);
   const [inputWeight, setInputWeight] = useState('');
   const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
@@ -689,7 +581,7 @@ const WeightTracker = React.memo(function WeightTracker({ history, onAdd }: any)
   );
 });
 
-const UserProfile = React.memo(function UserProfile({ currentSub, setSubscription }: any) {
+const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
   const { t, lang, setLang } = useContext(LanguageContext);
   const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState<any>(null), [purchasingTier, setPurchasingTier] = useState<any>(null);
 
@@ -702,7 +594,7 @@ const UserProfile = React.memo(function UserProfile({ currentSub, setSubscriptio
   };
 
   return (
-    <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
+    <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6 pb-20">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 flex justify-between items-center border border-white/5 shadow-lg">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500"><User size={32} className="text-slate-400" /></div>
@@ -713,7 +605,7 @@ const UserProfile = React.memo(function UserProfile({ currentSub, setSubscriptio
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
         <div className="flex items-center gap-2 text-white font-medium"><Globe size={20} className="text-blue-400"/> {t.language}</div>
         <select value={lang} onChange={e => setLang(String(e.target.value))} className="bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 outline-none font-medium">
-          <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option><option value="pt">🇵🇹 Português</option><option value="fr">🇫🇷 Français</option><option value="kk">🇰🇿 Қазақша</option>
+          <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option>
         </select>
       </div>
 
@@ -872,7 +764,7 @@ const UserProfile = React.memo(function UserProfile({ currentSub, setSubscriptio
   );
 });
 
-const OnboardingScreen = React.memo(function OnboardingScreen({ onComplete }: any) {
+const OnboardingScreen = React.memo(({ onComplete }: any) => {
   const { t } = useContext(LanguageContext);
   const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
@@ -913,6 +805,7 @@ const OnboardingScreen = React.memo(function OnboardingScreen({ onComplete }: an
   );
 });
 
+// ГЛАВНОЕ ПРИЛОЖЕНИЕ (НАВИГАЦИЯ И СОСТОЯНИЯ)
 function NutriBotApp() {
   const { t, lang } = useContext(LanguageContext);
   
@@ -930,6 +823,8 @@ function NutriBotApp() {
   const [customFoods, setCustomFoods] = useState<any[]>([]);
   const [recentFoods, setRecentFoods] = useState<any[]>([]);
   const [pendingMeal, setPendingMeal] = useState<any>(null);
+  
+  // НАСТРОЙКИ СТРИКА (С 0 ДНЕЙ И СПЕЦ ЦВЕТАМИ)
   const [streakDays, setStreakDays] = useState(0); // Начинаем с 0
   const [showStreakPopup, setShowStreakPopup] = useState(false);
   const [subscription, setSubscription] = useState('bronze'); 
@@ -937,12 +832,15 @@ function NutriBotApp() {
   const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
 
-  // Оптимизация навигации
-  const goToDashboard = useCallback(() => setActiveTab('dashboard'), []);
-  const goToSearch = useCallback(() => setActiveTab('search'), []);
-  const goToCamera = useCallback(() => { if(checkAccess('silver')) setActiveTab('camera') }, [subscription]);
-  const goToWeight = useCallback(() => setActiveTab('weight'), []);
-  const goToProfile = useCallback(() => setActiveTab('profile'), []);
+  // Логика цвета огонька
+  const getStreakColor = (days: number) => {
+    if (days >= 400) return { text: "text-cyan-400", fill: "fill-cyan-400", shadow: "shadow-cyan-500/30", border: "border-cyan-500/50", bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" };
+    if (days >= 100) return { text: "text-red-500", fill: "fill-red-500", shadow: "shadow-red-500/30", border: "border-red-500/50", bg: "bg-red-500", grad: "from-red-500 to-rose-600" };
+    if (days >= 30) return { text: "text-purple-400", fill: "fill-purple-400", shadow: "shadow-purple-500/30", border: "border-purple-500/50", bg: "bg-purple-500", grad: "from-purple-500 to-fuchsia-500" };
+    return { text: "text-orange-400", fill: "fill-orange-400", shadow: "shadow-orange-500/30", border: "border-orange-500/50", bg: "bg-orange-500", grad: "from-orange-500 to-amber-500" };
+  };
+
+  const streakStyle = getStreakColor(streakDays);
 
   useEffect(() => {
     if (!(window as any).Telegram) {
@@ -1104,9 +1002,13 @@ function NutriBotApp() {
       if (willIgniteStreak) { 
         const newStreak = streakDays + 1; 
         setStreakDays(newStreak);
-        if ([5, 10, 30, 60, 100, 200, 400].includes(newStreak)) {
-          setShowStreakPopup(true); setTimeout(() => setShowStreakPopup(false), 3500); 
+        
+        // ПОКАЗЫВАЕМ АНИМАЦИЮ ТОЛЬКО В ЮБИЛЕЙНЫЕ ДНИ
+        const jubileeDays = [5, 10, 30, 60, 100, 200, 400];
+        if (jubileeDays.includes(newStreak)) {
+          setShowStreakPopup(true); setTimeout(() => setShowStreakPopup(false), 4500); 
         }
+
         if(user && db && !user.uid.startsWith('offline-user')) setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
       }
       if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
@@ -1157,15 +1059,6 @@ function NutriBotApp() {
     if(user && db && !user.uid.startsWith('offline-user')) await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
   }, [scansToday, barcodeScansToday, user]);
 
-  const getStreakStyles = (days: number) => {
-    if (days < 30) return { text: 'text-orange-400', bg: 'bg-orange-500/20', border: 'border-orange-500/50', icon: 'fill-orange-400 text-orange-400', popupBg: 'from-orange-500 to-amber-500', popupShadow: 'shadow-orange-500/60', glow: 'rgba(249,115,22,1)', blur: 'bg-orange-500' };
-    if (days < 100) return { text: 'text-purple-400', bg: 'bg-purple-500/20', border: 'border-purple-500/50', icon: 'fill-purple-400 text-purple-400', popupBg: 'from-purple-500 to-fuchsia-500', popupShadow: 'shadow-purple-500/60', glow: 'rgba(168,85,247,1)', blur: 'bg-purple-500' };
-    if (days < 400) return { text: 'text-red-400', bg: 'bg-red-500/20', border: 'border-red-500/50', icon: 'fill-red-400 text-red-400', popupBg: 'from-red-500 to-rose-500', popupShadow: 'shadow-red-500/60', glow: 'rgba(239,68,68,1)', blur: 'bg-red-500' };
-    return { text: 'text-cyan-400', bg: 'bg-cyan-500/20', border: 'border-cyan-500/50', icon: 'fill-cyan-400 text-cyan-400', popupBg: 'from-cyan-400 to-teal-400', popupShadow: 'shadow-cyan-500/60', glow: 'rgba(34,211,238,1)', blur: 'bg-cyan-400' };
-  };
-
-  const streakStyles = getStreakStyles(streakDays);
-
   if (authLoading || dataLoading) return (<div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center"><Activity className="text-emerald-500 animate-spin mb-4" size={40}/><p className="text-slate-400 font-medium">{t?.loadingData}</p></div>);
   if (isFirstLaunch || !dailyGoals) return <OnboardingScreen onComplete={handleOnboardingComplete} />;
 
@@ -1175,11 +1068,12 @@ function NutriBotApp() {
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakStyles.bg} ${streakStyles.border} ${streakStyles.text} shadow-md` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
-            <Flame size={16} className={hasMealsToday ? `${streakStyles.icon} animate-pulse` : ""} />
+          {/* ИНДИКАТОР ОГОНЬКА С ДИНАМИЧЕСКИМ ЦВЕТОМ */}
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+            <Flame size={16} className={hasMealsToday ? `${streakStyle.fill} animate-pulse` : ""} />
             <span className="font-bold text-sm">{streakDays}</span>
           </div>
-          <div onClick={goToProfile} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div onClick={() => setActiveTab('profile')} className={`btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             {subscription === 'gold' ? <Crown size={14} /> : subscription === 'silver' ? <Zap size={14} /> : <Shield size={14} />}
             <span className="font-bold tracking-wide">{subscription.toUpperCase()}</span>
           </div>
@@ -1187,8 +1081,8 @@ function NutriBotApp() {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-24 relative">
-        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={goToSearch} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
-        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={goToDashboard} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
+        {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
+        {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
         {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
         {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
         {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
@@ -1197,15 +1091,15 @@ function NutriBotApp() {
       <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
         <div className="flex justify-between items-end px-2 pb-2">
           <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={goToDashboard} />
-            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={goToSearch} />
+            <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+            <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={() => setActiveTab('search')} />
           </div>
           <div className="w-1/5 flex justify-center relative">
-            <div onClick={goToCamera} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
+            <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50"><Camera size={28} /></div>
           </div>
           <div className="flex w-2/5 justify-around">
-            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={goToWeight} />
-            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={goToProfile} />
+            <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={() => setActiveTab('weight')} />
+            <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
           </div>
         </div>
       </nav>
@@ -1243,15 +1137,16 @@ function NutriBotApp() {
         </div>
       )}
 
+      {/* ЮБИЛЕЙНЫЙ ПОПАП С ЦВЕТАМИ */}
       {showStreakPopup && (
         <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
           <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
             <div className="relative mb-6">
-               <div className={`absolute w-40 h-40 ${streakStyles.blur} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
-               <Flame size={140} className={`${streakStyles.text} relative z-10 animate-bounce`} style={{ filter: `drop-shadow(0 0 30px ${streakStyles.glow})` }} fill="currentColor" />
+               <div className={`absolute w-40 h-40 ${streakStyle.bg} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
+               <Flame size={140} className={`${streakStyle.text} relative z-10 drop-shadow-[0_0_30px_rgba(currentColor,1)] animate-bounce`} fill="currentColor" />
             </div>
-            <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ОГОНЕК<br/>ПРОДЛЕН!</h2>
-            <div className={`bg-gradient-to-r ${streakStyles.popupBg} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyles.popupShadow} mt-4`}>🔥 {streakDays}</div>
+            <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ЮБИЛЕЙ!</h2>
+            <div className={`bg-gradient-to-r ${streakStyle.grad} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyle.shadow} mt-4`}>🔥 {streakDays} ДНЕЙ</div>
           </div>
         </div>
       )}
@@ -1259,6 +1154,7 @@ function NutriBotApp() {
   );
 }
 
+// ЭКСПОРТ ДЛЯ NEXT.JS 
 export default function Page() {
   const [lang, setLang] = useState('ru');
   return (
