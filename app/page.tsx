@@ -18,11 +18,7 @@ if (typeof window !== 'undefined') {
 const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined'
 ? JSON.parse((window as any).__firebase_config)
 : { apiKey: "AIzaSyDummyKeyForBuild" };
-app = !getApps().length ? initializeApp(firebaseConfig) : getApps()
-
-$$0$$
-
-;
+app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 auth = getAuth(app);
 db = getFirestore(app);
 if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
@@ -56,22 +52,12 @@ const GoldBurstAnimation = () => (
 
 // === ВЗАИМОДЕЙСТВИЕ С БЭКЕНДОМ GEMINI ===
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
-const parts: any
-
- = 
-
-$${ text: prompt }$$
-
-;
+const parts: any[] = [{ text: prompt }];
 if (base64Image) {
 parts.push({ inlineData: { mimeType: mimeType, data: base64Image } });
 }
 const payload = {
-contents: 
-
-$${ role: "user", parts }$$
-
-,
+contents: [{ role: "user", parts }],
 generationConfig: { responseMimeType: "application/json", responseSchema: schema }
 };
 
@@ -86,15 +72,7 @@ body: JSON.stringify(payload)
 const result = await response.json();
 if (!response.ok) throw new Error(result.error || 'Ошибка сервера Vercel');
 if (result.error) throw new Error(result.error);
-return JSON.parse(result.candidates
-
-$$0$$
-
-.content.parts
-
-$$0$$
-
-.text);
+return JSON.parse(result.candidates[0].content.parts[0].text);
 } catch (error: any) {
 retries--;
 if (retries === 0) throw error;
@@ -125,11 +103,7 @@ canvas.height = height;
 const ctx = canvas.getContext('2d');
 if (ctx) ctx.drawImage(img, 0, 0, width, height);
 const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-resolve(dataUrl.split(',')
-
-$$1$$
-
-);
+resolve(dataUrl.split(',')[1]);
 };
 img.onerror = reject;
 };
@@ -145,11 +119,7 @@ protein_100g: { type: "NUMBER" },
 fats_100g: { type: "NUMBER" },
 carbs_100g: { type: "NUMBER" }
 },
-required: 
-
-$$"name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"$$
-
-
+required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"]
 } : {
 type: "OBJECT",
 properties: {
@@ -162,18 +132,10 @@ protein: { type: "NUMBER" },
 fat: { type: "NUMBER" },
 carbs: { type: "NUMBER" }
 },
-required: 
-
-$$"calories", "protein", "fat", "carbs"$$
-
-
+required: ["calories", "protein", "fat", "carbs"]
 }
 },
-required: 
-
-$$"dish_name", "total"$$
-
-
+required: ["dish_name", "total"]
 };
 
 const prompt = isBarcode
@@ -198,19 +160,11 @@ protein: { type: "NUMBER" },
 fat: { type: "NUMBER" },
 carbs: { type: "NUMBER" }
 },
-required: 
-
-$$"title", "description", "calories", "protein", "fat", "carbs"$$
-
-
+required: ["title", "description", "calories", "protein", "fat", "carbs"]
 }
 }
 },
-required: 
-
-$$"suggestions"$$
-
-
+required: ["suggestions"]
 };
 return await fetchGeminiWithRetry(
 User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang] || 'Russian'},
@@ -231,18 +185,10 @@ protein: { type: "NUMBER" },
 fat: { type: "NUMBER" },
 carbs: { type: "NUMBER" }
 },
-required: 
-
-$$"calories", "protein", "fat", "carbs"$$
-
-
+required: ["calories", "protein", "fat", "carbs"]
 }
 },
-required: 
-
-$$"dish_name", "total"$$
-
-
+required: ["dish_name", "total"]
 };
 return await fetchGeminiWithRetry(Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang] || 'Russian'}, schema);
 }
@@ -250,22 +196,20 @@ return await fetchGeminiWithRetry(Text: "${text}". Convert to meal, estimate wei
 const calculateLocalMacros = (profile: any, weight: any) => {
 const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
 const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
-let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' ? 5 : -161)) * (multipliers
-
-$$profile.activity$$
-
- || 1.375);
+let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
 if (profile.goal === 'lose') tdee -= 500;
 if (profile.goal === 'gain') tdee += 500;
 const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
 return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
 };
 
-const MOCK_CATALOG = 
-
-$${ id: 1, name: "Творог 0\%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 }, { id: 2, name: "Творог 5\%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 }, { id: 3, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 }, { id: 4, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 }, { id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }$$
-
-;
+const MOCK_CATALOG = [
+{ id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
+{ id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
+{ id: 3, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
+{ id: 4, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
+{ id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }
+];
 
 // === КОМПОНЕНТЫ ===
 const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
@@ -277,46 +221,21 @@ return (
 {label}
 {Math.round(current)} / {goal}{g}
 
+<div className={h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}} style={{ width: ${percent}% }} />
+
+
 );
 });
 
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
 const { t, lang } = useContext(LanguageContext);
-const 
-
-$$adviceData, setAdviceData$$
-
- = useState(null);
-const 
-
-$$loadingAdvice, setLoadingAdvice$$
-
- = useState(false);
-const 
-
-$$showAdviceModal, setShowAdviceModal$$
-
- = useState(false);
-const 
-
-$$isVoiceModalOpen, setIsVoiceModalOpen$$
-
- = useState(false);
-const 
-
-$$voiceText, setVoiceText$$
-
- = useState('');
-const 
-
-$$isAnalyzingVoice, setIsAnalyzingVoice$$
-
- = useState(false);
-const 
-
-$$aiErrorMsg, setAiErrorMsg$$
-
- = useState('');
+const [adviceData, setAdviceData] = useState(null);
+const [loadingAdvice, setLoadingAdvice] = useState(false);
+const [showAdviceModal, setShowAdviceModal] = useState(false);
+const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+const [voiceText, setVoiceText] = useState('');
+const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
+const [aiErrorMsg, setAiErrorMsg] = useState('');
 
 const WATER_GOAL = 2000;
 const getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
@@ -366,15 +285,26 @@ if (d.toDateString() === tomorrow.toDateString()) return "Завтра";
 return ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()};
 };
 
-const mealTypes = 
-
-$${ id: 'breakfast', label: t.breakfast, icon: '🌅' }, { id: 'lunch', label: t.lunch, icon: '☀️' }, { id: 'dinner', label: t.dinner, icon: '🌙' }, { id: 'snack', label: t.snack, icon: '🍎' }$$
-
-;
+const mealTypes = [
+{ id: 'breakfast', label: t.breakfast, icon: '🌅' },
+{ id: 'lunch', label: t.lunch, icon: '☀️' },
+{ id: 'dinner', label: t.dinner, icon: '🌙' },
+{ id: 'snack', label: t.snack, icon: '🍎' }
+];
 
 return (
 
+
+<div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
+
+
+
 {formatDisplayDate(selectedDate)}
+
+<div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
+
+
+
 
   <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5 relative overflow-hidden">
     <div className="flex justify-between items-start mb-2">
@@ -532,40 +462,19 @@ return (
 </div>
 
 
-
 );
 });
 
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
 const { t, lang } = useContext(LanguageContext);
-const 
-
-$$status, setStatus$$
-
- = useState('idle');
-const 
-
-$$result, setResult$$
-
- = useState(null);
-const 
-
-$$imagePreview, setImagePreview$$
-
- = useState(null);
-const 
-
-$$errorDetails, setErrorDetails$$
-
- = useState('');
+const [status, setStatus] = useState('idle');
+const [result, setResult] = useState(null);
+const [imagePreview, setImagePreview] = useState(null);
+const [errorDetails, setErrorDetails] = useState('');
 
 const handleFileChange = async (e: any) => {
 if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
-const file = e.target.files
-
-$$0$$
-
-;
+const file = e.target.files[0];
 if (!file) return;
 setImagePreview(URL.createObjectURL(file));
 setStatus('scanning');
@@ -584,26 +493,43 @@ setStatus('error');
 
 return (
 
+
+
 {t.aiScanner}
+
+
 
 {status === 'idle' && (
 
 {subscription === 'silver' && Доступно: {10 - scansToday}/10}
 
+
+
 {t.takePhoto}
 
+
+
+
 {t.fromGallery}
+
 
 )}
 {status === 'error' && (
 
+
+
 {t.recognitionError}
 {errorDetails}
+<div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}
+
 
 )}
 {(status === 'scanning' || status === 'result') && imagePreview && (
 
+
+
 {status === 'scanning' && (
+
 
 {t.aiThinking}
 
@@ -618,89 +544,34 @@ return (
 {Math.round(result.total?.fat || 0)}г
 {Math.round(result.total?.carbs || 0)}г
 
+<div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">
+{t.addToDiary}
+
+
 )}
 
 )}
+
 
 );
 });
 
 const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
 const { t, lang } = useContext(LanguageContext);
-const 
-
-$$activeSubTab, setActiveSubTab$$
-
- = useState('global');
-const 
-
-$$query, setQuery$$
-
- = useState('');
-const 
-
-$$weight, setWeight$$
-
- = useState(100);
-const 
-
-$$selectedItem, setSelectedItem$$
-
- = useState(null);
-const 
-
-$$isCreatingRecipe, setIsCreatingRecipe$$
-
- = useState(false);
-const 
-
-$$recipeName, setRecipeName$$
-
- = useState('');
-const 
-
-$$recipeIngredients, setRecipeIngredients$$
-
- = useState<any
-
->(
-
-);
-const 
-
-$$recipeError, setRecipeError$$
-
- = useState('');
-const 
-
-$$isSearchingIngredient, setIsSearchingIngredient$$
-
- = useState(false);
-const 
-
-$$ingQuery, setIngQuery$$
-
- = useState('');
-const 
-
-$$ingSelected, setIngSelected$$
-
- = useState(null);
-const 
-
-$$ingWeight, setIngWeight$$
-
- = useState(100);
-const 
-
-$$isScanning, setIsScanning$$
-
- = useState(false);
-const 
-
-$$scanStatus, setScanStatus$$
-
- = useState('idle');
+const [activeSubTab, setActiveSubTab] = useState('global');
+const [query, setQuery] = useState('');
+const [weight, setWeight] = useState(100);
+const [selectedItem, setSelectedItem] = useState(null);
+const [isCreatingRecipe, setIsCreatingRecipe] = useState(false);
+const [recipeName, setRecipeName] = useState('');
+const [recipeIngredients, setRecipeIngredients] = useState<any[]>([]);
+const [recipeError, setRecipeError] = useState('');
+const [isSearchingIngredient, setIsSearchingIngredient] = useState(false);
+const [ingQuery, setIngQuery] = useState('');
+const [ingSelected, setIngSelected] = useState(null);
+const [ingWeight, setIngWeight] = useState(100);
+const [isScanning, setIsScanning] = useState(false);
+const [scanStatus, setScanStatus] = useState('idle');
 
 const safeQuery = String(query || '');
 const safeIngQuery = String(ingQuery || '');
@@ -709,34 +580,14 @@ const displayList = useMemo(() => {
 const list = activeSubTab === 'global' ? MOCK_CATALOG : customFoods;
 if (safeQuery.trim() === '') return activeSubTab === 'global' ? (recentFoods.length > 0 ? recentFoods : MOCK_CATALOG.slice(0, 15)) : customFoods;
 return list.filter((item: any) => String(item?.name || '').toLowerCase().includes(safeQuery.toLowerCase()));
-}, 
-
-$$safeQuery, activeSubTab, customFoods, recentFoods$$
-
-);
+}, [safeQuery, activeSubTab, customFoods, recentFoods]);
 
 const ingSearchResults = useMemo(() => {
-if (safeIngQuery.trim() === '') return 
+if (safeIngQuery.trim() === '') return [...MOCK_CATALOG, ...customFoods].slice(0, 15);
+return [...MOCK_CATALOG, ...customFoods].filter((item: any) => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
+}, [safeIngQuery, customFoods]);
 
-$$...MOCK_CATALOG, ...customFoods$$
-
-.slice(0, 15);
-return 
-
-$$...MOCK_CATALOG, ...customFoods$$
-
-.filter((item: any) => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
-}, 
-
-$$safeIngQuery, customFoods$$
-
-);
-
-useEffect(() => { setQuery(''); }, 
-
-$$activeSubTab$$
-
-);
+useEffect(() => { setQuery(''); }, [activeSubTab]);
 
 const handleSelect = (item: any) => { setSelectedItem(item); setWeight(100); };
 
@@ -753,11 +604,7 @@ carbs: parseFloat((selectedItem.carbs_100g * factor).toFixed(1))
 }
 };
 onSave(finalItem);
-if (setRecentFoods) setRecentFoods((prev: any) => 
-
-$${ ...selectedItem, id: selectedItem.id \vert{}\vert{} Date.now() }, ...prev.filter((i: any) => i.id !== selectedItem.id)$$
-
-.slice(0, 15));
+if (setRecentFoods) setRecentFoods((prev: any) => [{ ...selectedItem, id: selectedItem.id || Date.now() }, ...prev.filter((i: any) => i.id !== selectedItem.id)].slice(0, 15));
 setSelectedItem(null);
 setQuery('');
 };
@@ -765,11 +612,7 @@ setQuery('');
 const addIngredientToRecipe = () => {
 if(!ingSelected) return;
 const nw = Number(ingWeight) || 0, factor = nw / 100;
-setRecipeIngredients(
-
-$$...recipeIngredients, { ...ingSelected, weight: nw, cals: ingSelected.calories_100g \* factor, prot: ingSelected.protein_100g \* factor, fat: ingSelected.fats_100g \* factor, carbs: ingSelected.carbs_100g \* factor }$$
-
-);
+setRecipeIngredients([...recipeIngredients, { ...ingSelected, weight: nw, cals: ingSelected.calories_100g * factor, prot: ingSelected.protein_100g * factor, fat: ingSelected.fats_100g * factor, carbs: ingSelected.carbs_100g * factor }]);
 setIngSelected(null);
 setIsSearchingIngredient(false);
 setIngQuery('');
@@ -793,20 +636,14 @@ carbs_100g: Number((recipeIngredients.reduce((s, i) => s + i.carbs, 0) * factor)
 saveCustomRecipeToDB(recipeItem);
 setIsCreatingRecipe(false);
 setRecipeName('');
-setRecipeIngredients(
-
-);
+setRecipeIngredients([]);
 setRecipeError('');
 setActiveSubTab('custom');
 };
 
 const handleBarcodeFile = async (e: any) => {
 if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
-const file = e.target.files
-
-$$0$$
-
-;
+const file = e.target.files[0];
 if (!file) return;
 setIsScanning(true);
 setScanStatus('loading');
@@ -833,6 +670,11 @@ if (isSearchingIngredient) {
 if (ingSelected) {
 return (
 
+
+<div onClick={() => setIngSelected(null)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
+Вес: {ingSelected.name}
+
+
 <input type="number" value={ingWeight} onChange={e => setIngWeight(Number(e.target.value))} className="bg-slate-800/80 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 text-white outline-none" />
 {t.g}
 
@@ -842,9 +684,17 @@ return (
 }
 return (
 
+
+<div onClick={() => setIsSearchingIngredient(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
+{t.ingredient}
+
+
+
 <input type="text" placeholder={t.searchPlaceholder} value={safeIngQuery} onChange={e => setIngQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
 
+
 {ingSearchResults.map((item: any, idx: number) => (
+<div key={${item.id || idx}} onClick={() => { setIngSelected(item); setIngWeight(100); }} className="btn-glass bg-slate-800/80 p-4 rounded-xl flex justify-between items-center border border-white/5 mb-2">
 
 {item.name}
 Б: {item.protein_100g}Ж: {item.fats_100g}У: {item.carbs_100g}
@@ -853,6 +703,7 @@ return (
 
 ))}
 
+
 );
 }
 
@@ -860,15 +711,24 @@ if (isCreatingRecipe) {
 const isReadyToSave = recipeName && recipeIngredients.length > 0;
 return (
 
+
+<div onClick={() => setIsCreatingRecipe(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
+{t.constructor}
+
+
 <input type="text" placeholder={t.recipeName} value={recipeName} onChange={e => setRecipeName(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none"/>
 
 {recipeError && {recipeError}}
 
+
 {recipeIngredients.map((ing: any, idx: number) => (
 
 {ing.name}{ing.weight}г
+<div onClick={() => removeIngredient(idx)} className="btn-glass p-2 text-red-400 bg-slate-700/30 rounded-lg">
 
 ))}
+
+<div onClick={() => setIsSearchingIngredient(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-3 rounded-xl flex justify-center items-center gap-2 font-medium"> {t.addIngredient}
 
 {recipeIngredients.length > 0 && (
 
@@ -879,7 +739,9 @@ return (
 {((recipeIngredients.reduce((s,i)=>s+i.fat,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))).toFixed(1)}
 {((recipeIngredients.reduce((s,i)=>s+i.carbs,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))).toFixed(1)}
 
+
 )}
+<div onClick={saveCustomRecipe} className={btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/40' : 'bg-slate-700 text-slate-500'}}>{t.saveRecipe}
 
 );
 }
@@ -889,12 +751,19 @@ return (
 {!selectedItem ? (
 <>
 
+<div onClick={() => setActiveSubTab('global')} className={btn-glass flex-1 py-2 text-sm font-bold rounded-lg flex items-center justify-center ${activeSubTab === 'global' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400'}}>{t.base}
+<div onClick={() => setActiveSubTab('custom')} className={btn-glass flex-1 py-2 text-sm font-bold rounded-lg flex items-center justify-center ${activeSubTab === 'custom' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400'}}>{t.myRecipes}
+
+
+
+
 <input type="text" placeholder={t.searchPlaceholder} value={safeQuery} onChange={e => setQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
 
 {activeSubTab === 'global' && (
 <label
 onClick={(e) => { if (subscription === 'bronze' && barcodeScansToday >= 7) { e.preventDefault(); checkAccess('silver'); } }}
 className={btn-glass bg-slate-800/80 border border-white/5 rounded-xl px-4 flex justify-center items-center ${isScanning ? 'opacity-50 pointer-events-none' : 'text-slate-400'}}
+>
 
 {isScanning ?  : }
 
@@ -925,24 +794,15 @@ className={btn-glass bg-slate-800/80 border border-white/5 rounded-xl px-4 flex 
 </div>
 
 
-
 );
 });
 
 const WeightTracker = React.memo(({ history, onAdd }: any) => {
 const { t } = useContext(LanguageContext);
-const 
-
-$$inputWeight, setInputWeight$$
-
- = useState('');
+const [inputWeight, setInputWeight] = useState('');
 const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
 
-const chartData = 
-
-$$...history$$
-
-.reverse();
+const chartData = [...history].reverse();
 const maxW = chartData.length > 0 ? Math.max(...chartData.map((h: any) => h.weight)) + 1 : 100;
 const minW = chartData.length > 0 ? Math.max(0, Math.min(...chartData.map((h: any) => h.weight)) - 1) : 0;
 const range = maxW - minW || 1;
@@ -950,30 +810,34 @@ const points = chartData.map((d: any, i: number) => ${(i / Math.max(chartData.le
 
 return (
 
-{t.weightTitle}
+
+ {t.weightTitle}
 
 <input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/>
 {t.add}
 
+
+
 {t.chart}
 {history.length > 1 ? (
 
+
+
 {chartData.map((d: any, i: number) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}
 
+
 ) : (
+
 
 {t.needMoreData}
 
 )}
 
+
 {t.history}
 
 {history.map((record: any, index: number) => {
-const prevRecord = history
-
-$$index + 1$$
-
-;
+const prevRecord = history[index + 1];
 const diff = prevRecord ? (record.weight - prevRecord.weight).toFixed(1) : 0;
 return (
 
@@ -986,29 +850,20 @@ return (
 ) : {t.start}}
 {record.weight}
 
+
 );
 })}
+
+
 
 );
 });
 
 const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
 const { t, lang, setLang } = useContext(LanguageContext);
-const 
-
-$$purchaseStatus, setPurchaseStatus$$
-
- = useState('idle');
-const 
-
-$$expandedTier, setExpandedTier$$
-
- = useState(null);
-const 
-
-$$purchasingTier, setPurchasingTier$$
-
- = useState(null);
+const [purchaseStatus, setPurchaseStatus] = useState('idle');
+const [expandedTier, setExpandedTier] = useState(null);
+const [purchasingTier, setPurchasingTier] = useState(null);
 
 const handlePurchase = (level: string) => {
 setPurchasingTier(level);
@@ -1025,8 +880,17 @@ setTimeout(() => { setPurchaseStatus('idle'); setPurchasingTier(null); }, 3500);
 
 return (
 
+
+
+
+
+
+
 @telegram_user
 {t.inSystemSince}
+
+
+
 
   <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
     <div className="flex items-center gap-2 text-white font-medium"><Globe size={20} className="text-blue-400"/> {t.language}</div>
@@ -1189,22 +1053,13 @@ return (
 </div>
 
 
-
 );
 });
 
 const OnboardingScreen = React.memo(({ onComplete }: any) => {
 const { t } = useContext(LanguageContext);
-const 
-
-$$formData, setFormData$$
-
- = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
-const 
-
-$$errorMsg, setErrorMsg$$
-
- = useState('');
+const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
+const [errorMsg, setErrorMsg] = useState('');
 
 const handleCalculate = () => {
 if (!formData.age || !formData.height || !formData.weight) { setErrorMsg("Заполните все поля!"); return; }
@@ -1212,11 +1067,7 @@ setErrorMsg('');
 onComplete(calculateLocalMacros(formData, formData.weight), formData);
 };
 
-const genderOptions = 
-
-$${ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }$$
-
-;
+const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
 const activityOptions = [
 { id: 'min', label: t.activities.min },
 { id: 'low', label: t.activities.low },
@@ -1231,3 +1082,471 @@ const goalOptions = [
 ];
 
 return (
+
+<style dangerouslySetInnerHTML={{__html: globalStyles}} />
+
+
+
+
+NutriBot
+Умный трекер КБЖУ
+
+{errorMsg && {errorMsg}}
+
+
+{genderOptions.map(g => (
+<div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}}>{g.label}
+))}
+
+
+
+{t.age}
+<input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} placeholder="25" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
+
+
+{t.height}
+<input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
+
+
+
+
+{t.weight}
+<input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} placeholder="70" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
+
+
+{t.activityLabel}
+<select value={formData.activity} onChange={e => setFormData({...formData, activity: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-2 py-3 text-white focus:border-emerald-500 outline-none appearance-none text-sm">
+{activityOptions.map(a => {a.label})}
+
+
+
+
+{t.goalLabel}
+
+{goalOptions.map(g => (
+<div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}}>
+{g.label}{formData.goal === g.id && }
+
+))}
+
+
+
+{t.startUsing}
+
+
+
+);
+});
+
+// === ОСНОВНОЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ ===
+function NutriBotApp() {
+const { t, lang } = useContext(LanguageContext);
+
+const [user, setUser] = useState(null);
+const [authLoading, setAuthLoading] = useState(true);
+const [dataLoading, setDataLoading] = useState(true);
+const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+const [userProfile, setUserProfile] = useState(null);
+const [dailyGoals, setDailyGoals] = useState(null);
+const [activeTab, setActiveTab] = useState('dashboard');
+const [selectedDate, setSelectedDate] = useState(new Date());
+const [meals, setMeals] = useState<any[]>([]);
+const [weightHistory, setWeightHistory] = useState<any[]>([]);
+const [waterLogs, setWaterLogs] = useState({});
+const [customFoods, setCustomFoods] = useState<any[]>([]);
+const [recentFoods, setRecentFoods] = useState<any[]>([]);
+const [pendingMeal, setPendingMeal] = useState(null);
+
+// Огонек начинается с 0 дней
+const [streakDays, setStreakDays] = useState(0);
+const [showStreakPopup, setShowStreakPopup] = useState(false);
+const [subscription, setSubscription] = useState('bronze');
+const [scansToday, setScansToday] = useState(0);
+const [barcodeScansToday, setBarcodeScansToday] = useState(0);
+const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
+
+// Логика цвета огонька
+const streakStyle = useMemo(() => {
+if (streakDays >= 400) return { text: "text-cyan-400", fill: "fill-cyan-400", shadow: "shadow-cyan-500/30", border: "border-cyan-500/50", bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" };
+if (streakDays >= 100) return { text: "text-red-500", fill: "fill-red-500", shadow: "shadow-red-500/30", border: "border-red-500/50", bg: "bg-red-500", grad: "from-red-500 to-rose-600" };
+if (streakDays >= 30) return { text: "text-purple-400", fill: "fill-purple-400", shadow: "shadow-purple-500/30", border: "border-purple-500/50", bg: "bg-purple-500", grad: "from-purple-500 to-fuchsia-500" };
+return { text: "text-orange-400", fill: "fill-orange-400", shadow: "shadow-orange-500/30", border: "border-orange-500/50", bg: "bg-orange-500", grad: "from-orange-500 to-amber-500" };
+}, [streakDays]);
+
+useEffect(() => {
+if (!(window as any).Telegram) {
+const tgScript = document.createElement('script');
+tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
+tgScript.onload = () => { if ((window as any).Telegram && (window as any).Telegram.WebApp) { (window as any).Telegram.WebApp.ready(); (window as any).Telegram.WebApp.expand(); } };
+document.head.appendChild(tgScript);
+}
+}, []);
+
+useEffect(() => {
+if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
+const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+if (currentUser) {
+setUser(currentUser);
+setAuthLoading(false);
+} else {
+try {
+if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) {
+await signInWithCustomToken(auth, (window as any).__initial_auth_token);
+} else {
+await signInAnonymously(auth);
+}
+} catch (e: any) {
+let localUid = localStorage.getItem('nutribot_uid');
+if (!localUid) {
+localUid = 'offline-user-' + Math.random().toString(36).substring(7);
+localStorage.setItem('nutribot_uid', localUid);
+}
+setUser({ uid: localUid });
+setAuthLoading(false);
+}
+}
+});
+return () => unsubscribe();
+}, []);
+
+useEffect(() => {
+if (!user) { setDataLoading(false); return; }
+const uid = user.uid;
+
+if (uid.startsWith('offline-user')) {
+  const saved = localStorage.getItem('nutribot_data');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.profile) { setUserProfile(data.profile); setDailyGoals(data.goals); setIsFirstLaunch(false); }
+      if (data.meals) setMeals(data.meals);
+      if (data.weights) setWeightHistory(data.weights);
+      if (data.water) setWaterLogs(data.water);
+      if (data.customFoods) setCustomFoods(data.customFoods);
+      if (data.stats) {
+        setSubscription(data.stats.subscription || 'bronze');
+        setStreakDays(data.stats.streakDays || 0);
+        if (data.stats.lastScanDate === new Date().toDateString()) {
+          setScansToday(data.stats.scansToday || 0); setBarcodeScansToday(data.stats.barcodeScansToday || 0);
+        }
+      }
+    } catch(e){}
+  }
+  setDataLoading(false);
+  return;
+}
+
+if (!db) return;
+let isSubscribed = true;
+
+const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap: any) => {
+  if (!isSubscribed) return;
+  if(docSnap.exists()) {
+    const data = docSnap.data();
+    setUserProfile(data.formData); setDailyGoals(data.goals); setIsFirstLaunch(false);
+  } else { setIsFirstLaunch(true); }
+  setDataLoading(false);
+}, (err: any) => {
+  console.error("Profile sync error:", err);
+  if (isSubscribed) setDataLoading(false);
+});
+
+const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap: any) => {
+  if (!isSubscribed) return;
+  const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setMeals(items);
+}, (err: any) => console.error("Meals sync error:", err));
+
+const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
+  if (!isSubscribed) return;
+  const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
+}, (err: any) => console.error("Weight sync error:", err));
+
+const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
+  if (!isSubscribed) return;
+  if(docSnap.exists()) setWaterLogs(docSnap.data().logs || {});
+}, (err: any) => console.error("Water sync error:", err));
+
+const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap: any) => {
+  if (!isSubscribed) return;
+  const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setCustomFoods(items);
+}, (err: any) => console.error("Custom foods sync error:", err));
+
+const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
+  if (!isSubscribed) return;
+  if(docSnap.exists()) {
+    const data = docSnap.data();
+    setSubscription(data.subscription || 'bronze'); setStreakDays(data.stats?.streakDays ?? 0);
+    if(data.lastScanDate === new Date().toDateString()) {
+      setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
+    } else { setScansToday(0); setBarcodeScansToday(0); }
+  }
+}, (err: any) => console.error("Stats sync error:", err));
+
+return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight(); unsubWater(); unsubStats(); unsubCustomFoods(); };
+
+
+}, [user]);
+
+useEffect(() => {
+if (user && user.uid.startsWith('offline-user') && !isFirstLaunch && userProfile) {
+localStorage.setItem('nutribot_data', JSON.stringify({
+profile: userProfile, goals: dailyGoals, meals, weights: weightHistory, water: waterLogs, customFoods,
+stats: { subscription, streakDays, scansToday, barcodeScansToday, lastScanDate: new Date().toDateString() }
+}));
+}
+}, [user, isFirstLaunch, userProfile, dailyGoals, meals, weightHistory, waterLogs, customFoods, subscription, streakDays, scansToday, barcodeScansToday]);
+
+const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return ${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}; }, [selectedDate]);
+const todayFormatted = useMemo(() => { const d = new Date(); return ${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}; }, []);
+const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
+const hasMealsToday = useMemo(() => meals.some((m: any) => m.date === todayFormatted), [meals, todayFormatted]);
+
+const current = useMemo(() => currentDayMeals.reduce(
+(acc: any, meal: any) => ({
+calories: acc.calories + (meal.total?.calories || 0),
+protein: acc.protein + (meal.total?.protein || 0),
+fat: acc.fat + (meal.total?.fat || 0),
+carbs: acc.carbs + (meal.total?.carbs || 0),
+}), { calories: 0, protein: 0, fat: 0, carbs: 0 }
+), [currentDayMeals]);
+
+const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
+setUserProfile(formData);
+setDailyGoals(goals);
+setIsFirstLaunch(false);
+const d = new Date();
+const today = ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()};
+const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
+setWeightHistory([wData]);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals }).catch(console.error);
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
+}
+}, [user]);
+
+const checkAccess = useCallback((requiredTier: string) => {
+const tiers: any = { bronze: 0, silver: 1, gold: 2 };
+if (tiers[subscription] >= tiers[requiredTier]) return true;
+setUpgradePrompt({ show: true, required: requiredTier }); return false;
+}, [subscription]);
+
+const requestAddMeal = useCallback((mealData: any) => setPendingMeal(mealData), []);
+
+const confirmAddMeal = useCallback(async (type: string) => {
+if(pendingMeal) {
+const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
+const d = new Date();
+const safeTime = ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')};
+const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
+setMeals((prev: any) => [...prev, newMeal]);
+setPendingMeal(null);
+setActiveTab('dashboard');
+
+  if (willIgniteStreak) { 
+    const newStreak = streakDays + 1; 
+    setStreakDays(newStreak);
+    
+    // Показываем анимацию только в юбилейные дни
+    const jubileeDays = [5, 10, 30, 60, 100, 200, 400];
+    if (jubileeDays.includes(newStreak)) {
+      setShowStreakPopup(true); 
+      setTimeout(() => setShowStreakPopup(false), 4500); 
+    }
+
+    if(user && db && !user.uid.startsWith('offline-user')) {
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
+    }
+  }
+  if(user && db && !user.uid.startsWith('offline-user')) {
+    await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal).catch(console.error);
+  }
+}
+
+
+}, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
+
+const deleteMeal = useCallback(async (id: any) => {
+setMeals((prev: any) => prev.filter((m: any) => m.id !== id));
+if(user && db && !user.uid.startsWith('offline-user')) {
+await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString())).catch(console.error);
+}
+}, [user]);
+
+const addWeight = useCallback(async (weightStr: any) => {
+const weight = parseFloat(String(weightStr).replace(',', '.'));
+if(isNaN(weight)) return;
+const d = new Date();
+const today = ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()};
+const wData = { id: Date.now(), date: today, weight };
+setWeightHistory((prev: any) => [wData, ...prev]);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
+}
+if (userProfile) {
+const newGoals = calculateLocalMacros(userProfile, weight);
+setDailyGoals(newGoals);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(console.error);
+}
+}
+}, [userProfile, user]);
+
+const currentWater = waterLogs[formattedSelectedDate] || 0;
+const handleAddWater = useCallback(async (amount: number) => {
+const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
+const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
+setWaterLogs(newLogs);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs });
+}
+}, [formattedSelectedDate, waterLogs, user]);
+
+const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
+setCustomFoods((prev: any) => [recipeItem, ...prev]);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.error);
+}
+}, [user]);
+
+const updateSubscription = useCallback(async (level: string) => {
+setSubscription(level);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true});
+}
+}, [user]);
+
+const incrementScan = useCallback(async (type: string) => {
+const todayStr = new Date().toDateString();
+const newStats = {
+lastScanDate: todayStr,
+scansToday: type === 'photo' ? scansToday + 1 : scansToday,
+barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday
+};
+if (type === 'photo') setScansToday(p => p+1);
+if (type === 'barcode') setBarcodeScansToday(p => p+1);
+if(user && db && !user.uid.startsWith('offline-user')) {
+await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
+}
+}, [scansToday, barcodeScansToday, user]);
+
+if (authLoading || dataLoading) {
+return (
+
+
+{t?.loadingData}
+
+);
+}
+
+if (isFirstLaunch || !dailyGoals) {
+return ;
+}
+
+return (
+
+<style dangerouslySetInnerHTML={{__html: globalStyles}} />
+
+
+
+NutriBot
+
+
+{/* Индикатор огонька с динамическим цветом и стартом с 0 */}
+<div className={flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow} : 'bg-slate-700/50 border-slate-600 text-slate-400'}}>
+<Flame size={16} className={hasMealsToday ? ${streakStyle.fill} animate-pulse : ""} />
+{streakDays}
+
+<div onClick={() => setActiveTab('profile')} className={btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}}>
+{subscription === 'gold' ?  : subscription === 'silver' ?  : }
+{subscription.toUpperCase()}
+
+
+
+
+  <main className="flex-1 overflow-y-auto pb-24 relative">
+    {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
+    {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
+    {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
+    {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
+    {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
+  </main>
+
+  <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
+    <div className="flex justify-between items-end px-2 pb-2">
+      <div className="flex w-2/5 justify-around">
+        <NavButton icon={<Home />} label={t.dashboard} isActive={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
+        <NavButton icon={<Search />} label={t.searchTab} isActive={activeTab === 'search'} onClick={() => setActiveTab('search')} />
+      </div>
+      <div className="w-1/5 flex justify-center relative">
+        <div onClick={() => checkAccess('silver') && setActiveTab('camera')} className="btn-glass absolute bottom-4 bg-emerald-500 text-white p-4 rounded-full shadow-xl shadow-emerald-500/40 flex items-center justify-center z-50">
+          <Camera size={28} />
+        </div>
+      </div>
+      <div className="flex w-2/5 justify-around">
+        <NavButton icon={<Scale />} label={t.weightTab} isActive={activeTab === 'weight'} onClick={() => setActiveTab('weight')} />
+        <NavButton icon={<User />} label={t.profileTab} isActive={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
+      </div>
+    </div>
+  </nav>
+
+  {upgradePrompt.show && (
+    <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+      <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
+        <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${upgradePrompt.required === 'gold' ? 'bg-amber-500/20' : 'bg-slate-400/20'}`}>
+          {upgradePrompt.required === 'gold' ? <Crown size={40} className="text-amber-400" /> : <Zap size={40} className="text-blue-400" />}
+        </div>
+        <h3 className="text-xl font-bold text-white mb-2">{t.reqSub} {upgradePrompt.required.toUpperCase()}</h3>
+        <p className="text-slate-300 text-sm mb-6">{t.reqSubDesc}</p>
+        <div className="flex gap-3">
+          <div onClick={() => setUpgradePrompt({ show: false, required: '' })} className="btn-glass flex-1 py-3 rounded-xl bg-slate-700/50 text-white font-medium text-center">{t.cancel}</div>
+          <div onClick={() => { setUpgradePrompt({ show: false, required: '' }); setActiveTab('profile'); }} className="btn-glass flex-1 py-3 rounded-xl bg-emerald-500 text-slate-900 font-bold text-center">{t.toProfile}</div>
+        </div>
+      </div>
+    </div>
+  )}
+
+  {pendingMeal && (
+    <div className="absolute inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
+      <div className="bg-slate-800/95 w-full rounded-3xl p-6 shadow-2xl border border-white/10 animate-in slide-in-from-bottom-8 duration-300">
+        <div className="w-12 h-1.5 bg-slate-600 rounded-full mx-auto mb-6"></div>
+        <h3 className="text-xl font-bold text-white mb-2 text-center">{t.whereToSave}</h3>
+        <p className="text-slate-400 text-sm text-center mb-6">{t.date}: {`${selectedDate.getDate()}.${selectedDate.getMonth()+1}.${selectedDate.getFullYear()}`}</p>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div onClick={() => confirmAddMeal('breakfast')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌅</span> {t.breakfast}</div>
+          <div onClick={() => confirmAddMeal('lunch')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">☀️</span> {t.lunch}</div>
+          <div onClick={() => confirmAddMeal('dinner')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌙</span> {t.dinner}</div>
+          <div onClick={() => confirmAddMeal('snack')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🍎</span> {t.snack}</div>
+        </div>
+        <div onClick={() => setPendingMeal(null)} className="btn-glass w-full mt-2 py-4 text-slate-400 font-medium bg-slate-800 rounded-xl text-center">{t.cancel}</div>
+      </div>
+    </div>
+  )}
+
+  {/* Юбилейный попап с динамическим цветом */}
+  {showStreakPopup && (
+    <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
+      <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
+        <div className="relative mb-6">
+          <div className={`absolute w-40 h-40 ${streakStyle.bg} rounded-full blur-[60px] opacity-70 animate-pulse`}></div>
+          <Flame size={140} className={`${streakStyle.text} relative z-10 drop-shadow-[0_0_30px_rgba(currentColor,1)] animate-bounce`} fill="currentColor" />
+        </div>
+        <h2 className="text-5xl font-black text-white mb-2 text-center tracking-widest drop-shadow-lg">ЮБИЛЕЙ!</h2>
+        <div className={`bg-gradient-to-r ${streakStyle.grad} text-slate-900 px-8 py-3 rounded-full font-black text-2xl shadow-xl ${streakStyle.shadow} mt-4`}>🔥 {streakDays} ДНЕЙ</div>
+      </div>
+    </div>
+  )}
+</div>
+
+
+);
+}
+
+// Экспорт страницы по умолчанию
+export default function Page() {
+const [lang, setLang] = useState('ru');
+return (
+<LanguageContext.Provider value={{ lang, setLang, t: translations[lang as keyof typeof translations] || translations['en'] }}>
+
+</LanguageContext.Provider>
+);
+}
