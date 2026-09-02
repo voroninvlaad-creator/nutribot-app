@@ -11,8 +11,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'API ключ не найден в настройках Vercel' }, { status: 500 });
     }
 
-    // 🔥 ИСПОЛЬЗУЕМ САМУЮ ЭКОНОМНУЮ И СТАБИЛЬНУЮ МОДЕЛЬ (без приставок latest) 🔥
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // 🔥 ИСПОЛЬЗУЕМ САМУЮ СВЕЖУЮ, ЭКОНОМНУЮ И БЕСПЛАТНУЮ МОДЕЛЬ 3-го ПОКОЛЕНИЯ 🔥
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
