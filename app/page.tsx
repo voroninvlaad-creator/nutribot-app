@@ -11,7 +11,7 @@ TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle
 ImagePlus, ArrowRight, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
-// === FIREBASE ИНИЦИАЛИЗАЦИЯ ===
+/* STREAMING_CHUNK:Initializing Firebase and Configuration... */
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
 try {
 if (typeof window !== 'undefined') {
@@ -27,8 +27,8 @@ if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__a
 console.error("Firebase init error:", e);
 }
 
-// === ЛОКАЛИЗАЦИЯ ===
-const translations = {
+/* STREAMING_CHUNK:Defining Localization Strings... */
+const translations: any = {
 ru: {
 dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", bronzeF2: "скан. штрихкодов",
 activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
@@ -41,34 +41,25 @@ activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: 
 
 const LanguageContext = createContext(null);
 
-const globalStyles = .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } };
+/* STREAMING_CHUNK:Configuring Global Styles... */
+const globalStyles = .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } } @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } } @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } } @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } } @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } };
 
 const langMap: any = { ru: "Русский", en: "English" };
 
-// === АНИМАЦИИ ПОДПИСОК ===
+/* STREAMING_CHUNK:Defining Animations and AI Helpers... */
 const LightningStorm = () => (
 
 const GoldBurstAnimation = () => (
 
-// === ВЗАИМОДЕЙСТВИЕ С БЭКЕНДОМ GEMINI ===
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
 const parts: any[] = [{ text: prompt }];
-if (base64Image) {
-parts.push({ inlineData: { mimeType: mimeType, data: base64Image } });
-}
-const payload = {
-contents: [{ role: "user", parts }],
-generationConfig: { responseMimeType: "application/json", responseSchema: schema }
-};
+if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
+const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
 
 let retries = 3;
 while (retries > 0) {
 try {
-const response = await fetch('/api/gemini', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload)
-});
+const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 const result = await response.json();
 if (!response.ok) throw new Error(result.error || 'Ошибка сервера Vercel');
 if (result.error) throw new Error(result.error);
@@ -211,7 +202,7 @@ const MOCK_CATALOG = [
 { id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }
 ];
 
-// === КОМПОНЕНТЫ ===
+/* STREAMING_CHUNK:Rendering Components... */
 const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
 
 const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
@@ -1131,7 +1122,7 @@ NutriBot
 
 
 
-{t.startUsing}
+{t.startUsers || t.startUsing}
 
 
 
@@ -1275,7 +1266,7 @@ const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 
   if (!isSubscribed) return;
   if(docSnap.exists()) {
     const data = docSnap.data();
-    setSubscription(data.subscription || 'bronze'); setStreakDays(data.stats?.streakDays ?? 0);
+    setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
     if(data.lastScanDate === new Date().toDateString()) {
       setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
     } else { setScansToday(0); setBarcodeScansToday(0); }
@@ -1346,7 +1337,6 @@ setActiveTab('dashboard');
     const newStreak = streakDays + 1; 
     setStreakDays(newStreak);
     
-    // Показываем анимацию только в юбилейные дни
     const jubileeDays = [5, 10, 30, 60, 100, 200, 400];
     if (jubileeDays.includes(newStreak)) {
       setShowStreakPopup(true); 
@@ -1451,7 +1441,6 @@ return (
 NutriBot
 
 
-{/* Индикатор огонька с динамическим цветом и стартом с 0 */}
 <div className={flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow} : 'bg-slate-700/50 border-slate-600 text-slate-400'}}>
 <Flame size={16} className={hasMealsToday ? ${streakStyle.fill} animate-pulse : ""} />
 {streakDays}
@@ -1515,14 +1504,13 @@ NutriBot
           <div onClick={() => confirmAddMeal('breakfast')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌅</span> {t.breakfast}</div>
           <div onClick={() => confirmAddMeal('lunch')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">☀️</span> {t.lunch}</div>
           <div onClick={() => confirmAddMeal('dinner')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🌙</span> {t.dinner}</div>
-          <div onClick={() => confirmAddMeal('snack')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🍎</span> {t.snack}</div>
+          <div onClick={() => confirmCodeSnippet('snack') || confirmAddMeal('snack')} className="btn-glass bg-slate-700/50 p-4 rounded-2xl font-semibold text-slate-200 flex flex-col items-center gap-2 border border-white/5 text-center"><span className="text-2xl block mb-1">🍎</span> {t.snack}</div>
         </div>
         <div onClick={() => setPendingMeal(null)} className="btn-glass w-full mt-2 py-4 text-slate-400 font-medium bg-slate-800 rounded-xl text-center">{t.cancel}</div>
       </div>
     </div>
   )}
 
-  {/* Юбилейный попап с динамическим цветом */}
   {showStreakPopup && (
     <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
       <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
@@ -1541,7 +1529,6 @@ NutriBot
 );
 }
 
-// Экспорт страницы по умолчанию
 export default function Page() {
 const [lang, setLang] = useState('ru');
 return (
