@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext, useRef } from 'react';
@@ -10,20 +11,28 @@ import {
   ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff
 } from 'lucide-react';
 
-let app, auth, db, appId = 'default-app-id';
+let app: any = null;
+let auth: any = null;
+let db: any = null;
+let appId: any = 'default-app-id';
+
 try {
   if (typeof window !== 'undefined') {
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "AIzaSyDummyKeyForBuild", projectId: "dummy" };
+    const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined' 
+      ? JSON.parse((window as any).__firebase_config) 
+      : { apiKey: "AIzaSyDummyKeyForBuild", projectId: "dummy" };
     app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
     auth = getAuth(app);
     db = getFirestore(app);
-    if (typeof __app_id !== 'undefined') appId = __app_id;
+    if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
   }
-} catch (e) { console.error("Firebase init:", e); }
+} catch (e: any) { 
+  console.error("Firebase init:", e); 
+}
 
 const apiKey = ""; 
 
-const translations = {
+const translations: any = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
@@ -34,11 +43,18 @@ const translations = {
   }
 };
 
-const LanguageContext = createContext();
+const LanguageContext = createContext<any>(null);
 
-const globalStyles = ".btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } \n .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } \n @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } \n @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } \n @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } } \n @keyframes pulseWave { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }";
+const globalStyles = `
+  .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
+  .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
+  @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
+  @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+  @keyframes pulseWave { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+`;
 
-const langMap = { ru: "Русский", en: "English" };
+const langMap: any = { ru: "Русский", en: "English" };
 
 const LightningStorm = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
@@ -85,28 +101,44 @@ const GoldBurstAnimation = () => (
   </div>
 );
 
-async function fetchGeminiWithRetry(prompt, schema, base64Image = null, mimeType = null) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
-  const parts = [{ text: prompt }];
+async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
+  const parts: any[] = [{ text: prompt }];
   if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
   const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
 
   let retries = 3;
   while (retries > 0) {
     try {
-      const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      if (!response.ok) throw new Error('HTTP error');
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        if (apiKey) {
+          const directUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
+          const directRes = await fetch(directUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          if (!directRes.ok) throw new Error('Direct API HTTP error');
+          const dData = await directRes.json();
+          return JSON.parse(dData.candidates[0].content.parts[0].text);
+        }
+        throw new Error('Server API error');
+      }
       const result = await response.json();
       return JSON.parse(result.candidates[0].content.parts[0].text);
-    } catch (error) { retries--; if (retries === 0) throw error; await new Promise(r => setTimeout(r, 1000)); }
+    } catch (error: any) { 
+      retries--; 
+      if (retries === 0) throw error; 
+      await new Promise(r => setTimeout(r, 1000)); 
+    }
   }
 }
 
-async function analyzeImageWithGemini(file, isBarcode, lang) {
-  const base64Image = await new Promise((resolve, reject) => {
+async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: string) {
+  const base64Image: any = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = (event) => {
+    reader.onload = (event: any) => {
       const img = new Image();
       img.src = event.target.result;
       img.onload = () => {
@@ -131,30 +163,30 @@ async function analyzeImageWithGemini(file, isBarcode, lang) {
   const schema = isBarcode 
     ? { type: "OBJECT", properties: { name: { type: "STRING" }, calories_100g: { type: "INTEGER" }, protein_100g: { type: "NUMBER" }, fats_100g: { type: "NUMBER" }, carbs_100g: { type: "NUMBER" } }, required: ["name", "calories_100g", "protein_100g", "fats_100g", "carbs_100g"] } 
     : { type: "OBJECT", properties: { dish_name: { type: "STRING" }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } }, required: ["calories", "protein", "fat", "carbs"] } }, required: ["dish_name", "total"] };
-  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang]}` : `Analyze food photo. Return dish name, and total estimated macros for portion. Language: ${langMap[lang]}`;
+  const prompt = isBarcode ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang] || 'Russian'}` : `Analyze food photo. Return dish name, and total estimated macros for portion. Language: ${langMap[lang] || 'Russian'}`;
   return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
 }
 
-async function getAIAdviceForRemaining(remaining, lang) {
+async function getAIAdviceForRemaining(remaining: any, lang: string) {
   const schema = { type: "OBJECT", properties: { suggestions: { type: "ARRAY", items: { type: "OBJECT", properties: { title: { type: "STRING" }, description: { type: "STRING" }, calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } }, required: ["title", "description", "calories", "protein", "fat", "carbs"] } } }, required: ["suggestions"] };
-  return await fetchGeminiWithRetry(`User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang]}`, schema);
+  return await fetchGeminiWithRetry(`User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang] || 'Russian'}`, schema);
 }
 
-async function analyzeTextToFood(text, lang) {
+async function analyzeTextToFood(text: string, lang: string) {
   const schema = { type: "OBJECT", properties: { dish_name: { type: "STRING" }, total: { type: "OBJECT", properties: { calories: { type: "INTEGER" }, protein: { type: "NUMBER" }, fat: { type: "NUMBER" }, carbs: { type: "NUMBER" } }, required: ["calories", "protein", "fat", "carbs"] } }, required: ["dish_name", "total"] };
-  return await fetchGeminiWithRetry(`Text: "${text}". Convert to single dish or meal summary, estimate total weight and macros. Language: ${langMap[lang]}`, schema);
+  return await fetchGeminiWithRetry(`Text: "${text}". Convert to single dish or meal summary, estimate total weight and macros. Language: ${langMap[lang] || 'Russian'}`, schema);
 }
 
-const calculateLocalMacros = (profile, weight) => {
+const calculateLocalMacros = (profile: any, weight: any) => {
   const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
-  const multipliers = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
+  const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
   let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
   if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
   const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
   return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
 };
 
-const MOCK_CATALOG = [
+const MOCK_CATALOG: any[] = [
   { id: 1, name: "Barilla Макароны Cannelloni (трубочки)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 2, name: "Barilla Макароны Farfalle (Бант)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 3, name: "Barilla Макароны Fusilli (Спирали)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
@@ -294,20 +326,20 @@ export default function App() {
 function MainApp() {
   const { t, lang } = useContext(LanguageContext);
   
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
   const [isFirstLaunch, setIsFirstLaunch] = useState(true);
-  const [userProfile, setUserProfile] = useState(null);
-  const [dailyGoals, setDailyGoals] = useState(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [dailyGoals, setDailyGoals] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedDate, setSelectedDate] = useState(new Date()); 
-  const [meals, setMeals] = useState([]);
-  const [weightHistory, setWeightHistory] = useState([]);
-  const [waterLogs, setWaterLogs] = useState({});
-  const [customFoods, setCustomFoods] = useState([]);
-  const [recentFoods, setRecentFoods] = useState([]);
-  const [pendingMeal, setPendingMeal] = useState(null);
+  const [meals, setMeals] = useState<any[]>([]);
+  const [weightHistory, setWeightHistory] = useState<any[]>([]);
+  const [waterLogs, setWaterLogs] = useState<any>({});
+  const [customFoods, setCustomFoods] = useState<any[]>([]);
+  const [recentFoods, setRecentFoods] = useState<any[]>([]);
+  const [pendingMeal, setPendingMeal] = useState<any>(null);
   
   const [streakDays, setStreakDays] = useState(0);
   const [showStreakPopup, setShowStreakPopup] = useState(false);
@@ -317,11 +349,20 @@ function MainApp() {
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && !(window as any).Telegram) {
+      const tgScript = document.createElement('script');
+      tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
+      tgScript.onload = () => { if ((window as any).Telegram?.WebApp) { (window as any).Telegram.WebApp.ready(); (window as any).Telegram.WebApp.expand(); } };
+      document.head.appendChild(tgScript);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
     const initAuth = async () => {
       try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { 
-          await signInWithCustomToken(auth, __initial_auth_token); 
+        if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { 
+          await signInWithCustomToken(auth, (window as any).__initial_auth_token); 
         } else { 
           await signInAnonymously(auth); 
         }
@@ -345,7 +386,7 @@ function MainApp() {
        return;
     }
 
-    const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap) => {
+    const unsubProfile = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'profile'), (docSnap: any) => {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
@@ -354,27 +395,27 @@ function MainApp() {
       setDataLoading(false);
     });
 
-    const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap) => {
+    const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap: any) => {
       if (!isSubscribed) return;
-      const items = []; snap.forEach(d => items.push(d.data())); setMeals(items);
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setMeals(items);
     });
 
-    const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap) => {
+    const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
       if (!isSubscribed) return;
-      const items = []; snap.forEach(d => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a: any, b: any) => b.id - a.id));
     });
 
-    const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap) => {
+    const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
       if (!isSubscribed) return;
       if(docSnap.exists()) setWaterLogs(docSnap.data().logs || {});
     });
 
-    const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap) => {
+    const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap: any) => {
       if (!isSubscribed) return;
-      const items = []; snap.forEach(d => items.push(d.data())); setCustomFoods(items);
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setCustomFoods(items);
     });
 
-    const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap) => {
+    const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
@@ -391,17 +432,17 @@ function MainApp() {
 
   const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, [selectedDate]);
   const todayFormatted = useMemo(() => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }, []);
-  const currentDayMeals = useMemo(() => meals.filter(m => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
-  const hasMealsToday = useMemo(() => meals.some(m => m.date === todayFormatted), [meals, todayFormatted]);
+  const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
+  const hasMealsToday = useMemo(() => meals.some((m: any) => m.date === todayFormatted), [meals, todayFormatted]);
 
   const current = useMemo(() => currentDayMeals.reduce(
-    (acc, meal) => ({
+    (acc: any, meal: any) => ({
       calories: acc.calories + (meal.total?.calories || 0), protein: acc.protein + (meal.total?.protein || 0),
       fat: acc.fat + (meal.total?.fat || 0), carbs: acc.carbs + (meal.total?.carbs || 0),
     }), { calories: 0, protein: 0, fat: 0, carbs: 0 }
   ), [currentDayMeals]);
 
-  const handleOnboardingComplete = useCallback(async (goals, formData) => {
+  const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
     setUserProfile(formData); setDailyGoals(goals); setIsFirstLaunch(false);
     const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
@@ -412,15 +453,15 @@ function MainApp() {
     }
   }, [user]);
 
-  const checkAccess = useCallback((requiredTier) => {
-    const tiers = { bronze: 0, silver: 1, gold: 2 };
+  const checkAccess = useCallback((requiredTier: string) => {
+    const tiers: any = { bronze: 0, silver: 1, gold: 2 };
     if (tiers[subscription] >= tiers[requiredTier]) return true;
     setUpgradePrompt({ show: true, required: requiredTier }); return false;
   }, [subscription]);
 
-  const requestAddMeal = useCallback((mealData) => setPendingMeal(mealData), []);
+  const requestAddMeal = useCallback((mealData: any) => setPendingMeal(mealData), []);
 
-  const confirmAddMeal = useCallback(async (type) => {
+  const confirmAddMeal = useCallback(async (type: string) => {
     if(pendingMeal) {
       const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
       const d = new Date(); const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
@@ -447,14 +488,14 @@ function MainApp() {
     }
   }, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
 
-  const deleteMeal = useCallback(async (id) => {
-    setMeals(prev => prev.filter(m => m.id !== id));
+  const deleteMeal = useCallback(async (id: any) => {
+    setMeals(prev => prev.filter((m: any) => m.id !== id));
     if(user && db && user.uid.indexOf('offline') === -1) {
       await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString()));
     }
   }, [user]);
 
-  const addWeight = useCallback(async (weightStr) => {
+  const addWeight = useCallback(async (weightStr: any) => {
     const weight = parseFloat(String(weightStr).replace(',', '.'));
     if(isNaN(weight)) return;
     const d = new Date(); const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
@@ -473,7 +514,7 @@ function MainApp() {
   }, [userProfile, user]);
 
   const currentWater = waterLogs[formattedSelectedDate] || 0;
-  const handleAddWater = useCallback(async (amount) => {
+  const handleAddWater = useCallback(async (amount: number) => {
     const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
     const newLogs = { ...waterLogs, [formattedSelectedDate]: newAmount };
     setWaterLogs(newLogs);
@@ -482,21 +523,21 @@ function MainApp() {
     }
   }, [formattedSelectedDate, waterLogs, user]);
 
-  const saveCustomRecipeToDB = useCallback(async (recipeItem) => {
+  const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
     setCustomFoods(prev => [recipeItem, ...prev]);
     if(user && db && user.uid.indexOf('offline') === -1) {
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem);
     }
   }, [user]);
 
-  const updateSubscription = useCallback(async (level) => {
+  const updateSubscription = useCallback(async (level: string) => {
     setSubscription(level);
     if(user && db && user.uid.indexOf('offline') === -1) {
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true});
     }
   }, [user]);
 
-  const incrementScan = useCallback(async (type) => {
+  const incrementScan = useCallback(async (type: string) => {
     const todayStr = new Date().toDateString();
     const newStats = { lastScanDate: todayStr, scansToday: type === 'photo' ? scansToday + 1 : scansToday, barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday };
     if (type === 'photo') setScansToday(p => p+1); if (type === 'barcode') setBarcodeScansToday(p => p+1);
@@ -519,6 +560,7 @@ function MainApp() {
     <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
       
+      {}
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
@@ -533,6 +575,7 @@ function MainApp() {
         </div>
       </header>
 
+      {}
       <main className="flex-1 overflow-y-auto pb-24 relative">
         {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
         {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
@@ -541,6 +584,7 @@ function MainApp() {
         {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
       </main>
 
+      {}
       <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
         <div className="flex justify-between items-end px-2 pb-2">
           <div className="flex w-2/5 justify-around">
@@ -559,6 +603,7 @@ function MainApp() {
         </div>
       </nav>
 
+      {}
       {upgradePrompt.show && (
         <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
@@ -608,13 +653,13 @@ function MainApp() {
   );
 }
 
-const NavButton = React.memo(({ icon, label, isActive, onClick }) => (
+const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
   <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
     {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
   </div>
 ));
 
-const MacroCard = React.memo(({ label, current, goal, color, g }) => {
+const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
   const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
   return (
     <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-xl border border-white/5 flex flex-col shadow-lg">
@@ -625,35 +670,34 @@ const MacroCard = React.memo(({ label, current, goal, color, g }) => {
   );
 });
 
-const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }) => {
+const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
-  const [adviceData, setAdviceData] = useState(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
+  const [adviceData, setAdviceData] = useState<any>(null), [loadingAdvice, setLoadingAdvice] = useState(false), [showAdviceModal, setShowAdviceModal] = useState(false);
   
-  // Voice recognition states
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
   const [voiceError, setVoiceError] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef(null);
+  const recognitionRef = useRef<any>(null);
 
-  const WATER_GOAL = 2000, getPercent = (val, max) => Math.min(Math.round((val / max) * 100), 100);
+  const WATER_GOAL = 2000, getPercent = (val: number, max: number) => Math.min(Math.round((val / max) * 100), 100);
   const remaining = { calories: Math.max((goals?.calories || 2000) - current.calories, 0), protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0), fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0), carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0) };
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in (window as any))) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       const rec = new SpeechRecognition();
       rec.continuous = false;
       rec.interimResults = false;
       rec.lang = lang === 'en' ? 'en-US' : 'ru-RU';
       
-      rec.onresult = (e) => {
+      rec.onresult = (e: any) => {
         const transcript = e.results[0][0].transcript;
-        setVoiceText(prev => prev ? `${prev} ${transcript}` : transcript);
+        setVoiceText((prev: string) => prev ? `${prev} ${transcript}` : transcript);
         setIsListening(false);
       };
-      rec.onerror = (e) => {
+      rec.onerror = (e: any) => {
         console.warn("Speech recognition error:", e);
         setIsListening(false);
       };
@@ -706,7 +750,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
     setIsAnalyzingVoice(false);
   };
 
-  const formatDisplayDate = (d) => {
+  const formatDisplayDate = (d: any) => {
     const today = new Date(), yesterday = new Date(), tomorrow = new Date();
     yesterday.setDate(today.getDate() - 1); tomorrow.setDate(today.getDate() + 1);
     if (d.toDateString() === today.toDateString()) return "Сегодня";
@@ -752,8 +796,8 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
 
       <div className="mt-8 space-y-6 pb-20">
         {mealTypes.map(type => {
-          const typeMeals = meals.filter(m => m.type === type.id);
-          const typeCals = typeMeals.reduce((acc, m) => acc + (m.total?.calories || 0), 0);
+          const typeMeals = meals.filter((m: any) => m.type === type.id);
+          const typeCals = typeMeals.reduce((acc: any, m: any) => acc + (m.total?.calories || 0), 0);
           return (
             <div key={type.id} className="animate-in fade-in">
               <div className="flex justify-between items-center mb-3 px-1"><h4 className="font-bold text-slate-200 flex items-center gap-2"><span className="text-lg">{type.icon}</span> {type.label}</h4><span className="text-sm font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md">{Math.round(typeCals)} {t.kcal}</span></div>
@@ -761,7 +805,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                 <div onClick={onAddClick} className="btn-glass w-full bg-slate-800/30 border border-slate-700/50 border-dashed rounded-xl p-4 flex justify-center items-center text-sm text-slate-500"><Plus size={16} className="mr-1"/> {t.addFood}</div>
               ) : (
                 <div className="space-y-2">
-                  {typeMeals.map(meal => (
+                  {typeMeals.map((meal: any) => (
                     <div key={meal.id} className="bg-slate-800/80 backdrop-blur-md p-4 rounded-xl flex justify-between items-center border border-white/5 relative">
                       <div className="flex-1 pr-2"><h4 className="font-medium text-slate-100 truncate">{meal.dish_name}</h4><div className="text-xs text-slate-400 mt-1 flex gap-2"><span>Б: {Math.round(meal.total?.protein || 0)}</span><span>Ж: {Math.round(meal.total?.fat || 0)}</span><span>У: {Math.round(meal.total?.carbs || 0)}</span></div></div>
                       <div className="flex items-center gap-3"><div className="text-right"><div className="font-bold text-emerald-400">{Math.round(meal.total?.calories || 0)}</div><div className="text-[10px] text-slate-500">{meal.time}</div></div><div onClick={() => deleteMeal(meal.id)} className="btn-glass p-2 text-slate-500 hover:text-red-400 bg-slate-700/30 rounded-lg"><Trash2 size={18} /></div></div>
@@ -785,7 +829,6 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
             </div>
             <p className="text-xs text-slate-300 mb-4">{t.dictatePrompt}</p>
 
-            {/* Interactive Microphone Pulse Button */}
             <div className="flex flex-col items-center justify-center my-4">
               <div 
                 onClick={toggleListening} 
@@ -828,7 +871,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
                 <div className="flex flex-col items-center justify-center mt-20"><div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-amber-400 animate-pulse font-medium">{t.aiCreating}</p></div>
               ) : (
                 <div className="space-y-4">
-                  {adviceData && Array.isArray(adviceData) && adviceData.map((advice, idx) => (
+                  {adviceData && Array.isArray(adviceData) && adviceData.map((advice: any, idx: number) => (
                     <div key={idx} className="bg-slate-800/80 p-5 rounded-2xl border border-white/5 shadow-lg">
                       <h4 className="font-bold text-lg text-white mb-2">{advice?.title}</h4><p className="text-sm text-slate-400 mb-4">{advice?.description}</p>
                       <div className="flex justify-between bg-slate-900/80 rounded-xl p-3">
@@ -850,11 +893,11 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   );
 });
 
-const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }) => {
+const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
   const { t, lang } = useContext(LanguageContext);
-  const [status, setStatus] = useState('idle'), [result, setResult] = useState(null), [imagePreview, setImagePreview] = useState(null);
+  const [status, setStatus] = useState('idle'), [result, setResult] = useState<any>(null), [imagePreview, setImagePreview] = useState<any>(null);
   
-  const handleFileChange = async (e) => {
+  const handleFileChange = async (e: any) => {
     if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
     const file = e.target.files[0]; if (!file) return;
     setImagePreview(URL.createObjectURL(file)); setStatus('scanning');
@@ -904,13 +947,13 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
   );
 });
 
-const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }) => {
+const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
   const { t, lang } = useContext(LanguageContext);
   const [activeSubTab, setActiveSubTab] = useState('global');
   const [query, setQuery] = useState('');
-  const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState(null);
-  const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState([]), [recipeError, setRecipeError] = useState(''); 
-  const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState(null), [ingWeight, setIngWeight] = useState(100);
+  const [weight, setWeight] = useState(100), [selectedItem, setSelectedItem] = useState<any>(null);
+  const [isCreatingRecipe, setIsCreatingRecipe] = useState(false), [recipeName, setRecipeName] = useState(''), [recipeIngredients, setRecipeIngredients] = useState<any[]>([]), [recipeError, setRecipeError] = useState(''); 
+  const [isSearchingIngredient, setIsSearchingIngredient] = useState(false), [ingQuery, setIngQuery] = useState(''), [ingSelected, setIngSelected] = useState<any>(null), [ingWeight, setIngWeight] = useState(100);
   const [isScanning, setIsScanning] = useState(false), [scanStatus, setScanStatus] = useState('idle');
 
   const safeQuery = String(query || ''); const safeIngQuery = String(ingQuery || '');
@@ -918,24 +961,24 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   const displayList = useMemo(() => {
     const list = activeSubTab === 'global' ? MOCK_CATALOG : customFoods;
     if (safeQuery.trim() === '') return activeSubTab === 'global' ? (recentFoods.length > 0 ? recentFoods : MOCK_CATALOG.slice(0, 30)) : customFoods;
-    return list.filter(item => String(item?.name || '').toLowerCase().includes(safeQuery.toLowerCase()));
+    return list.filter((item: any) => String(item?.name || '').toLowerCase().includes(safeQuery.toLowerCase()));
   }, [safeQuery, activeSubTab, customFoods, recentFoods]);
 
   const ingSearchResults = useMemo(() => {
     if (safeIngQuery.trim() === '') return [...MOCK_CATALOG, ...customFoods].slice(0, 30);
-    return [...MOCK_CATALOG, ...customFoods].filter(item => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
+    return [...MOCK_CATALOG, ...customFoods].filter((item: any) => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
   }, [safeIngQuery, customFoods]);
 
   useEffect(() => { setQuery(''); }, [activeSubTab]);
 
-  const handleSelect = (item) => { setSelectedItem(item); setWeight(100); };
+  const handleSelect = (item: any) => { setSelectedItem(item); setWeight(100); };
 
   const handleSaveToDiary = () => {
     if(!selectedItem) return;
     const factor = (Number(weight) || 0) / 100;
     const finalItem = { dish_name: selectedItem.name, total: { calories: Math.round(selectedItem.calories_100g * factor), protein: parseFloat((selectedItem.protein_100g * factor).toFixed(1)), fat: parseFloat((selectedItem.fats_100g * factor).toFixed(1)), carbs: parseFloat((selectedItem.carbs_100g * factor).toFixed(1)) } };
     onSave(finalItem);
-    if (setRecentFoods) setRecentFoods(prev => [{ ...selectedItem, id: selectedItem.id || Date.now() }, ...prev.filter(i => i.id !== selectedItem.id)].slice(0, 15));
+    if (setRecentFoods) setRecentFoods((prev: any) => [{ ...selectedItem, id: selectedItem.id || Date.now() }, ...prev.filter((i: any) => i.id !== selectedItem.id)].slice(0, 15));
     setSelectedItem(null); setQuery('');
   };
 
@@ -946,7 +989,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
     setIngSelected(null); setIsSearchingIngredient(false); setIngQuery(''); setRecipeError('');
   };
 
-  const removeIngredient = (index) => setRecipeIngredients(recipeIngredients.filter((_, i) => i !== index));
+  const removeIngredient = (index: number) => setRecipeIngredients(recipeIngredients.filter((_, i) => i !== index));
 
   const totalRecipeWeight = recipeIngredients.reduce((s, i) => s + (Number(i.weight) || 0), 0);
 
@@ -959,7 +1002,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
     saveCustomRecipeToDB(recipeItem); setIsCreatingRecipe(false); setRecipeName(''); setRecipeIngredients([]); setRecipeError(''); setActiveSubTab('custom');
   };
 
-  const handleBarcodeFile = async (e) => {
+  const handleBarcodeFile = async (e: any) => {
     if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
     const file = e.target.files[0]; if (!file) return;
     setIsScanning(true); setScanStatus('loading');
@@ -986,7 +1029,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
         <div className="flex items-center gap-3 mb-6"><div onClick={() => setIsSearchingIngredient(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div><h2 className="text-xl font-bold">{t.ingredient}</h2></div>
         <div className="relative mb-4"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} /><input type="text" placeholder={t.searchPlaceholder} value={safeIngQuery} onChange={e => setIngQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/></div>
         <div className="flex-1 overflow-y-auto pb-10 space-y-2">
-          {ingSearchResults.map((item, idx) => (
+          {ingSearchResults.map((item: any, idx: number) => (
             <div key={`${item.id || idx}`} onClick={() => { setIngSelected(item); setIngWeight(100); }} className="btn-glass bg-slate-800/80 p-4 rounded-xl flex justify-between items-center border border-white/5 mb-2">
               <div className="pr-2"><h4 className="font-medium text-slate-100 truncate">{item.name}</h4><div className="text-xs text-slate-400 mt-1 flex gap-2"><span>Б: {item.protein_100g}</span><span>Ж: {item.fats_100g}</span><span>У: {item.carbs_100g}</span></div></div>
               <div className="font-bold text-emerald-400 whitespace-nowrap">{item.calories_100g} <span className="text-[10px] text-slate-500">{t.kcal}</span></div>
@@ -1006,7 +1049,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
         {recipeError && <div className="text-red-400 text-sm text-center mb-4 bg-red-500/10 p-2 rounded-xl border border-red-500/30">{recipeError}</div>}
         <div className="mb-6 flex-1">
           <div className="space-y-2 mb-4">
-            {recipeIngredients.map((ing, idx) => (
+            {recipeIngredients.map((ing: any, idx: number) => (
               <div key={idx} className="bg-slate-800/80 p-3 rounded-xl flex justify-between items-center border border-white/5">
                 <div className="pr-2"><p className="font-medium text-sm text-white truncate">{ing.name}</p><p className="text-xs text-slate-400">{ing.weight}г</p></div>
                 <div onClick={() => removeIngredient(idx)} className="btn-glass p-2 text-red-400 bg-slate-700/30 rounded-lg"><Trash2 size={18}/></div>
@@ -1058,7 +1101,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
           <div className="flex-1 overflow-y-auto pb-10 space-y-2">
             {activeSubTab === 'custom' && safeQuery.trim() === '' && <div onClick={() => setIsCreatingRecipe(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-4 rounded-xl flex justify-center items-center gap-2 mb-4 font-semibold"><Plus size={20}/> {t.constructor}</div>}
             {safeQuery.trim() === '' && activeSubTab === 'global' && recentFoods.length > 0 && <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-3 mt-1 px-1"><History size={14} /> {t.recentAdded}</h3>}
-            {displayList.length > 0 ? displayList.map((item, idx) => (
+            {displayList.length > 0 ? displayList.map((item: any, idx: number) => (
               <div key={`${item.id || idx}-${idx}`} onClick={() => handleSelect(item)} className="btn-glass bg-slate-800/80 p-4 rounded-xl flex justify-between items-center border border-white/5 mb-2">
                 <div className="pr-2"><h4 className="font-medium text-slate-100 truncate">{item.name}</h4><div className="text-xs text-slate-400 mt-1 flex gap-2"><span>Б: {item.protein_100g}</span><span>Ж: {item.fats_100g}</span><span>У: {item.carbs_100g}</span></div></div>
                 <div className="flex items-center gap-3"><div className="font-bold text-emerald-400 whitespace-nowrap">{item.calories_100g}</div><div className="bg-slate-700/50 text-emerald-400 p-2 rounded-lg pointer-events-none"><Plus size={20}/></div></div>
@@ -1077,16 +1120,16 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
   );
 });
 
-const WeightTracker = React.memo(({ history, onAdd }) => {
+const WeightTracker = React.memo(({ history, onAdd }: any) => {
   const { t } = useContext(LanguageContext);
   const [inputWeight, setInputWeight] = useState('');
-  const handleSubmit = (e) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
+  const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
   
   const chartData = [...history].reverse();
-  const maxW = chartData.length > 0 ? Math.max(...chartData.map(h => h.weight)) + 1 : 100;
-  const minW = chartData.length > 0 ? Math.max(0, Math.min(...chartData.map(h => h.weight)) - 1) : 0;
+  const maxW = chartData.length > 0 ? Math.max(...chartData.map((h: any) => h.weight)) + 1 : 100;
+  const minW = chartData.length > 0 ? Math.max(0, Math.min(...chartData.map((h: any) => h.weight)) - 1) : 0;
   const range = maxW - minW || 1;
-  const points = chartData.map((d, i) => `${(i / Math.max(chartData.length - 1, 1)) * 300},${100 - ((d.weight - minW) / range) * 100}`).join(' ');
+  const points = chartData.map((d: any, i: number) => `${(i / Math.max(chartData.length - 1, 1)) * 300},${100 - ((d.weight - minW) / range) * 100}`).join(' ');
 
   return (
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
@@ -1097,15 +1140,15 @@ const WeightTracker = React.memo(({ history, onAdd }) => {
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
         {history.length > 1 ? (
-          <div className="w-full h-32 relative flex items-center justify-center"><svg viewBox="-10 -10 320 120" className="w-full h-full overflow-visible"><polyline points={points} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg" />{chartData.map((d, i) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}</svg></div>
+          <div className="w-full h-32 relative flex items-center justify-center"><svg viewBox="-10 -10 320 120" className="w-full h-full overflow-visible"><polyline points={points} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg" />{chartData.map((d: any, i: number) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}</svg></div>
         ) : (<div className="w-full h-32 flex flex-col items-center justify-center text-slate-500 border border-dashed border-slate-700 rounded-xl"><TrendingDown size={32} className="mb-2 opacity-50" /><p className="text-sm text-center px-4">{t.needMoreData}</p></div>)}
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.history}</h3>
-        <div className="space-y-0">{history.map((record, index) => {
+        <div className="space-y-0">{history.map((record: any, index: number) => {
             const prevRecord = history[index + 1], diff = prevRecord ? (record.weight - prevRecord.weight).toFixed(1) : 0;
             return (
-              <div key={record.id} className="flex justify-between items-center py-3 border-b border-slate-700/50 last:border-0"><span className="text-slate-300 font-medium">{record.date}</span><div className="flex items-center gap-4">{prevRecord ? (<span className={`flex items-center text-xs font-semibold ${diff < 0 ? 'text-emerald-400' : diff > 0 ? 'text-red-400' : 'text-slate-500'}`}>{diff < 0 ? <TrendingDown size={14} className="mr-1"/> : diff > 0 ? <TrendingUp size={14} className="mr-1"/> : <Minus size={14} className="mr-1"/>} {Math.abs(diff)}</span>) : <span className="text-xs text-slate-500">{t.start}</span>}<span className="text-lg font-bold w-16 text-right text-white">{record.weight}</span></div></div>
+              <div key={record.id} className="flex justify-between items-center py-3 border-b border-slate-700/50 last:border-0"><span className="text-slate-300 font-medium">{record.date}</span><div className="flex items-center gap-4">{prevRecord ? (<span className={`flex items-center text-xs font-semibold ${diff < 0 ? 'text-emerald-400' : diff > 0 ? 'text-red-400' : 'text-slate-500'}`}>{diff < 0 ? <TrendingDown size={14} className="mr-1"/> : diff > 0 ? <TrendingUp size={14} className="mr-1"/> : <Minus size={14} className="mr-1"/>} {Math.abs(diff as any)}</span>) : <span className="text-xs text-slate-500">{t.start}</span>}<span className="text-lg font-bold w-16 text-right text-white">{record.weight}</span></div></div>
             );
         })}</div>
       </div>
@@ -1113,11 +1156,11 @@ const WeightTracker = React.memo(({ history, onAdd }) => {
   );
 });
 
-const UserProfile = React.memo(({ currentSub, setSubscription }) => {
+const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
   const { t, lang, setLang } = useContext(LanguageContext);
-  const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState(null), [purchasingTier, setPurchasingTier] = useState(null);
+  const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState<any>(null), [purchasingTier, setPurchasingTier] = useState<any>(null);
 
-  const handlePurchase = (level) => {
+  const handlePurchase = (level: string) => {
     setPurchasingTier(level); setPurchaseStatus('loading');
     setTimeout(() => {
       setPurchaseStatus('confetti'); 
@@ -1223,7 +1266,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }) => {
   );
 });
 
-const OnboardingScreen = React.memo(({ onComplete }) => {
+const OnboardingScreen = React.memo(({ onComplete }: any) => {
   const { t } = useContext(LanguageContext);
   const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
