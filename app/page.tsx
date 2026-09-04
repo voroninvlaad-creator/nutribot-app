@@ -1,6 +1,5 @@
 // @ts-nocheck
 "use client";
-
 import React, { useState, useEffect, useMemo, useCallback, createContext, useContext } from 'react';
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -10,48 +9,92 @@ Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, S
 TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
 ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
-
+/* STREAMING_CHUNK:Initializing Firebase... */
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
 try {
 if (typeof window !== 'undefined') {
-const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined' ? JSON.parse((window as any).__firebase_config) : { apiKey: "AIzaSyDummyKeyForBuild" };
+const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined'
+? JSON.parse((window as any).__firebase_config)
+: { apiKey: "AIzaSyDummyKeyForBuild" };
 app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 auth = getAuth(app);
 db = getFirestore(app);
 if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
 }
 } catch (e: any) { console.error("Firebase init:", e); }
-
+/* STREAMING_CHUNK:Defining Translations... */
 const translations: any = {
 ru: {
-dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", bronzeF2: "скан. штрихкодов",
+dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", bronzeF2: "скан. штрихкодов",
 activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
 },
 en: {
-dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", bronzeF2: "barcode scans",
+dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Record", dictatePrompt: "Type or dictate what you ate.", dictatePlaceholder: "e.g., 200g of buckwheat", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD STATUS", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", bronzeF2: "barcode scans",
 activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
 }
 };
-
 const LanguageContext = createContext(null);
-
-const globalStyles = .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } } @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } } @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } } @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } } @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } };
-
+/* STREAMING_CHUNK:Configuring Global Styles... */
+const globalStyles = .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } } @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } } @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } } @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } } @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } } @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } };
 const langMap: any = { ru: "Русский", en: "English" };
-
+/* STREAMING_CHUNK:Defining Animations and Helpers... */
 const LightningStorm = () => (
-
 const GoldBurstAnimation = () => (
+<div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
+  <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
+  <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
+</div>
 
+<div className="absolute inset-0 z-20 flex items-center justify-center">
+  {[...Array(80)].map((_, i) => {
+    const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+    const distance = 100 + Math.random() * 400;
+    const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+    const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+    const size = 3 + Math.random() * 8;
+    return (
+      <div 
+        key={`l-${i}`} 
+        className="absolute bg-yellow-200 rounded-full"
+        style={{ width: size, height: size, left: '20%', top: '50%', '--tx': tx, '--ty': ty, animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`, animationDelay: `${Math.random() * 0.5}s`, boxShadow: '0 0 15px 3px #fcd34d' } as React.CSSProperties}
+      />
+    )
+  })}
+  {[...Array(80)].map((_, i) => {
+    const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
+    const distance = 100 + Math.random() * 400;
+    const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
+    const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
+    const size = 3 + Math.random() * 8;
+    return (
+      <div 
+        key={`r-${i}`} 
+        className="absolute bg-yellow-200 rounded-full"
+        style={{ width: size, height: size, left: '80%', top: '50%', '--tx': tx, '--ty': ty, animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`, animationDelay: `${Math.random() * 0.5}s`, boxShadow: '0 0 15px 3px #fcd34d' } as React.CSSProperties}
+      />
+    )
+  })}
+</div>
+
+
+/* STREAMING_CHUNK:AI API Integration... */
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
 const parts: any[] = [{ text: prompt }];
-if (base64Image) { parts.push({ inlineData: { mimeType: mimeType, data: base64Image } }); }
-const payload = { contents: [{ role: "user", parts }], generationConfig: { responseMimeType: "application/json", responseSchema: schema } };
-
+if (base64Image) {
+parts.push({ inlineData: { mimeType: mimeType, data: base64Image } });
+}
+const payload = {
+contents: [{ role: "user", parts }],
+generationConfig: { responseMimeType: "application/json", responseSchema: schema }
+};
 let retries = 3;
 while (retries > 0) {
 try {
-const response = await fetch('/api/gemini', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+const response = await fetch('/api/gemini', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+});
 const result = await response.json();
 if (!response.ok) throw new Error(result.error || 'Ошибка сервера Vercel');
 if (result.error) throw new Error(result.error);
@@ -63,7 +106,6 @@ await new Promise(r => setTimeout(r, 1000));
 }
 }
 }
-
 async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: string) {
 const base64Image = await new Promise((resolve, reject) => {
 const reader = new FileReader();
@@ -92,7 +134,6 @@ img.onerror = reject;
 };
 reader.onerror = reject;
 });
-
 const schema = isBarcode ? {
 type: "OBJECT",
 properties: {
@@ -120,13 +161,11 @@ required: ["calories", "protein", "fat", "carbs"]
 },
 required: ["dish_name", "total"]
 };
-
 const prompt = isBarcode
 ? Analyze barcode. Return macros per 100g. Language: ${langMap[lang] || 'Russian'}
 : Analyze food photo. Identify dish and estimate total macros for the whole portion. Be extremely fast. Language: ${langMap[lang] || 'Russian'};
 return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
 }
-
 async function getAIAdviceForRemaining(remaining: any, lang: string) {
 const schema = {
 type: "OBJECT",
@@ -154,7 +193,6 @@ User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remai
 schema
 );
 }
-
 async function analyzeTextToFood(text: string, lang: string) {
 const schema = {
 type: "OBJECT",
@@ -175,7 +213,7 @@ required: ["dish_name", "total"]
 };
 return await fetchGeminiWithRetry(Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang] || 'Russian'}, schema);
 }
-
+/* STREAMING_CHUNK:Local Calculation Helpers... */
 const calculateLocalMacros = (profile: any, weight: any) => {
 const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
 const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
@@ -185,7 +223,6 @@ if (profile.goal === 'gain') tdee += 500;
 const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
 return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
 };
-
 const MOCK_CATALOG = [
 { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
 { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
@@ -193,22 +230,16 @@ const MOCK_CATALOG = [
 { id: 4, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
 { id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }
 ];
-
+/* STREAMING_CHUNK:UI Components... */
 const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
-
 const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
 const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
 return (
-
 {label}
 {Math.round(current)} / {goal}{g}
-
 <div className={h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}} style={{ width: ${percent}% }} />
-
-
 );
 });
-
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
 const { t, lang } = useContext(LanguageContext);
 const [adviceData, setAdviceData] = useState(null);
@@ -218,7 +249,6 @@ const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
 const [voiceText, setVoiceText] = useState('');
 const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
 const [aiErrorMsg, setAiErrorMsg] = useState('');
-
 const WATER_GOAL = 2000;
 const getPercent = (val: any, max: any) => Math.min(Math.round((val / max) * 100), 100);
 const remaining = {
@@ -227,7 +257,6 @@ protein: Math.max(Math.round((goals?.protein || 150) - current.protein), 0),
 fat: Math.max(Math.round((goals?.fat || 70) - current.fat), 0),
 carbs: Math.max(Math.round((goals?.carbs || 200) - current.carbs), 0)
 };
-
 const handleAskAI = async () => {
 if (!checkAccess('gold')) return;
 setShowAdviceModal(true);
@@ -241,7 +270,6 @@ setAiErrorMsg(e.message || "Ошибка соединения");
 }
 setLoadingAdvice(false);
 };
-
 const handleVoiceSubmit = async () => {
 if(!voiceText.trim()) return;
 setIsAnalyzingVoice(true);
@@ -256,7 +284,6 @@ setAiErrorMsg(e.message || "Ошибка распознавания голоса
 }
 setIsAnalyzingVoice(false);
 };
-
 const formatDisplayDate = (d: any) => {
 const today = new Date(), yesterday = new Date(), tomorrow = new Date();
 yesterday.setDate(today.getDate() - 1);
@@ -266,27 +293,16 @@ if (d.toDateString() === yesterday.toDateString()) return "Вчера";
 if (d.toDateString() === tomorrow.toDateString()) return "Завтра";
 return ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()};
 };
-
 const mealTypes = [
 { id: 'breakfast', label: t.breakfast, icon: '🌅' },
 { id: 'lunch', label: t.lunch, icon: '☀️' },
 { id: 'dinner', label: t.dinner, icon: '🌙' },
 { id: 'snack', label: t.snack, icon: '🍎' }
 ];
-
 return (
-
-
 <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
-
-
-
 {formatDisplayDate(selectedDate)}
-
 <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
-
-
-
 
   <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5 relative overflow-hidden">
     <div className="flex justify-between items-start mb-2">
@@ -446,14 +462,12 @@ return (
 
 );
 });
-
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
 const { t, lang } = useContext(LanguageContext);
 const [status, setStatus] = useState('idle');
 const [result, setResult] = useState(null);
 const [imagePreview, setImagePreview] = useState(null);
 const [errorDetails, setErrorDetails] = useState('');
-
 const handleFileChange = async (e: any) => {
 if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
 const file = e.target.files[0];
@@ -472,72 +486,35 @@ setErrorDetails(e.message || "Ошибка сервера");
 setStatus('error');
 }
 };
-
 return (
-
-
-
 {t.aiScanner}
-
-
-
 {status === 'idle' && (
-
 {subscription === 'silver' && Доступно: {10 - scansToday}/10}
-
-
-
 {t.takePhoto}
-
-
-
-
 {t.fromGallery}
-
-
 )}
 {status === 'error' && (
-
-
-
 {t.recognitionError}
 {errorDetails}
 <div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}
-
-
 )}
 {(status === 'scanning' || status === 'result') && imagePreview && (
-
-
-
 {status === 'scanning' && (
-
-
 {t.aiThinking}
-
 )}
-
 {status === 'result' && result && (
-
 {result.dish_name}
-
 {Math.round(result.total?.calories || 0)}
 {Math.round(result.total?.protein || 0)}г
 {Math.round(result.total?.fat || 0)}г
 {Math.round(result.total?.carbs || 0)}г
-
 <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">
 {t.addToDiary}
-
-
 )}
-
 )}
-
-
 );
 });
-
+/* STREAMING_CHUNK:Additional UI Components... */
 const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
 const { t, lang } = useContext(LanguageContext);
 const [activeSubTab, setActiveSubTab] = useState('global');
@@ -554,25 +531,19 @@ const [ingSelected, setIngSelected] = useState(null);
 const [ingWeight, setIngWeight] = useState(100);
 const [isScanning, setIsScanning] = useState(false);
 const [scanStatus, setScanStatus] = useState('idle');
-
 const safeQuery = String(query || '');
 const safeIngQuery = String(ingQuery || '');
-
 const displayList = useMemo(() => {
 const list = activeSubTab === 'global' ? MOCK_CATALOG : customFoods;
 if (safeQuery.trim() === '') return activeSubTab === 'global' ? (recentFoods.length > 0 ? recentFoods : MOCK_CATALOG.slice(0, 15)) : customFoods;
 return list.filter((item: any) => String(item?.name || '').toLowerCase().includes(safeQuery.toLowerCase()));
 }, [safeQuery, activeSubTab, customFoods, recentFoods]);
-
 const ingSearchResults = useMemo(() => {
 if (safeIngQuery.trim() === '') return [...MOCK_CATALOG, ...customFoods].slice(0, 15);
 return [...MOCK_CATALOG, ...customFoods].filter((item: any) => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
 }, [safeIngQuery, customFoods]);
-
 useEffect(() => { setQuery(''); }, [activeSubTab]);
-
 const handleSelect = (item: any) => { setSelectedItem(item); setWeight(100); };
-
 const handleSaveToDiary = () => {
 if(!selectedItem) return;
 const factor = (Number(weight) || 0) / 100;
@@ -590,7 +561,6 @@ if (setRecentFoods) setRecentFoods((prev: any) => [{ ...selectedItem, id: select
 setSelectedItem(null);
 setQuery('');
 };
-
 const addIngredientToRecipe = () => {
 if(!ingSelected) return;
 const nw = Number(ingWeight) || 0, factor = nw / 100;
@@ -600,10 +570,8 @@ setIsSearchingIngredient(false);
 setIngQuery('');
 setRecipeError('');
 };
-
 const removeIngredient = (index: number) => setRecipeIngredients(recipeIngredients.filter((_, i) => i !== index));
 const totalRecipeWeight = recipeIngredients.reduce((s, i) => s + (Number(i.weight) || 0), 0);
-
 const saveCustomRecipe = () => {
 if(!recipeName || recipeIngredients.length === 0) { setRecipeError(t.tryAgain); return; }
 const factor = totalRecipeWeight > 0 ? 100 / totalRecipeWeight : 0;
@@ -622,7 +590,6 @@ setRecipeIngredients([]);
 setRecipeError('');
 setActiveSubTab('custom');
 };
-
 const handleBarcodeFile = async (e: any) => {
 if (subscription === 'bronze' && barcodeScansToday >= 7) { checkAccess('silver'); return; }
 const file = e.target.files[0];
@@ -647,112 +614,66 @@ setScanStatus('error');
 setIsScanning(false);
 }
 };
-
 if (isSearchingIngredient) {
 if (ingSelected) {
 return (
-
-
 <div onClick={() => setIngSelected(null)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
 Вес: {ingSelected.name}
-
-
 <input type="number" value={ingWeight} onChange={e => setIngWeight(Number(e.target.value))} className="bg-slate-800/80 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 text-white outline-none" />
 {t.g}
-
 {t.addIngredient}
-
 );
 }
 return (
-
-
 <div onClick={() => setIsSearchingIngredient(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
 {t.ingredient}
-
-
-
 <input type="text" placeholder={t.searchPlaceholder} value={safeIngQuery} onChange={e => setIngQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
-
-
 {ingSearchResults.map((item: any, idx: number) => (
 <div key={${item.id || idx}} onClick={() => { setIngSelected(item); setIngWeight(100); }} className="btn-glass bg-slate-800/80 p-4 rounded-xl flex justify-between items-center border border-white/5 mb-2">
-
 {item.name}
 Б: {item.protein_100g}Ж: {item.fats_100g}У: {item.carbs_100g}
-
 {item.calories_100g} {t.kcal}
-
 ))}
-
-
 );
 }
-
 if (isCreatingRecipe) {
 const isReadyToSave = recipeName && recipeIngredients.length > 0;
 return (
-
-
 <div onClick={() => setIsCreatingRecipe(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full">
 {t.constructor}
-
-
 <input type="text" placeholder={t.recipeName} value={recipeName} onChange={e => setRecipeName(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none"/>
-
 {recipeError && {recipeError}}
-
-
 {recipeIngredients.map((ing: any, idx: number) => (
-
 {ing.name}{ing.weight}г
 <div onClick={() => removeIngredient(idx)} className="btn-glass p-2 text-red-400 bg-slate-700/30 rounded-lg">
-
 ))}
-
-<div onClick={() => setIsSearchingIngredient(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-3 rounded-xl flex justify-center items-center gap-2 font-medium"> {t.addIngredient}
-
+<div onClick={() => setIsSearchingIngredient(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-3 rounded-xl flex justify-center items-center gap-2 font-medium">
+{t.addIngredient}
 {recipeIngredients.length > 0 && (
-
 {t.kbju100g}
-
 {Math.round(recipeIngredients.reduce((s,i)=>s+i.cals,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))}
 {((recipeIngredients.reduce((s,i)=>s+i.prot,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))).toFixed(1)}
 {((recipeIngredients.reduce((s,i)=>s+i.fat,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))).toFixed(1)}
 {((recipeIngredients.reduce((s,i)=>s+i.carbs,0)/(totalRecipeWeight>0?totalRecipeWeight/100:1))).toFixed(1)}
-
-
 )}
-<div onClick={saveCustomRecipe} className={btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/40' : 'bg-slate-700 text-slate-500'}}>{t.saveRecipe}
-
+<div onClick={saveCustomRecipe} className={btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/40' : 'bg-slate-700 text-slate-500'}}>
+{t.saveRecipe}
 );
 }
-
 return (
-
 {!selectedItem ? (
 <>
-
 <div onClick={() => setActiveSubTab('global')} className={btn-glass flex-1 py-2 text-sm font-bold rounded-lg flex items-center justify-center ${activeSubTab === 'global' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400'}}>{t.base}
 <div onClick={() => setActiveSubTab('custom')} className={btn-glass flex-1 py-2 text-sm font-bold rounded-lg flex items-center justify-center ${activeSubTab === 'custom' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400'}}>{t.myRecipes}
-
-
-
-
 <input type="text" placeholder={t.searchPlaceholder} value={safeQuery} onChange={e => setQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
-
 {activeSubTab === 'global' && (
 <label
 onClick={(e) => { if (subscription === 'bronze' && barcodeScansToday >= 7) { e.preventDefault(); checkAccess('silver'); } }}
 className={btn-glass bg-slate-800/80 border border-white/5 rounded-xl px-4 flex justify-center items-center ${isScanning ? 'opacity-50 pointer-events-none' : 'text-slate-400'}}
 >
-
-{isScanning ?  : }
-
+{isScanning ? : }
 )}
-
 {activeSubTab === 'global' && subscription === 'bronze' && {t.bronzeF2}: {barcodeScansToday}/7}
-
       {scanStatus === 'error' && <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 mb-4 text-red-400 text-sm"><AlertCircle size={18} className="shrink-0 mt-0.5" /> <p>{t.recognitionError}</p></div>}
 
       <div className="flex-1 overflow-y-auto pb-10 space-y-2">
@@ -778,75 +699,45 @@ className={btn-glass bg-slate-800/80 border border-white/5 rounded-xl px-4 flex 
 
 );
 });
-
 const WeightTracker = React.memo(({ history, onAdd }: any) => {
 const { t } = useContext(LanguageContext);
 const [inputWeight, setInputWeight] = useState('');
 const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
-
 const chartData = [...history].reverse();
 const maxW = chartData.length > 0 ? Math.max(...chartData.map((h: any) => h.weight)) + 1 : 100;
 const minW = chartData.length > 0 ? Math.max(0, Math.min(...chartData.map((h: any) => h.weight)) - 1) : 0;
 const range = maxW - minW || 1;
 const points = chartData.map((d: any, i: number) => ${(i / Math.max(chartData.length - 1, 1)) * 300},${100 - ((d.weight - minW) / range) * 100}).join(' ');
-
 return (
-
-
- {t.weightTitle}
-
+{t.weightTitle}
 <input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/>
 {t.add}
-
-
-
 {t.chart}
 {history.length > 1 ? (
-
-
-
 {chartData.map((d: any, i: number) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}
-
-
 ) : (
-
-
 {t.needMoreData}
-
 )}
-
-
 {t.history}
-
 {history.map((record: any, index: number) => {
 const prevRecord = history[index + 1];
 const diff = prevRecord ? (record.weight - prevRecord.weight).toFixed(1) : 0;
 return (
-
 {record.date}
-
 {prevRecord ? (
 <span className={flex items-center text-xs font-semibold ${diff < 0 ? 'text-emerald-400' : diff > 0 ? 'text-red-400' : 'text-slate-500'}}>
-{diff < 0 ?  : diff > 0 ?  : } {Math.abs(diff as any)}
-
+{diff < 0 ? : diff > 0 ? : } {Math.abs(diff as any)}
 ) : {t.start}}
 {record.weight}
-
-
 );
 })}
-
-
-
 );
 });
-
 const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
 const { t, lang, setLang } = useContext(LanguageContext);
 const [purchaseStatus, setPurchaseStatus] = useState('idle');
 const [expandedTier, setExpandedTier] = useState(null);
 const [purchasingTier, setPurchasingTier] = useState(null);
-
 const handlePurchase = (level: string) => {
 setPurchasingTier(level);
 setPurchaseStatus('loading');
@@ -859,20 +750,9 @@ setTimeout(() => { setPurchaseStatus('idle'); setPurchasingTier(null); }, 3500);
 }, 500);
 }, 1000);
 };
-
 return (
-
-
-
-
-
-
-
 @telegram_user
 {t.inSystemSince}
-
-
-
 
   <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
     <div className="flex items-center gap-2 text-white font-medium"><Globe size={20} className="text-blue-400"/> {t.language}</div>
@@ -1037,18 +917,15 @@ return (
 
 );
 });
-
 const OnboardingScreen = React.memo(({ onComplete }: any) => {
 const { t } = useContext(LanguageContext);
 const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
 const [errorMsg, setErrorMsg] = useState('');
-
 const handleCalculate = () => {
 if (!formData.age || !formData.height || !formData.weight) { setErrorMsg("Заполните все поля!"); return; }
 setErrorMsg('');
 onComplete(calculateLocalMacros(formData, formData.weight), formData);
 };
-
 const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
 const activityOptions = [
 { id: 'min', label: t.activities.min },
@@ -1062,67 +939,34 @@ const goalOptions = [
 { id: 'keep', label: t.goals.keep },
 { id: 'gain', label: t.goals.gain }
 ];
-
 return (
-
 <style dangerouslySetInnerHTML={{__html: globalStyles}} />
-
-
-
-
 NutriBot
 Умный трекер КБЖУ
-
 {errorMsg && {errorMsg}}
-
-
 {genderOptions.map(g => (
 <div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}}>{g.label}
 ))}
-
-
-
 {t.age}
 <input type="number" value={formData.age} onChange={e => setFormData({...formData, age: String(e.target?.value || '')})} placeholder="25" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
-
-
 {t.height}
 <input type="number" value={formData.height} onChange={e => setFormData({...formData, height: String(e.target?.value || '')})} placeholder="175" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
-
-
-
-
 {t.weight}
 <input type="number" inputMode="decimal" value={formData.weight} onChange={e => setFormData({...formData, weight: String(e.target?.value || '')})} placeholder="70" className="w-full bg-slate-800/80 rounded-xl px-4 py-3 text-white focus:border-emerald-500 outline-none"/>
-
-
 {t.activityLabel}
 <select value={formData.activity} onChange={e => setFormData({...formData, activity: String(e.target?.value || '')})} className="w-full bg-slate-800/80 rounded-xl px-2 py-3 text-white focus:border-emerald-500 outline-none appearance-none text-sm">
 {activityOptions.map(a => {a.label})}
-
-
-
-
 {t.goalLabel}
-
 {goalOptions.map(g => (
 <div key={g.id} onClick={() => setFormData({...formData, goal: g.id})} className={btn-glass text-left px-4 py-3 text-sm font-bold rounded-xl border flex justify-between items-center ${formData.goal === g.id ? 'bg-slate-800 border-emerald-500 text-emerald-400' : 'bg-slate-700/50 border-slate-700/50 text-slate-300'}}>
 {g.label}{formData.goal === g.id && }
-
 ))}
-
-
-
 {t.startUsing}
-
-
-
 );
 });
-
+/* STREAMING_CHUNK:Main Application State... */
 function NutriBotApp() {
 const { t, lang } = useContext(LanguageContext);
-
 const [user, setUser] = useState(null);
 const [authLoading, setAuthLoading] = useState(true);
 const [dataLoading, setDataLoading] = useState(true);
@@ -1137,21 +981,18 @@ const [waterLogs, setWaterLogs] = useState({});
 const [customFoods, setCustomFoods] = useState<any[]>([]);
 const [recentFoods, setRecentFoods] = useState<any[]>([]);
 const [pendingMeal, setPendingMeal] = useState(null);
-
 const [streakDays, setStreakDays] = useState(0);
 const [showStreakPopup, setShowStreakPopup] = useState(false);
 const [subscription, setSubscription] = useState('bronze');
 const [scansToday, setScansToday] = useState(0);
 const [barcodeScansToday, setBarcodeScansToday] = useState(0);
 const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
-
 const streakStyle = useMemo(() => {
 if (streakDays >= 400) return { text: "text-cyan-400", fill: "fill-cyan-400", shadow: "shadow-cyan-500/30", border: "border-cyan-500/50", bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" };
 if (streakDays >= 100) return { text: "text-red-500", fill: "fill-red-500", shadow: "shadow-red-500/30", border: "border-red-500/50", bg: "bg-red-500", grad: "from-red-500 to-rose-600" };
 if (streakDays >= 30) return { text: "text-purple-400", fill: "fill-purple-400", shadow: "shadow-purple-500/30", border: "border-purple-500/50", bg: "bg-purple-500", grad: "from-purple-500 to-fuchsia-500" };
 return { text: "text-orange-400", fill: "fill-orange-400", shadow: "shadow-orange-500/30", border: "border-orange-500/50", bg: "bg-orange-500", grad: "from-orange-500 to-amber-500" };
 }, [streakDays]);
-
 useEffect(() => {
 if (!(window as any).Telegram) {
 const tgScript = document.createElement('script');
@@ -1160,7 +1001,6 @@ tgScript.onload = () => { if ((window as any).Telegram && (window as any).Telegr
 document.head.appendChild(tgScript);
 }
 }, []);
-
 useEffect(() => {
 if (!auth) { setAuthLoading(false); setDataLoading(false); return; }
 const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -1187,11 +1027,9 @@ setAuthLoading(false);
 });
 return () => unsubscribe();
 }, []);
-
 useEffect(() => {
 if (!user) { setDataLoading(false); return; }
 const uid = user.uid;
-
 if (uid.startsWith('offline-user')) {
   const saved = localStorage.getItem('nutribot_data');
   if (saved) {
@@ -1265,7 +1103,6 @@ return () => { isSubscribed = false; unsubProfile(); unsubMeals(); unsubWeight()
 
 
 }, [user]);
-
 useEffect(() => {
 if (user && user.uid.startsWith('offline-user') && !isFirstLaunch && userProfile) {
 localStorage.setItem('nutribot_data', JSON.stringify({
@@ -1274,12 +1111,10 @@ stats: { subscription, streakDays, scansToday, barcodeScansToday, lastScanDate: 
 }));
 }
 }, [user, isFirstLaunch, userProfile, dailyGoals, meals, weightHistory, waterLogs, customFoods, subscription, streakDays, scansToday, barcodeScansToday]);
-
 const formattedSelectedDate = useMemo(() => { const d = new Date(selectedDate); return ${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}; }, [selectedDate]);
 const todayFormatted = useMemo(() => { const d = new Date(); return ${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}; }, []);
 const currentDayMeals = useMemo(() => meals.filter((m: any) => m.date === formattedSelectedDate), [meals, formattedSelectedDate]);
 const hasMealsToday = useMemo(() => meals.some((m: any) => m.date === todayFormatted), [meals, todayFormatted]);
-
 const current = useMemo(() => currentDayMeals.reduce(
 (acc: any, meal: any) => ({
 calories: acc.calories + (meal.total?.calories || 0),
@@ -1288,7 +1123,6 @@ fat: acc.fat + (meal.total?.fat || 0),
 carbs: acc.carbs + (meal.total?.carbs || 0),
 }), { calories: 0, protein: 0, fat: 0, carbs: 0 }
 ), [currentDayMeals]);
-
 const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
 setUserProfile(formData);
 setDailyGoals(goals);
@@ -1302,15 +1136,12 @@ await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), 
 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.error);
 }
 }, [user]);
-
 const checkAccess = useCallback((requiredTier: string) => {
 const tiers: any = { bronze: 0, silver: 1, gold: 2 };
 if (tiers[subscription] >= tiers[requiredTier]) return true;
 setUpgradePrompt({ show: true, required: requiredTier }); return false;
 }, [subscription]);
-
 const requestAddMeal = useCallback((mealData: any) => setPendingMeal(mealData), []);
-
 const confirmAddMeal = useCallback(async (type: string) => {
 if(pendingMeal) {
 const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
@@ -1320,7 +1151,6 @@ const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.no
 setMeals((prev: any) => [...prev, newMeal]);
 setPendingMeal(null);
 setActiveTab('dashboard');
-
   if (willIgniteStreak) { 
     const newStreak = streakDays + 1; 
     setStreakDays(newStreak);
@@ -1342,14 +1172,12 @@ setActiveTab('dashboard');
 
 
 }, [pendingMeal, formattedSelectedDate, todayFormatted, hasMealsToday, user, streakDays]);
-
 const deleteMeal = useCallback(async (id: any) => {
 setMeals((prev: any) => prev.filter((m: any) => m.id !== id));
 if(user && db && !user.uid.startsWith('offline-user')) {
 await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString())).catch(console.error);
 }
 }, [user]);
-
 const addWeight = useCallback(async (weightStr: any) => {
 const weight = parseFloat(String(weightStr).replace(',', '.'));
 if(isNaN(weight)) return;
@@ -1368,7 +1196,6 @@ await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), 
 }
 }
 }, [userProfile, user]);
-
 const currentWater = waterLogs[formattedSelectedDate] || 0;
 const handleAddWater = useCallback(async (amount: number) => {
 const newAmount = Math.max((waterLogs[formattedSelectedDate] || 0) + amount, 0);
@@ -1378,21 +1205,18 @@ if(user && db && !user.uid.startsWith('offline-user')) {
 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs });
 }
 }, [formattedSelectedDate, waterLogs, user]);
-
 const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
 setCustomFoods((prev: any) => [recipeItem, ...prev]);
 if(user && db && !user.uid.startsWith('offline-user')) {
 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.error);
 }
 }, [user]);
-
 const updateSubscription = useCallback(async (level: string) => {
 setSubscription(level);
 if(user && db && !user.uid.startsWith('offline-user')) {
 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true});
 }
 }, [user]);
-
 const incrementScan = useCallback(async (type: string) => {
 const todayStr = new Date().toDateString();
 const newStats = {
@@ -1406,39 +1230,23 @@ if(user && db && !user.uid.startsWith('offline-user')) {
 await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
 }
 }, [scansToday, barcodeScansToday, user]);
-
 if (authLoading || dataLoading) {
 return (
-
-
 {t?.loadingData}
-
 );
 }
-
 if (isFirstLaunch || !dailyGoals) {
 return ;
 }
-
 return (
-
 <style dangerouslySetInnerHTML={{__html: globalStyles}} />
-
-
-
 NutriBot
-
-
 <div className={flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow} : 'bg-slate-700/50 border-slate-600 text-slate-400'}}>
 <Flame size={16} className={hasMealsToday ? ${streakStyle.fill} animate-pulse : ""} />
 {streakDays}
-
 <div onClick={() => setActiveTab('profile')} className={btn-glass text-sm border px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md ${subscription === 'gold' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-md shadow-amber-500/20' : subscription === 'silver' ? 'bg-slate-400/10 border-slate-400/30 text-slate-300' : 'bg-slate-700/50 border-slate-600 text-slate-400'}}>
-{subscription === 'gold' ?  : subscription === 'silver' ?  : }
+{subscription === 'gold' ? : subscription === 'silver' ? : }
 {subscription.toUpperCase()}
-
-
-
 
   <main className="flex-1 overflow-y-auto pb-24 relative">
     {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
@@ -1516,12 +1324,10 @@ NutriBot
 
 );
 }
-
 export default function Page() {
 const [lang, setLang] = useState('ru');
 return (
 <LanguageContext.Provider value={{ lang, setLang, t: translations[lang as keyof typeof translations] || translations['en'] }}>
-
 </LanguageContext.Provider>
 );
 }
