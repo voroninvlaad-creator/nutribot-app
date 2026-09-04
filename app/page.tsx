@@ -18,16 +18,21 @@ let appId: any = 'default-app-id';
 
 try {
   if (typeof window !== 'undefined') {
-    const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined' 
-      ? JSON.parse((window as any).__firebase_config) 
+    const rawCfg = (window as any).__firebase_config;
+    const firebaseConfig = typeof rawCfg !== 'undefined' 
+      ? JSON.parse(rawCfg) 
       : { apiKey: "AIzaSyDummyKeyForBuild", projectId: "dummy" };
-    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-    auth = getAuth(app);
-    db = getFirestore(app);
+    
+    // Only initialize if not dummy to avoid network aborts in standalone mode
+    if (firebaseConfig.projectId !== "dummy") {
+      app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+      auth = getAuth(app);
+      db = getFirestore(app);
+    }
     if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
   }
 } catch (e: any) { 
-  console.error("Firebase init:", e); 
+  console.warn("Firebase init notice (running in local storage mode):", e); 
 }
 
 const apiKey = ""; 
@@ -324,6 +329,8 @@ export default function App() {
 function MainApp() {
   const { t, lang } = useContext(LanguageContext);
   
+  // Mounted guard prevents Next.js SSR hydration mismatches
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
@@ -346,9 +353,9 @@ function MainApp() {
   const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
 
-  // 1. Initial Load from LocalStorage (Guaranteed Instant Memory)
+  // 1. Initial Load from LocalStorage
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    setMounted(true);
     try {
       const savedProfile = localStorage.getItem('nutribot_profile');
       const savedGoals = localStorage.getItem('nutribot_goals');
@@ -390,7 +397,7 @@ function MainApp() {
     }
   }, []);
 
-  // 3. Robust Authentication Listener & Fallback
+  // 3. User Authentication Fallback
   useEffect(() => {
     if (!auth) { 
       let localUid = localStorage.getItem('nutribot_uid') || 'user_' + Math.random().toString(36).substring(2, 9);
@@ -415,7 +422,6 @@ function MainApp() {
             setUser(res.user);
           }
         } catch (e) { 
-          console.warn("Auth network fallback to local user:", e);
           let localUid = localStorage.getItem('nutribot_uid') || 'user_' + Math.random().toString(36).substring(2, 9);
           localStorage.setItem('nutribot_uid', localUid);
           setUser({ uid: localUid });
@@ -428,7 +434,7 @@ function MainApp() {
     return () => unsubAuth();
   }, []);
 
-  // 4. Cloud Synchronization with Fallback
+  // 4. Cloud Synchronization
   useEffect(() => {
     if (!user) { setDataLoading(false); return; }
     const uid = user.uid;
@@ -455,10 +461,7 @@ function MainApp() {
         setIsFirstLaunch(false);
       }
       setDataLoading(false);
-    }, (err) => {
-      console.warn("Profile sync listener notice:", err);
-      if (isSubscribed) setDataLoading(false);
-    });
+    }, () => { if (isSubscribed) setDataLoading(false); });
 
     const unsubMeals = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'meals'), (snap: any) => {
       if (!isSubscribed) return;
@@ -468,7 +471,7 @@ function MainApp() {
         setMeals(items);
         localStorage.setItem('nutribot_meals', JSON.stringify(items));
       }
-    }, (err) => console.warn("Meals sync notice:", err));
+    }, () => {});
 
     const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
       if (!isSubscribed) return;
@@ -479,7 +482,7 @@ function MainApp() {
         setWeightHistory(sorted);
         localStorage.setItem('nutribot_weights', JSON.stringify(sorted));
       }
-    }, (err) => console.warn("Weights sync notice:", err));
+    }, () => {});
 
     const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
       if (!isSubscribed) return;
@@ -487,7 +490,7 @@ function MainApp() {
         setWaterLogs(docSnap.data().logs);
         localStorage.setItem('nutribot_water', JSON.stringify(docSnap.data().logs));
       }
-    }, (err) => console.warn("Water sync notice:", err));
+    }, () => {});
 
     const unsubCustomFoods = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'customFoods'), (snap: any) => {
       if (!isSubscribed) return;
@@ -497,7 +500,7 @@ function MainApp() {
         setCustomFoods(items);
         localStorage.setItem('nutribot_custom', JSON.stringify(items));
       }
-    }, (err) => console.warn("Custom foods sync notice:", err));
+    }, () => {});
 
     const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
       if (!isSubscribed) return;
@@ -519,7 +522,7 @@ function MainApp() {
           setBarcodeScansToday(0);
         }
       }
-    }, (err) => console.warn("Stats sync notice:", err));
+    }, () => {});
 
     return () => { 
       isSubscribed = false; 
@@ -608,7 +611,7 @@ function MainApp() {
         }
 
         if (user && db && !user.uid.startsWith('user_')) {
-          setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true}).catch(console.warn);
+          setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true}).catch(() => {});
         }
       }
 
@@ -652,7 +655,7 @@ function MainApp() {
     });
 
     if (user && db && !user.uid.startsWith('user_')) {
-      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(console.warn);
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData).catch(() => {});
     }
 
     if (userProfile) {
@@ -660,7 +663,7 @@ function MainApp() {
       setDailyGoals(newGoals);
       localStorage.setItem('nutribot_goals', JSON.stringify(newGoals));
       if (user && db && !user.uid.startsWith('user_')) {
-        setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(console.warn);
+        setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData: userProfile, goals: newGoals }, {merge:true}).catch(() => {});
       }
     }
   }, [userProfile, user]);
@@ -673,7 +676,7 @@ function MainApp() {
     localStorage.setItem('nutribot_water', JSON.stringify(newLogs));
 
     if (user && db && !user.uid.startsWith('user_')) {
-      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs }).catch(console.warn);
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'), { logs: newLogs }).catch(() => {});
     }
   }, [formattedSelectedDate, waterLogs, user]);
 
@@ -685,7 +688,7 @@ function MainApp() {
     });
 
     if (user && db && !user.uid.startsWith('user_')) {
-      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(console.warn);
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'customFoods', recipeItem.id.toString()), recipeItem).catch(() => {});
     }
   }, [user]);
 
@@ -694,7 +697,7 @@ function MainApp() {
     localStorage.setItem('nutribot_sub', level);
 
     if (user && db && !user.uid.startsWith('user_')) {
-      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true}).catch(console.warn);
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: level }, {merge:true}).catch(() => {});
     }
   }, [user]);
 
@@ -709,22 +712,23 @@ function MainApp() {
     if (type === 'barcode') setBarcodeScansToday(p => p+1);
 
     if (user && db && !user.uid.startsWith('user_')) {
-      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.warn);
+      setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(() => {});
     }
   }, [scansToday, barcodeScansToday, user]);
 
   const streakStyle = useMemo(() => {
-    if (streakDays >= 400) return { text: "text-cyan-400", fill: "fill-cyan-400", shadow: "shadow-cyan-500/30", border: "border-cyan-500/50", bg: "bg-cyan-500", grad: "from-cyan-500 to-blue-500" };
-    if (streakDays >= 100) return { text: "text-red-500", fill: "fill-red-500", shadow: "shadow-red-500/30", border: "border-red-500/50", bg: "bg-red-500", grad: "from-red-500 to-rose-600" };
-    if (streakDays >= 30) return { text: "text-purple-400", fill: "fill-purple-400", shadow: "shadow-purple-500/30", border: "border-purple-500/50", bg: "bg-purple-500", grad: "from-purple-500 to-fuchsia-500" };
-    return { text: "text-orange-400", fill: "fill-orange-400", shadow: "shadow-orange-500/30", border: "border-orange-500/50", bg: "bg-orange-500", grad: "from-orange-500 to-amber-500" };
+    if (streakDays >= 400) return { text: "text-cyan-400", fill: "fill-cyan-400", shadow: "shadow-cyan-500/30", border: "border-cyan-500/50", bg: "bg-cyan-500/20", grad: "from-cyan-500 to-blue-500" };
+    if (streakDays >= 100) return { text: "text-red-500", fill: "fill-red-500", shadow: "shadow-red-500/30", border: "border-red-500/50", bg: "bg-red-500/20", grad: "from-red-500 to-rose-600" };
+    if (streakDays >= 30) return { text: "text-purple-400", fill: "fill-purple-400", shadow: "shadow-purple-500/30", border: "border-purple-500/50", bg: "bg-purple-500/20", grad: "from-purple-500 to-fuchsia-500" };
+    return { text: "text-orange-400", fill: "fill-orange-400", shadow: "shadow-orange-500/30", border: "border-orange-500/50", bg: "bg-orange-500/20", grad: "from-orange-500 to-amber-500" };
   }, [streakDays]);
 
-  if (authLoading && dataLoading && !userProfile) {
+  // Prevent hydration mismatch
+  if (!mounted || (authLoading && dataLoading && !userProfile)) {
     return (
       <div className="flex flex-col h-screen bg-slate-900 text-slate-100 items-center justify-center">
         <Activity className="text-emerald-500 animate-spin mb-4" size={40}/>
-        <p className="text-slate-400 font-medium">{t?.loadingData}</p>
+        <p className="text-slate-400 font-medium">{t?.loadingData || "Загрузка..."}</p>
       </div>
     );
   }
@@ -744,7 +748,7 @@ function MainApp() {
           <h1 className="text-lg font-bold">NutriBot</h1>
         </div>
         <div className="flex items-center gap-3">
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `${streakStyle.bg} ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             <Flame size={16} className={hasMealsToday ? `${streakStyle.fill} animate-pulse` : ""} />
             <span className="font-bold text-sm">{streakDays}</span>
           </div>
@@ -763,6 +767,16 @@ function MainApp() {
         {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
         {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
       </main>
+
+      {/* Floating Microphone Button: permanently visible on Dashboard tab inside mobile container */}
+      {activeTab === 'dashboard' && (
+        <div 
+          onClick={() => checkAccess('silver') && window.dispatchEvent(new CustomEvent('open-voice-modal'))} 
+          className="btn-glass absolute bottom-24 right-4 bg-emerald-500 text-slate-900 p-4 rounded-full shadow-[0_5px_20px_rgba(16,185,129,0.5)] z-30"
+        >
+          <Mic size={24} />
+        </div>
+      )}
 
       {/* Persistent Bottom Bar */}
       <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
@@ -865,6 +879,18 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
 
+  // Self-contained formatted date to prevent ReferenceError
+  const formattedDate = useMemo(() => {
+    const d = new Date(selectedDate);
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  }, [selectedDate]);
+
+  useEffect(() => {
+    const handleOpenVoice = () => setIsVoiceModalOpen(true);
+    window.addEventListener('open-voice-modal', handleOpenVoice);
+    return () => window.removeEventListener('open-voice-modal', handleOpenVoice);
+  }, []);
+
   const WATER_GOAL = 2000;
   const getPercent = (val: number, max: number) => Math.min(Math.round((val / (max || 1)) * 100), 100);
   const remaining = { 
@@ -876,7 +902,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
 
   const toggleListening = () => {
     if (isListening) {
-      if (recognitionRef.current) recognitionRef.current.stop();
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch(e){}
+      }
       setIsListening(false);
     } else {
       if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in (window as any))) {
@@ -993,7 +1021,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
       {/* Meal Diary Feed */}
       <div className="mt-8 space-y-6 pb-20">
         {mealTypes.map(type => {
-          const typeMeals = meals.filter((m: any) => m.date === formattedSelectedDate && m.type === type.id);
+          const typeMeals = meals.filter((m: any) => (m.date === formattedDate || !m.date) && m.type === type.id);
           const typeCals = typeMeals.reduce((acc: any, m: any) => acc + (m.total?.calories || 0), 0);
           return (
             <div key={type.id} className="animate-in fade-in">
@@ -1013,14 +1041,6 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
             </div>
           );
         })}
-      </div>
-
-      {/* Floating Microphone Button: anchored directly in the mobile frame */}
-      <div 
-        onClick={() => checkAccess('silver') && setIsVoiceModalOpen(true)} 
-        className="btn-glass absolute bottom-24 right-4 bg-emerald-500 text-slate-900 p-4 rounded-full shadow-[0_5px_20px_rgba(16,185,129,0.5)] z-30"
-      >
-        <Mic size={24} />
       </div>
 
       {/* Voice Record Input Modal */}
