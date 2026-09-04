@@ -8,7 +8,7 @@ import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'fi
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff
+  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles
 } from 'lucide-react';
 
 let app: any = null;
@@ -31,19 +31,19 @@ try {
     if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
   }
 } catch (e: any) { 
-  console.warn("Firebase init note (running local-storage mode):", e); 
+  console.warn("Firebase init notice:", e); 
 }
 
 const apiKey = ""; 
 
 const translations: any = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
     resetTitle: "Начать сначала", resetDesc: "Удалить всю историю, замеры веса и приёмы пищи?", resetConfirmBtn: "Да, удалить всё", resetSuccess: "Данные очищены",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD STATUS", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
     resetTitle: "Start from scratch", resetDesc: "Delete all user history, weight logs, and meals?", resetConfirmBtn: "Yes, wipe everything", resetSuccess: "Data cleared",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   }
@@ -55,42 +55,34 @@ const globalStyles = `
   .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
   .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.75; }
   @keyframes zapIn { 0% { transform: scale(0.1) rotate(-15deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) rotate(5deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); } }
-  @keyframes floatUp { 0% { transform: translateY(120px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.25), calc(var(--ty) * 0.25)) scale(1.2); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
   @keyframes pulseWave { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 16px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
   @keyframes silverPulseWave { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); } 70% { transform: scale(1.08); box-shadow: 0 0 0 24px rgba(56, 189, 248, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); } }
   @keyframes lightningFlash { 0%, 100% { opacity: 0.1; } 12%, 35%, 55% { opacity: 0.85; } 22%, 45% { opacity: 0.15; } }
   @keyframes boltFlicker { 0%, 100% { opacity: 0.3; transform: scaleY(0.96); } 15%, 45%, 75% { opacity: 1; transform: scaleY(1); } 30%, 60% { opacity: 0.15; } }
   
-  /* Dynamic Gold FX Animations */
-  @keyframes goldRayRotate {
+  /* Minimalist Dynamic Gold Animations */
+  @keyframes goldMinimalEnter {
+    0% { transform: scale(0.85) translateY(24px); opacity: 0; }
+    60% { transform: scale(1.02) translateY(-4px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  @keyframes goldRingSpin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-  @keyframes goldShockwave {
-    0% { transform: scale(0.4); opacity: 1; border-width: 6px; }
-    50% { opacity: 0.85; }
-    100% { transform: scale(2.8); opacity: 0; border-width: 1px; }
-  }
-  @keyframes goldCrownBounce {
-    0% { transform: scale(0.1) translateY(80px) rotate(-15deg); opacity: 0; filter: drop-shadow(0 0 50px #f59e0b) brightness(2.5); }
-    55% { transform: scale(1.22) translateY(-15px) rotate(6deg); opacity: 1; filter: drop-shadow(0 0 70px #fde047) brightness(1.6); }
-    75% { transform: scale(0.95) translateY(5px) rotate(-3deg); }
-    100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 45px #f59e0b) brightness(1.2); }
+  @keyframes goldGlowBreathe {
+    0%, 100% { transform: scale(0.92); opacity: 0.45; }
+    50% { transform: scale(1.12); opacity: 0.8; }
   }
   @keyframes goldTextShimmer {
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
   }
-  @keyframes floatSparkle {
-    0% { transform: translateY(20px) scale(0.5); opacity: 0; }
-    25% { opacity: 1; }
-    80% { opacity: 0.9; }
-    100% { transform: translateY(-130px) scale(1.2); opacity: 0; }
-  }
-  @keyframes goldAuraPulse {
-    0%, 100% { transform: scale(0.85); opacity: 0.55; }
-    50% { transform: scale(1.18); opacity: 0.95; }
+  @keyframes goldPinpointDrift {
+    0% { transform: translateY(0) scale(0.8); opacity: 0; }
+    40% { opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(-70px) scale(1.1); opacity: 0; }
   }
 `;
 
@@ -98,13 +90,10 @@ const langMap: any = { ru: "Русский", en: "English" };
 
 const LightningStorm = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
-    {/* Atmospheric strobe light */}
     <div 
       className="absolute inset-0 bg-sky-500/20 pointer-events-none" 
       style={{ animation: 'lightningFlash 1.2s infinite ease-in-out' }}
     />
-    
-    {/* SVG Electric Lightning Bolts */}
     <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 800" preserveAspectRatio="none">
       <path 
         d="M200 0 L165 240 L235 260 L155 510 L220 530 L180 800" 
@@ -134,10 +123,7 @@ const LightningStorm = () => (
         strokeLinecap="round" 
         strokeLinejoin="round" 
         fill="none" 
-        style={{ 
-          filter: 'drop-shadow(0 0 18px #38bdf8)',
-          animation: 'boltFlicker 1.5s infinite 0.25s ease-in-out' 
-        }} 
+        style={{ filter: 'drop-shadow(0 0 18px #38bdf8)', animation: 'boltFlicker 1.5s infinite 0.25s ease-in-out' }} 
       />
       <path 
         d="M235 260 L295 400 L260 415 L320 600" 
@@ -146,150 +132,98 @@ const LightningStorm = () => (
         strokeLinecap="round" 
         strokeLinejoin="round" 
         fill="none" 
-        style={{ 
-          filter: 'drop-shadow(0 0 18px #38bdf8)',
-          animation: 'boltFlicker 1.7s infinite 0.45s ease-in-out' 
-        }} 
+        style={{ filter: 'drop-shadow(0 0 18px #38bdf8)', animation: 'boltFlicker 1.7s infinite 0.45s ease-in-out' }} 
       />
     </svg>
   </div>
 );
 
-const GoldBurstAnimation = () => (
-  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
-    {/* Atmospheric Golden Nebula */}
+const GoldMinimalDynamicAnimation = () => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center p-4">
+    {/* Refined Atmospheric Ambient Core Glow */}
     <div 
-      className="absolute w-[360px] h-[360px] bg-gradient-to-r from-amber-500/50 via-yellow-400/60 to-orange-500/50 blur-[85px] rounded-full"
-      style={{ animation: 'goldAuraPulse 2.8s ease-in-out infinite' }}
+      className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-amber-500/25 via-yellow-400/30 to-amber-600/20 blur-[90px]"
+      style={{ animation: 'goldGlowBreathe 3s ease-in-out infinite' }}
     />
 
-    {/* Rotating Majestic Sunburst Rays */}
-    <div 
-      className="absolute w-[680px] h-[680px] pointer-events-none opacity-35" 
-      style={{ animation: 'goldRayRotate 24s linear infinite' }}
-    >
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <defs>
-          <radialGradient id="goldRayGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fef08a" stopOpacity="0.9" />
-            <stop offset="35%" stopColor="#f59e0b" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {[...Array(16)].map((_, i) => (
-          <path
-            key={`ray-${i}`}
-            d={`M 50 50 L ${50 + 50 * Math.cos((i * 22.5 * Math.PI) / 180)} ${50 + 50 * Math.sin((i * 22.5 * Math.PI) / 180)} A 50 50 0 0 1 ${50 + 50 * Math.cos(((i * 22.5 + 11.25) * Math.PI) / 180)} ${50 + 50 * Math.sin(((i * 22.5 + 11.25) * Math.PI) / 180)} Z`}
-            fill="url(#goldRayGrad)"
-          />
-        ))}
-      </svg>
-    </div>
-
-    {/* Triple Golden Shockwave Rings */}
-    <div className="absolute w-56 h-56 rounded-full border border-amber-400/90 shadow-[0_0_35px_#f59e0b]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite' }} />
-    <div className="absolute w-56 h-56 rounded-full border border-yellow-300/80 shadow-[0_0_30px_#fde047]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) 0.65s infinite' }} />
-    <div className="absolute w-56 h-56 rounded-full border border-orange-400/60 shadow-[0_0_25px_#ea580c]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) 1.3s infinite' }} />
-
-    {/* Floating Rising Luxury Glyphs */}
-    <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+    {/* Elegant Golden Stardust Points */}
+    <div className="absolute inset-0 z-10 pointer-events-none">
       {[
-        { icon: '✨', left: '18%', delay: '0.2s', dur: '2.4s' },
-        { icon: '👑', left: '80%', delay: '0.5s', dur: '2.8s' },
-        { icon: '⭐', left: '30%', delay: '1.0s', dur: '2.2s' },
-        { icon: '✦', left: '70%', delay: '0.3s', dur: '2.6s' },
-        { icon: '💎', left: '14%', delay: '1.3s', dur: '3.0s' },
-        { icon: '✨', left: '86%', delay: '1.6s', dur: '2.3s' },
-        { icon: '⭐', left: '50%', delay: '0.8s', dur: '2.7s' },
-      ].map((item, idx) => (
+        { left: '22%', delay: '0.1s', dur: '3.2s', size: '2px' },
+        { left: '35%', delay: '1.2s', dur: '2.8s', size: '3px' },
+        { left: '48%', delay: '0.6s', dur: '3.5s', size: '2px' },
+        { left: '68%', delay: '1.8s', dur: '3.1s', size: '3px' },
+        { left: '79%', delay: '0.9s', dur: '2.9s', size: '2px' },
+        { left: '15%', delay: '2.2s', dur: '3.4s', size: '3px' },
+        { left: '86%', delay: '1.5s', dur: '3.0s', size: '2px' }
+      ].map((dot, i) => (
         <div
-          key={`flt-${idx}`}
-          className="absolute bottom-1/4 text-2xl select-none filter drop-shadow-[0_0_12px_rgba(253,224,71,0.9)]"
+          key={`dot-${i}`}
+          className="absolute bottom-1/3 bg-amber-200 rounded-full shadow-[0_0_8px_#fde047]"
           style={{
-            left: item.left,
-            animation: `floatSparkle ${item.dur} ease-out ${item.delay} infinite`
+            left: dot.left,
+            width: dot.size,
+            height: dot.size,
+            animation: `goldPinpointDrift ${dot.dur} cubic-bezier(0.2, 0.8, 0.2, 1) ${dot.delay} infinite`
           }}
-        >
-          {item.icon}
-        </div>
+        />
       ))}
     </div>
 
-    {/* Explosive Sparkling Golden Particles & Diamonds */}
-    <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-      {[...Array(60)].map((_, i) => {
-        const angle = (i * 360) / 60 + (Math.random() * 8 - 4);
-        const distance = 95 + Math.random() * 320;
-        const tx = `${Math.cos((angle * Math.PI) / 180) * distance}px`;
-        const ty = `${Math.sin((angle * Math.PI) / 180) * distance}px`;
-        const size = 3 + Math.random() * 7;
-        const isDiamond = i % 3 === 0;
-        const colors = ['#fef08a', '#fde047', '#f59e0b', '#ffffff', '#fbbf24'];
-        const color = colors[i % colors.length];
-        return (
-          <div 
-            key={`gp-${i}`} 
-            className={`absolute ${isDiamond ? 'rotate-45 rounded-sm' : 'rounded-full'}`}
-            style={{
-              width: size, 
-              height: size,
-              backgroundColor: color,
-              left: '50%', 
-              top: '50%',
-              '--tx': tx, 
-              '--ty': ty,
-              animation: `particle-explode ${0.85 + Math.random() * 1.3}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.6}s`,
-              boxShadow: `0 0 16px 3px ${color}`
-            }}
-          />
-        );
-      })}
-    </div>
-
-    {/* Central Dynamic Hero Badge */}
+    {/* Central Minimalist Luxury Card */}
     <div 
-      className="relative z-30 flex flex-col items-center justify-center px-4" 
-      style={{ animation: 'goldCrownBounce 0.9s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards' }}
+      className="relative z-30 flex flex-col items-center justify-center px-8 py-10 rounded-3xl bg-slate-950/85 backdrop-blur-2xl border border-amber-400/25 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(245,158,11,0.15)] max-w-xs w-full text-center"
+      style={{ animation: 'goldMinimalEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
     >
-      <div className="relative mb-3 flex items-center justify-center">
-        <div className="absolute w-28 h-28 bg-yellow-400/40 rounded-full blur-2xl animate-pulse" />
-        <Crown 
-          size={98} 
-          className="text-[#fde047] relative z-10 filter drop-shadow-[0_0_35px_rgba(253,224,71,1)]" 
-          fill="#fde047" 
-          stroke="#b45309" 
-          strokeWidth="1.5" 
-        />
-        <span className="absolute -top-1 -right-3 text-2xl animate-spin" style={{ animationDuration: '6s' }}>✦</span>
-        <span className="absolute -bottom-1 -left-4 text-xl animate-bounce" style={{ animationDuration: '2s' }}>✨</span>
+      {/* Sleek Orbiting Ring Around Crown */}
+      <div className="relative w-28 h-28 flex items-center justify-center mb-6">
+        <div 
+          className="absolute inset-0 rounded-full p-[1.5px]"
+          style={{
+            background: 'conic-gradient(from 0deg, transparent 0deg, #f59e0b 120deg, #fef08a 180deg, transparent 270deg)',
+            animation: 'goldRingSpin 4s linear infinite'
+          }}
+        >
+          <div className="w-full h-full bg-slate-950 rounded-full" />
+        </div>
+        
+        {/* Soft Ambient Icon Disc */}
+        <div className="w-20 h-20 rounded-full bg-gradient-to-b from-amber-400/15 to-transparent border border-amber-300/30 flex items-center justify-center relative shadow-[inset_0_0_15px_rgba(245,158,11,0.2)]">
+          <Crown 
+            size={42} 
+            className="text-amber-300 filter drop-shadow-[0_0_16px_rgba(253,224,71,0.7)]" 
+            strokeWidth={1.5}
+          />
+        </div>
       </div>
 
-      <span 
-        className="font-black text-7xl tracking-widest uppercase bg-gradient-to-r from-amber-200 via-yellow-100 via-amber-300 to-yellow-500 bg-[length:200%_auto] bg-clip-text text-transparent filter drop-shadow-[0_0_35px_rgba(245,158,11,0.9)]"
-        style={{ animation: 'goldTextShimmer 2.8s linear infinite' }}
+      {/* Pure Metallic Typography */}
+      <h2 
+        className="font-black text-4xl tracking-[0.3em] uppercase bg-gradient-to-r from-amber-200 via-yellow-100 via-amber-300 to-yellow-500 bg-[length:200%_auto] bg-clip-text text-transparent filter drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]"
+        style={{ animation: 'goldTextShimmer 3s linear infinite' }}
       >
         GOLD
-      </span>
+      </h2>
 
-      <div className="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/25 via-yellow-400/30 to-amber-500/25 border border-amber-300/60 shadow-[0_0_25px_rgba(245,158,11,0.5)] backdrop-blur-md">
-        <Crown size={14} className="text-yellow-300 fill-yellow-300" />
-        <span className="text-amber-100 font-extrabold text-xs tracking-wider uppercase drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]">
-          VIP PRO СТАТУС АКТИВЕН
+      {/* Understated Status Tag */}
+      <div className="mt-3 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+        <Sparkles size={12} className="text-amber-300" />
+        <span className="text-amber-200 text-[10px] font-bold tracking-widest uppercase">
+          VIP PRO АКТИВЕН
         </span>
-        <Crown size={14} className="text-yellow-300 fill-yellow-300" />
       </div>
 
-      <div className="mt-4 flex items-center gap-3 text-xs text-amber-200/90 font-medium">
-        <span className="flex items-center gap-1">⚡ Безлимит ИИ</span>
+      {/* Clean Feature Badges */}
+      <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-amber-200/70 font-medium">
+        <span>Безлимит ИИ</span>
         <span>•</span>
-        <span className="flex items-center gap-1">👑 ИИ-диетолог</span>
+        <span>ИИ-диетолог</span>
         <span>•</span>
-        <span className="flex items-center gap-1">🚀 Турбо</span>
+        <span>Турбо</span>
       </div>
 
-      <span className="text-[11px] text-amber-200/50 uppercase tracking-widest mt-6">
-        Нажмите в любое место, чтобы продолжить
+      <span className="text-[10px] text-slate-500 uppercase tracking-widest mt-6">
+        Нажмите, чтобы закрыть
       </span>
     </div>
   </div>
@@ -381,6 +315,7 @@ const calculateLocalMacros = (profile: any, weight: any) => {
 };
 
 const MOCK_CATALOG: any[] = [
+  // Бакалея и брендовые макароны
   { id: 1, name: "Barilla Макароны Cannelloni (трубочки)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 2, name: "Barilla Макароны Farfalle (Бант)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 3, name: "Barilla Макароны Fusilli (Спирали)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
@@ -426,12 +361,14 @@ const MOCK_CATALOG: any[] = [
   { id: 43, name: "Шебекинские Макароны Перья", calories_100g: 350, protein_100g: 13.0, fats_100g: 1.5, carbs_100g: 72.0 },
   { id: 44, name: "Шебекинские Макароны Спагетти №003", calories_100g: 350, protein_100g: 13.0, fats_100g: 1.5, carbs_100g: 72.0 },
   { id: 45, name: "Ясно Солнышко Овсяные хлопья №1", calories_100g: 350, protein_100g: 12.0, fats_100g: 6.0, carbs_100g: 62.0 },
+  // Спорт и суперфуды
   { id: 46, name: "BCAA (аминокислоты, порошок)", calories_100g: 400, protein_100g: 100.0, fats_100g: 0.0, carbs_100g: 0.0 },
   { id: 47, name: "Котлета Beyond Meat", calories_100g: 252, protein_100g: 18.0, fats_100g: 19.0, carbs_100g: 5.0 },
   { id: 48, name: "Молоко миндальное", calories_100g: 24, protein_100g: 0.8, fats_100g: 1.5, carbs_100g: 2.0 },
   { id: 49, name: "Молоко овсяное", calories_100g: 45, protein_100g: 1.0, fats_100g: 1.5, carbs_100g: 7.0 },
   { id: 50, name: "Протеин сывороточный (WPC 80)", calories_100g: 400, protein_100g: 80.0, fats_100g: 5.0, carbs_100g: 8.0 },
   { id: 51, name: "Тофу (соевый сыр)", calories_100g: 76, protein_100g: 8.1, fats_100g: 4.8, carbs_100g: 1.9 },
+  // Мясо, птица, стейки
   { id: 52, name: "Куриное филе грудки вареное", calories_100g: 137, protein_100g: 29.8, fats_100g: 1.8, carbs_100g: 0.0 },
   { id: 53, name: "Куриное филе грудки на гриле (без масла)", calories_100g: 150, protein_100g: 31.0, fats_100g: 2.8, carbs_100g: 0.0 },
   { id: 54, name: "Куриное бедро вареное без кожи", calories_100g: 165, protein_100g: 24.0, fats_100g: 7.5, carbs_100g: 0.0 },
@@ -450,14 +387,17 @@ const MOCK_CATALOG: any[] = [
   { id: 67, name: "Хинкали (говядина/свинина)", calories_100g: 230, protein_100g: 9.0, fats_100g: 10.0, carbs_100g: 25.0 },
   { id: 68, name: "Стейк Рибай Black Angus", calories_100g: 290, protein_100g: 24.0, fats_100g: 22.0, carbs_100g: 0.0 },
   { id: 69, name: "Стейк Филе-миньон (Тендерлойн)", calories_100g: 155, protein_100g: 26.0, fats_100g: 5.5, carbs_100g: 0.0 },
+  // Рыба и морепродукты
   { id: 70, name: "Лосось (семга)", calories_100g: 153, protein_100g: 20.0, fats_100g: 8.1, carbs_100g: 0.0 },
   { id: 71, name: "Тунец консервированный (в собст. соку)", calories_100g: 96, protein_100g: 21.0, fats_100g: 0.8, carbs_100g: 0.0 },
   { id: 72, name: "Креветки (отварные)", calories_100g: 97, protein_100g: 18.3, fats_100g: 1.2, carbs_100g: 0.8 },
+  // Молочные продукты и сыры
   { id: 73, name: "Творог 5%", calories_100g: 121, protein_100g: 17.2, fats_100g: 5.0, carbs_100g: 1.8 },
   { id: 74, name: "Творог обезжиренный (0%)", calories_100g: 71, protein_100g: 16.5, fats_100g: 0.0, carbs_100g: 1.3 },
   { id: 75, name: "Яйцо куриное (1 шт = ~50г)", calories_100g: 157, protein_100g: 12.7, fats_100g: 11.5, carbs_100g: 0.7 },
   { id: 76, name: "Сыр Пармезан", calories_100g: 392, protein_100g: 35.8, fats_100g: 25.8, carbs_100g: 3.2 },
   { id: 77, name: "Сыр Моцарелла (для пиццы)", calories_100g: 300, protein_100g: 22.0, fats_100g: 22.0, carbs_100g: 2.0 },
+  // Фрукты, орехи, овощи
   { id: 78, name: "Авокадо", calories_100g: 160, protein_100g: 2.0, fats_100g: 14.7, carbs_100g: 8.5 },
   { id: 79, name: "Банан", calories_100g: 89, protein_100g: 1.5, fats_100g: 0.1, carbs_100g: 21.8 },
   { id: 80, name: "Яблоко", calories_100g: 47, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 9.8 },
@@ -466,12 +406,22 @@ const MOCK_CATALOG: any[] = [
   { id: 83, name: "Капуста брокколи", calories_100g: 34, protein_100g: 2.8, fats_100g: 0.4, carbs_100g: 6.6 },
   { id: 84, name: "Арахисовая паста (без сахара)", calories_100g: 588, protein_100g: 25.0, fats_100g: 50.0, carbs_100g: 20.0 },
   { id: 85, name: "Миндаль", calories_100g: 609, protein_100g: 18.6, fats_100g: 53.7, carbs_100g: 13.0 },
+  // Бренды спортпита и фастфуда
   { id: 86, name: "Bombbar Батончик протеиновый (Малиновый чизкейк)", calories_100g: 297, protein_100g: 33.3, fats_100g: 10.7, carbs_100g: 9.8 },
   { id: 87, name: "Bombbar Печенье протеиновое (Шоколадный брауни)", calories_100g: 270, protein_100g: 25.0, fats_100g: 9.0, carbs_100g: 10.5 },
   { id: 88, name: "Optimum Nutrition 100% Whey Gold Standard (порошок)", calories_100g: 375, protein_100g: 75.0, fats_100g: 3.8, carbs_100g: 10.0 },
   { id: 89, name: "Вкусно и точка: Биг Хит", calories_100g: 235, protein_100g: 11.5, fats_100g: 12.0, carbs_100g: 20.0 },
   { id: 90, name: "Додо Пицца: Пепперони", calories_100g: 270, protein_100g: 10.5, fats_100g: 11.0, carbs_100g: 31.0 },
-  { id: 91, name: "Ролл Филадельфия", calories_100g: 168, protein_100g: 6.5, fats_100g: 6.8, carbs_100g: 19.5 }
+  { id: 91, name: "Ролл Филадельфия", calories_100g: 168, protein_100g: 6.5, fats_100g: 6.8, carbs_100g: 19.5 },
+  { id: 92, name: "Хлеб Бородинский", calories_100g: 208, protein_100g: 6.9, fats_100g: 1.3, carbs_100g: 40.9 },
+  { id: 93, name: "Хлеб пшеничный белый", calories_100g: 266, protein_100g: 8.9, fats_100g: 3.3, carbs_100g: 50.2 },
+  { id: 94, name: "Хлебцы Dr. Körner 'Семь злаков'", calories_100g: 290, protein_100g: 10.0, fats_100g: 2.0, carbs_100g: 57.0 },
+  { id: 95, name: "Сыр Сулугуни", calories_100g: 286, protein_100g: 20.5, fats_100g: 22.0, carbs_100g: 0.4 },
+  { id: 96, name: "Сыр Фета", calories_100g: 264, protein_100g: 14.2, fats_100g: 21.3, carbs_100g: 4.0 },
+  { id: 97, name: "Колбаса вареная 'Докторская'", calories_100g: 257, protein_100g: 12.8, fats_100g: 22.2, carbs_100g: 1.5 },
+  { id: 98, name: "Сосиски 'Молочные'", calories_100g: 261, protein_100g: 11.0, fats_100g: 23.9, carbs_100g: 0.4 },
+  { id: 99, name: "Шоколад горький (75-85%)", calories_100g: 540, protein_100g: 8.0, fats_100g: 36.0, carbs_100g: 46.8 },
+  { id: 100, name: "Шоколад молочный", calories_100g: 550, protein_100g: 6.9, fats_100g: 35.7, carbs_100g: 54.4 }
 ];
 
 export default function App() {
@@ -510,7 +460,7 @@ function MainApp() {
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  // Voice recognition states mounted at root to avoid scroll/blur glitches
+  // Voice recognition states mounted at root
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
@@ -521,30 +471,6 @@ function MainApp() {
   useEffect(() => {
     setMounted(true);
     try {
-      // One-time automatic wipe of previous user history
-      const isFreshStartDone = localStorage.getItem('nutribot_v3_fresh_start');
-      if (!isFreshStartDone) {
-        const legacyKeys = [
-          'nutribot_profile', 'nutribot_goals', 'nutribot_meals',
-          'nutribot_weights', 'nutribot_water', 'nutribot_custom',
-          'nutribot_streak', 'nutribot_sub', 'nutribot_uid', 'nutribot_data'
-        ];
-        legacyKeys.forEach(k => localStorage.removeItem(k));
-        localStorage.setItem('nutribot_v3_fresh_start', 'true');
-
-        setUserProfile(null);
-        setDailyGoals(null);
-        setIsFirstLaunch(true);
-        setMeals([]);
-        setWeightHistory([]);
-        setWaterLogs({});
-        setCustomFoods([]);
-        setStreakDays(0);
-        setSubscription('bronze');
-        setDataLoading(false);
-        return;
-      }
-
       const savedProfile = localStorage.getItem('nutribot_profile');
       const savedGoals = localStorage.getItem('nutribot_goals');
       const savedMeals = localStorage.getItem('nutribot_meals');
@@ -566,7 +492,7 @@ function MainApp() {
       if (savedStreak) setStreakDays(parseInt(savedStreak, 10) || 0);
       if (savedSub) setSubscription(savedSub);
     } catch (e) {
-      console.warn("LocalStorage initial load notice:", e);
+      console.warn("LocalStorage initial load note:", e);
     }
   }, []);
 
@@ -770,7 +696,7 @@ function MainApp() {
       };
 
       rec.onerror = (e: any) => {
-        console.warn("Speech recognition error:", e);
+        console.warn("Speech recognition notice:", e);
         setIsListening(false);
         if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
           setVoiceError(t.micBlocked);
@@ -785,7 +711,7 @@ function MainApp() {
       rec.start();
       setIsListening(true);
     } catch (err: any) {
-      console.warn("Speech mic init err:", err);
+      console.warn("Speech init err:", err);
       setIsListening(false);
       setVoiceError(t.micBlocked);
     }
@@ -828,7 +754,7 @@ function MainApp() {
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals });
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData);
       } catch (err) {
-        console.warn("Cloud save profile fallback to local:", err);
+        console.warn("Cloud save profile fallback:", err);
       }
     }
   }, [user]);
@@ -877,7 +803,7 @@ function MainApp() {
         try {
           await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', newMeal.id.toString()), newMeal);
         } catch (err) {
-          console.warn("Cloud save meal error:", err);
+          console.warn("Cloud save meal note:", err);
         }
       }
     }
@@ -894,7 +820,7 @@ function MainApp() {
       try {
         await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'meals', id.toString()));
       } catch (err) {
-        console.warn("Cloud delete meal error:", err);
+        console.warn("Cloud delete meal note:", err);
       }
     }
   }, [user]);
@@ -945,9 +871,7 @@ function MainApp() {
       'nutribot_streak', 'nutribot_sub', 'nutribot_uid', 'nutribot_data'
     ];
     keysToClear.forEach(k => localStorage.removeItem(k));
-    localStorage.setItem('nutribot_v3_fresh_start', 'true');
 
-    // Fresh random UID for new session
     const newLocalUid = 'user_' + Math.random().toString(36).substring(2, 9);
     localStorage.setItem('nutribot_uid', newLocalUid);
     setUser({ uid: newLocalUid });
@@ -1035,7 +959,7 @@ function MainApp() {
     <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
       
-      {/* Top Navigation Bar */}
+      {/* Top Header */}
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
         <div className="flex items-center gap-2">
           <Activity className="text-emerald-400" size={24} />
@@ -1053,7 +977,7 @@ function MainApp() {
         </div>
       </header>
 
-      {/* Screen Area */}
+      {/* Main Screen Tab Views */}
       <main className="flex-1 overflow-y-auto pb-24 relative">
         {activeTab === 'dashboard' && <Dashboard current={current} goals={dailyGoals} meals={currentDayMeals} onAddClick={() => setActiveTab('search')} selectedDate={selectedDate} setSelectedDate={setSelectedDate} requestAddMeal={requestAddMeal} currentWater={currentWater} addWater={handleAddWater} deleteMeal={deleteMeal} checkAccess={checkAccess} />}
         {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
@@ -1062,7 +986,7 @@ function MainApp() {
         {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} onRequestReset={() => setShowResetConfirm(true)} />}
       </main>
 
-      {/* Floating Microphone Button: directly opens reliable root modal */}
+      {/* Floating Microphone Button at Root Context */}
       {activeTab === 'dashboard' && (
         <button
           type="button"
@@ -1078,7 +1002,7 @@ function MainApp() {
         </button>
       )}
 
-      {/* Bottom Navigation */}
+      {/* Bottom Nav Bar */}
       <nav className="absolute bottom-0 w-full bg-slate-900/90 backdrop-blur-md border-t border-white/5 pb-safe pt-2 z-20">
         <div className="flex justify-between items-end px-2 pb-2">
           <div className="flex w-2/5 justify-around">
@@ -1097,7 +1021,7 @@ function MainApp() {
         </div>
       </nav>
 
-      {/* FIXED VOICE INPUT MODAL: Placed directly in root viewport */}
+      {/* Realtime Speech Input Overlay */}
       {isVoiceModalOpen && (
         <div className="absolute inset-0 z-[70] flex items-end justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-slate-800/95 w-full rounded-3xl p-6 border border-white/10 shadow-2xl animate-in slide-in-from-bottom-8 duration-300">
@@ -1122,7 +1046,6 @@ function MainApp() {
             
             <p className="text-xs text-slate-300 mb-4">{t.dictatePrompt}</p>
 
-            {/* Interactive Pulse Microphone Button */}
             <div className="flex flex-col items-center justify-center my-4">
               <div 
                 onClick={toggleListening} 
@@ -1163,7 +1086,7 @@ function MainApp() {
         </div>
       )}
 
-      {/* Subscription Upgrade Gate Modal */}
+      {/* Subscription Paywall Modal */}
       {upgradePrompt.show && (
         <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
@@ -1180,7 +1103,7 @@ function MainApp() {
         </div>
       )}
 
-      {/* In-App Confirmation Modal: Reset All Data */}
+      {/* Confirm Data Reset Modal */}
       {showResetConfirm && (
         <div className="absolute inset-0 z-[110] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
@@ -1209,7 +1132,7 @@ function MainApp() {
         </div>
       )}
 
-      {/* Meal Selection Category Popup */}
+      {/* Meal Period Selection Sheet */}
       {pendingMeal && (
         <div className="absolute inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200">
           <div className="bg-slate-800/95 w-full rounded-3xl p-6 shadow-2xl border border-white/10 animate-in slide-in-from-bottom-8 duration-300">
@@ -1227,7 +1150,7 @@ function MainApp() {
         </div>
       )}
 
-      {/* Streak Celebration Popup */}
+      {/* Streak Jubilee Celebration */}
       {showStreakPopup && (
         <div onClick={() => setShowStreakPopup(false)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md animate-in fade-in duration-300 cursor-pointer">
           <div className="flex flex-col items-center justify-center animate-in zoom-in-50 slide-in-from-bottom-12 duration-500 ease-out">
@@ -1288,7 +1211,7 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
       const res = await getAIAdviceForRemaining(remaining, lang);
       setAdviceData(res.suggestions); 
     } catch { 
-      setAdviceData([{ title: "Идеи блюд", description: "Нейросеть предлагает легкий белковый салат с овощами.", calories: 250, protein: 25, fat: 5, carbs: 15 }]); 
+      setAdviceData([{ title: "Идеи блюд", description: "Легкий салат с тунцом или омлет с зеленью отлично впишутся в норму.", calories: 250, protein: 25, fat: 5, carbs: 15 }]); 
     }
     setLoadingAdvice(false);
   };
@@ -1470,12 +1393,12 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
 
   const displayList = useMemo(() => {
     const list = activeSubTab === 'global' ? MOCK_CATALOG : customFoods;
-    if (safeQuery.trim() === '') return activeSubTab === 'global' ? (recentFoods.length > 0 ? recentFoods : MOCK_CATALOG.slice(0, 30)) : customFoods;
+    if (safeQuery.trim() === '') return activeSubTab === 'global' ? (recentFoods.length > 0 ? recentFoods : MOCK_CATALOG.slice(0, 35)) : customFoods;
     return list.filter((item: any) => String(item?.name || '').toLowerCase().includes(safeQuery.toLowerCase()));
   }, [safeQuery, activeSubTab, customFoods, recentFoods]);
 
   const ingSearchResults = useMemo(() => {
-    if (safeIngQuery.trim() === '') return [...MOCK_CATALOG, ...customFoods].slice(0, 30);
+    if (safeIngQuery.trim() === '') return [...MOCK_CATALOG, ...customFoods].slice(0, 35);
     return [...MOCK_CATALOG, ...customFoods].filter((item: any) => String(item?.name || '').toLowerCase().includes(safeIngQuery.toLowerCase()));
   }, [safeIngQuery, customFoods]);
 
@@ -1700,8 +1623,8 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
           setPurchaseStatus('idle'); 
           setPurchasingTier(null); 
         }, 3600); 
-      }, 500); 
-    }, 900);
+      }, 400); 
+    }, 700);
   };
 
   return (
@@ -1777,7 +1700,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
         </div>
       </div>
 
-      {/* Reset Data Section */}
+      {/* Reset History Action */}
       <div className="pt-4 border-t border-white/5 pb-6">
         <button
           type="button"
@@ -1789,7 +1712,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
         </button>
       </div>
 
-      {/* FULLSCREEN SUBSCRIPTION CELEBRATION MODAL */}
+      {/* Modern Minimalist / Dynamic Subscription Celebration Modals */}
       {(purchaseStatus === 'confetti' || purchaseStatus === 'success') && (
         <div 
           onClick={() => { setPurchaseStatus('idle'); setPurchasingTier(null); }}
@@ -1798,35 +1721,6 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
           {purchasingTier === 'silver' ? (
             <div className="relative w-full h-full flex flex-col items-center justify-center">
               <LightningStorm />
-              
-              {/* Electric Particle Sparks */}
-              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                {[...Array(40)].map((_, i) => {
-                  const angle = (i * 360) / 40 + (Math.random() * 10 - 5);
-                  const distance = 110 + Math.random() * 260;
-                  const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
-                  const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
-                  const size = 3 + Math.random() * 6;
-                  const sparkColors = ['#ffffff', '#bae6fd', '#38bdf8', '#60a5fa'];
-                  return (
-                    <div 
-                      key={`spk-${i}`} 
-                      className="absolute rounded-full"
-                      style={{
-                        backgroundColor: sparkColors[i % sparkColors.length],
-                        width: size, height: size,
-                        left: '50%', top: '50%',
-                        '--tx': tx, '--ty': ty,
-                        animation: `particle-explode ${0.8 + Math.random() * 1.4}s ease-out infinite`,
-                        animationDelay: `${Math.random() * 0.4}s`,
-                        boxShadow: '0 0 12px 2px #38bdf8'
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              {/* Central Silver Badge */}
               <div className="flex flex-col items-center justify-center relative z-[160]" style={{ animation: 'zapIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
                 <div 
                   className="w-28 h-28 bg-gradient-to-br from-slate-200 via-sky-200 to-blue-400 rounded-3xl flex items-center justify-center mb-5 shadow-[0_0_60px_rgba(56,189,248,0.9)] border-2 border-white/60"
@@ -1844,7 +1738,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
             </div>
           ) : (
             <div className="relative w-full h-full flex flex-col items-center justify-center">
-              <GoldBurstAnimation />
+              <GoldMinimalDynamicAnimation />
             </div>
           )}
         </div>
