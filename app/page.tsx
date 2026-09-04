@@ -39,10 +39,12 @@ const apiKey = "";
 const translations: any = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
+    resetTitle: "Начать сначала", resetDesc: "Удалить всю историю, замеры веса и приёмы пищи?", resetConfirmBtn: "Да, удалить всё", resetSuccess: "Данные очищены",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
     dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food...", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD STATUS", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
+    resetTitle: "Start from scratch", resetDesc: "Delete all user history, weight logs, and meals?", resetConfirmBtn: "Yes, wipe everything", resetSuccess: "Data cleared",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   }
 };
@@ -368,6 +370,7 @@ function MainApp() {
   const [scansToday, setScansToday] = useState(0); 
   const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Voice recognition states mounted at root to avoid scroll/blur glitches
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
@@ -380,6 +383,30 @@ function MainApp() {
   useEffect(() => {
     setMounted(true);
     try {
+      // One-time automatic wipe of previous user history
+      const isFreshStartDone = localStorage.getItem('nutribot_v3_fresh_start');
+      if (!isFreshStartDone) {
+        const legacyKeys = [
+          'nutribot_profile', 'nutribot_goals', 'nutribot_meals',
+          'nutribot_weights', 'nutribot_water', 'nutribot_custom',
+          'nutribot_streak', 'nutribot_sub', 'nutribot_uid', 'nutribot_data'
+        ];
+        legacyKeys.forEach(k => localStorage.removeItem(k));
+        localStorage.setItem('nutribot_v3_fresh_start', 'true');
+
+        setUserProfile(null);
+        setDailyGoals(null);
+        setIsFirstLaunch(true);
+        setMeals([]);
+        setWeightHistory([]);
+        setWaterLogs({});
+        setCustomFoods([]);
+        setStreakDays(0);
+        setSubscription('bronze');
+        setDataLoading(false);
+        return;
+      }
+
       const savedProfile = localStorage.getItem('nutribot_profile');
       const savedGoals = localStorage.getItem('nutribot_goals');
       const savedMeals = localStorage.getItem('nutribot_meals');
@@ -773,6 +800,43 @@ function MainApp() {
     }
   }, [formattedSelectedDate, waterLogs, user]);
 
+  const handleWipeAllData = useCallback(async () => {
+    const keysToClear = [
+      'nutribot_profile', 'nutribot_goals', 'nutribot_meals',
+      'nutribot_weights', 'nutribot_water', 'nutribot_custom',
+      'nutribot_streak', 'nutribot_sub', 'nutribot_uid', 'nutribot_data'
+    ];
+    keysToClear.forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('nutribot_v3_fresh_start', 'true');
+
+    // Fresh random UID for new session
+    const newLocalUid = 'user_' + Math.random().toString(36).substring(2, 9);
+    localStorage.setItem('nutribot_uid', newLocalUid);
+    setUser({ uid: newLocalUid });
+
+    setUserProfile(null);
+    setDailyGoals(null);
+    setIsFirstLaunch(true);
+    setMeals([]);
+    setWeightHistory([]);
+    setWaterLogs({});
+    setCustomFoods([]);
+    setStreakDays(0);
+    setSubscription('bronze');
+    setShowResetConfirm(false);
+    setActiveTab('dashboard');
+
+    if (user && db && !user.uid.startsWith('user_')) {
+      try {
+        await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'));
+        await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'water'));
+        await deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'));
+      } catch (err) {
+        console.warn("Cloud wipe error:", err);
+      }
+    }
+  }, [user]);
+
   const saveCustomRecipeToDB = useCallback(async (recipeItem: any) => {
     setCustomFoods(prev => {
       const next = [recipeItem, ...prev];
@@ -857,7 +921,7 @@ function MainApp() {
         {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
         {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
         {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
-        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} />}
+        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} onRequestReset={() => setShowResetConfirm(true)} />}
       </main>
 
       {/* Floating Microphone Button: directly opens reliable root modal */}
@@ -973,6 +1037,35 @@ function MainApp() {
             <div className="flex gap-3">
               <div onClick={() => setUpgradePrompt({ show: false, required: '' })} className="btn-glass flex-1 py-3 rounded-xl bg-slate-700/50 text-white font-medium text-center">{t.cancel}</div>
               <div onClick={() => { setUpgradePrompt({ show: false, required: '' }); setActiveTab('profile'); }} className="btn-glass flex-1 py-3 rounded-xl bg-emerald-500 text-slate-900 font-bold text-center">{t.toProfile}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* In-App Confirmation Modal: Reset All Data */}
+      {showResetConfirm && (
+        <div className="absolute inset-0 z-[110] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-800/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/10 text-center animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center mx-auto mb-4">
+              <Trash2 size={32} />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">{t.resetTitle}</h3>
+            <p className="text-slate-300 text-sm mb-6">{t.resetDesc}</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowResetConfirm(false)}
+                className="btn-glass flex-1 py-3 rounded-xl bg-slate-700/60 text-white font-medium text-center"
+              >
+                {t.cancel}
+              </button>
+              <button
+                type="button"
+                onClick={handleWipeAllData}
+                className="btn-glass flex-1 py-3 rounded-xl bg-red-500 text-white font-bold text-center shadow-lg shadow-red-500/30"
+              >
+                {t.resetConfirmBtn}
+              </button>
             </div>
           </div>
         </div>
@@ -1454,7 +1547,7 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
   );
 });
 
-const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
+const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }: any) => {
   const { t, lang, setLang } = useContext(LanguageContext);
   const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState<any>(null), [purchasingTier, setPurchasingTier] = useState<any>(null);
 
@@ -1544,6 +1637,18 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
             {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
+      </div>
+
+      {/* Reset Data Section */}
+      <div className="pt-4 border-t border-white/5 pb-6">
+        <button
+          type="button"
+          onClick={onRequestReset}
+          className="btn-glass w-full py-3.5 px-4 rounded-2xl border border-red-500/30 bg-red-500/10 text-red-400 font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all shadow-md shadow-red-500/10"
+        >
+          <Trash2 size={18} />
+          <span>{t.resetTitle}</span>
+        </button>
       </div>
 
       {/* FULLSCREEN SUBSCRIPTION CELEBRATION MODAL */}
