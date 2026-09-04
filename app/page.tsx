@@ -5,28 +5,30 @@ import React, { useState, useEffect, useMemo, useCallback, createContext, useCon
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
-import { 
-  Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
+import {
+  Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User,
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
   ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
 
+// === FIREBASE ИНИЦИАЛИЗАЦИЯ ===
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
 try {
   if (typeof window !== 'undefined') {
-    const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined' 
-      ? JSON.parse((window as any).__firebase_config) 
+    const firebaseConfig = typeof (window as any).__firebase_config !== 'undefined'
+      ? JSON.parse((window as any).__firebase_config)
       : { apiKey: "AIzaSyDummyKeyForBuild" };
     app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
     auth = getAuth(app);
     db = getFirestore(app);
     if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
   }
-} catch (e: any) { 
-  console.error("Firebase init error:", e); 
+} catch (e: any) {
+  console.error("Firebase init error:", e);
 }
 
-const translations: any = {
+// === ЛОКАЛИЗАЦИЯ ===
+const translations = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", bronzeF2: "скан. штрихкодов",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
@@ -37,19 +39,13 @@ const translations: any = {
   }
 };
 
-const LanguageContext = createContext<any>(null);
+const LanguageContext = createContext(null);
 
-const globalStyles = `
-  .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); }
-  .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; }
-  @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } }
-  @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
-  @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } }
-  @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } }
-  @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } }
-  @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
-`;
+const globalStyles = `.btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } } @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } } @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } } @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }`;
 
+const langMap: any = { ru: "Русский", en: "English" };
+
+// === АНИМАЦИИ ПОДПИСОК ===
 const LightningStorm = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[150]">
     <div className="absolute inset-0 bg-blue-500/10 animate-[lightning-bg_2s_infinite]"></div>
@@ -65,12 +61,10 @@ const GoldBurstAnimation = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
     <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
     <div className="absolute w-64 h-64 bg-yellow-300/40 blur-[40px] rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-    
     <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
       <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
       <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
     </div>
-
     <div className="absolute inset-0 z-20 flex items-center justify-center">
       {[...Array(80)].map((_, i) => {
         const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
@@ -79,31 +73,15 @@ const GoldBurstAnimation = () => (
         const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
         const size = 3 + Math.random() * 8;
         return (
-          <div 
-            key={`l-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
-            style={{ width: size, height: size, left: '20%', top: '50%', '--tx': tx, '--ty': ty, animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`, animationDelay: `${Math.random() * 0.5}s`, boxShadow: '0 0 15px 3px #fcd34d' } as React.CSSProperties}
-          />
-        )
-      })}
-      {[...Array(80)].map((_, i) => {
-        const angle = (i * 360) / 80 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 400;
-        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
-        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
-        const size = 3 + Math.random() * 8;
-        return (
-          <div 
-            key={`r-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
-            style={{ width: size, height: size, left: '80%', top: '50%', '--tx': tx, '--ty': ty, animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`, animationDelay: `${Math.random() * 0.5}s`, boxShadow: '0 0 15px 3px #fcd34d' } as React.CSSProperties}
-          />
+          <div key={`l-${i}`} className="absolute bg-yellow-200 rounded-full"
+            style={{ width: size, height: size, left: '50%', top: '50%', '--tx': tx, '--ty': ty, animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`, animationDelay: `${Math.random() * 0.5}s`, boxShadow: '0 0 15px 3px #fcd34d' }} />
         )
       })}
     </div>
   </div>
 );
 
+// === ВЗАИМОДЕЙСТВИЕ С БЭКЕНДОМ GEMINI ===
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
   const parts: any[] = [{ text: prompt }];
   if (base64Image) {
@@ -117,7 +95,6 @@ async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: an
   let retries = 3;
   while (retries > 0) {
     try {
-      // Обновлено для использования вашего API роута, чтобы ключи были в безопасности
       const response = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -193,8 +170,8 @@ async function analyzeImageWithGemini(file: any, isBarcode: boolean, lang: strin
   };
 
   const prompt = isBarcode
-    ? `Analyze barcode. Return macros per 100g. Language: ${lang}`
-    : `Analyze food photo. Identify dish and estimate total macros for the whole portion. Be extremely fast. Language: ${lang}`;
+    ? `Analyze barcode. Return macros per 100g. Language: ${langMap[lang] || 'Russian'}`
+    : `Analyze food photo. Identify dish and estimate total macros for the whole portion. Be extremely fast. Language: ${langMap[lang] || 'Russian'}`;
   return await fetchGeminiWithRetry(prompt, schema, base64Image, 'image/jpeg');
 }
 
@@ -220,7 +197,10 @@ async function getAIAdviceForRemaining(remaining: any, lang: string) {
     },
     required: ["suggestions"]
   };
-  return await fetchGeminiWithRetry(`User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${lang}`, schema);
+  return await fetchGeminiWithRetry(
+    `User has left: Cals: ${remaining.calories}, P: ${remaining.protein}g, F: ${remaining.fat}g, C: ${remaining.carbs}g. Suggest 3 meals. Language: ${langMap[lang] || 'Russian'}`,
+    schema
+  );
 }
 
 async function analyzeTextToFood(text: string, lang: string) {
@@ -241,7 +221,7 @@ async function analyzeTextToFood(text: string, lang: string) {
     },
     required: ["dish_name", "total"]
   };
-  return await fetchGeminiWithRetry(`Text: "${text}". Convert to meal, estimate weight & macros. Language: ${lang}`, schema);
+  return await fetchGeminiWithRetry(`Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang] || 'Russian'}`, schema);
 }
 
 const calculateLocalMacros = (profile: any, weight: any) => {
@@ -254,18 +234,94 @@ const calculateLocalMacros = (profile: any, weight: any) => {
   return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
 };
 
+// === ПОЛНАЯ БАЗА ПРОДУКТОВ ИЗ PDF ===
 const MOCK_CATALOG = [
-  { id: 1, name: "Творог 0%", calories_100g: 71, protein_100g: 16.5, fats_100g: 0, carbs_100g: 1.3 },
-  { id: 2, name: "Творог 5%", calories_100g: 121, protein_100g: 21, fats_100g: 5, carbs_100g: 3 },
-  { id: 3, name: "Куриная грудка (отварная)", calories_100g: 165, protein_100g: 31, fats_100g: 3.6, carbs_100g: 0 },
-  { id: 4, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
-  { id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }
+  { id: 1, name: "Хлеб пшеничный из муки высшего сорта", protein_100g: 7.5, fats_100g: 0.8, carbs_100g: 49.2, calories_100g: 235 },
+  { id: 2, name: "Хлеб пшеничный из муки 1 сорта", protein_100g: 7.6, fats_100g: 0.9, carbs_100g: 49.7, calories_100g: 226 },
+  { id: 3, name: "Хлеб из ржано-пшеничной муки", protein_100g: 6.8, fats_100g: 1.2, carbs_100g: 46.4, calories_100g: 215 },
+  { id: 4, name: "Хлеб ржаной", protein_100g: 4.7, fats_100g: 0.7, carbs_100g: 49.8, calories_100g: 214 },
+  { id: 5, name: "Хлеб Бородинский", protein_100g: 6.9, fats_100g: 1.3, carbs_100g: 40.9, calories_100g: 208 },
+  { id: 6, name: "Хлеб зерновой", protein_100g: 8.6, fats_100g: 1.4, carbs_100g: 45.1, calories_100g: 228 },
+  { id: 7, name: "Хлеб цельнозерновой из смеси злаков", protein_100g: 13.3, fats_100g: 4.2, carbs_100g: 43.3, calories_100g: 265 },
+  { id: 8, name: "Хлебцы Dr. Korner Семь злаков", protein_100g: 10, fats_100g: 2, carbs_100g: 57, calories_100g: 290 },
+  { id: 9, name: "Хлебцы Dr. Korner Бородинские", protein_100g: 11, fats_100g: 3, carbs_100g: 52, calories_100g: 280 },
+  { id: 10, name: "Хлебцы Dr. Korner Гречневые", protein_100g: 11.6, fats_100g: 3, carbs_100g: 52.4, calories_100g: 283 },
+  { id: 11, name: "Хлебцы Dr. Korner Рисовые", protein_100g: 6, fats_100g: 1, carbs_100g: 69, calories_100g: 310 },
+  { id: 12, name: "Сдоба", protein_100g: 7.4, fats_100g: 2.2, carbs_100g: 52.9, calories_100g: 269 },
+  { id: 13, name: "Сухари из пшеничной муки", protein_100g: 11.2, fats_100g: 1.4, carbs_100g: 72.4, calories_100g: 331 },
+  { id: 14, name: "Мука пшеничная из твердых сортов в/с", protein_100g: 10.8, fats_100g: 1.3, carbs_100g: 69.9, calories_100g: 334 },
+  { id: 15, name: "Мука пшеничная в/с", protein_100g: 10.3, fats_100g: 1.1, carbs_100g: 70.6, calories_100g: 334 },
+  { id: 16, name: "Мука ржаная обдирная", protein_100g: 8.9, fats_100g: 1.7, carbs_100g: 61.8, calories_100g: 298 },
+  { id: 17, name: "Макаронные изделия в/с сухие", protein_100g: 10.4, fats_100g: 1.1, carbs_100g: 69.7, calories_100g: 337 },
+  { id: 18, name: "Макаронные изделия в/с вареные", protein_100g: 3.5, fats_100g: 0.4, carbs_100g: 23.2, calories_100g: 112 },
+  { id: 19, name: "Крупа гречневая ядрица", protein_100g: 12.6, fats_100g: 3.3, carbs_100g: 57.1, calories_100g: 308 },
+  { id: 20, name: "Гречка вареная", protein_100g: 4.1, fats_100g: 1, carbs_100g: 18.5, calories_100g: 100 },
+  { id: 21, name: "Рис белый шлифованный", protein_100g: 7, fats_100g: 1, carbs_100g: 74, calories_100g: 333 },
+  { id: 22, name: "Рис белый вареный", protein_100g: 2.3, fats_100g: 0.2, carbs_100g: 28.7, calories_100g: 130 },
+  { id: 23, name: "Пшено", protein_100g: 11.5, fats_100g: 3.3, carbs_100g: 66.5, calories_100g: 342 },
+  { id: 24, name: "Пшено вареное", protein_100g: 3.5, fats_100g: 1.1, carbs_100g: 23.6, calories_100g: 119 },
+  { id: 25, name: "Овсяные хлопья", protein_100g: 12.3, fats_100g: 6.2, carbs_100g: 61.8, calories_100g: 352 },
+  { id: 26, name: "Каша овсяная на воде", protein_100g: 3, fats_100g: 1.7, carbs_100g: 15, calories_100g: 88 },
+  { id: 27, name: "Манная каша на воде", protein_100g: 2.5, fats_100g: 0.2, carbs_100g: 16.8, calories_100g: 80 },
+  { id: 28, name: "Горох вареный", protein_100g: 8.3, fats_100g: 0.4, carbs_100g: 21, calories_100g: 118 },
+  { id: 29, name: "Чечевица вареная", protein_100g: 9, fats_100g: 0.4, carbs_100g: 20.1, calories_100g: 116 },
+  { id: 30, name: "Молоко 2.5%", protein_100g: 2.9, fats_100g: 2.5, carbs_100g: 4.8, calories_100g: 54 },
+  { id: 31, name: "Творог 5%", protein_100g: 21, fats_100g: 5, carbs_100g: 3, calories_100g: 145 },
+  { id: 32, name: "Сметана 15%", protein_100g: 2.6, fats_100g: 15, carbs_100g: 3.6, calories_100g: 158 },
+  { id: 33, name: "Сыр Российский", protein_100g: 23.2, fats_100g: 29.5, carbs_100g: 0, calories_100g: 364 },
+  { id: 34, name: "Говядина вырезка", protein_100g: 22.2, fats_100g: 7.1, carbs_100g: 0, calories_100g: 158 },
+  { id: 35, name: "Свинина вырезка", protein_100g: 19.4, fats_100g: 7.1, carbs_100g: 0, calories_100g: 142 },
+  { id: 36, name: "Куриная грудка сырая", protein_100g: 23.6, fats_100g: 1.9, carbs_100g: 0, calories_100g: 113 },
+  { id: 37, name: "Куриная грудка вареная", protein_100g: 31, fats_100g: 3.6, carbs_100g: 0, calories_100g: 165 },
+  { id: 38, name: "Индейка грудка", protein_100g: 23.6, fats_100g: 1.5, carbs_100g: 0, calories_100g: 114 },
+  { id: 39, name: "Колбаса Докторская", protein_100g: 12.8, fats_100g: 22.2, carbs_100g: 1.5, calories_100g: 257 },
+  { id: 40, name: "Сосиски Молочные", protein_100g: 11, fats_100g: 23.9, carbs_100g: 0.4, calories_100g: 261 },
+  { id: 41, name: "Лосось атлантический (семга)", protein_100g: 20, fats_100g: 8.1, carbs_100g: 0, calories_100g: 153 },
+  { id: 42, name: "Минтай", protein_100g: 15.9, fats_100g: 0.9, carbs_100g: 0, calories_100g: 72 },
+  { id: 43, name: "Креветки", protein_100g: 18, fats_100g: 1, carbs_100g: 0, calories_100g: 85 },
+  { id: 44, name: "Кальмар", protein_100g: 18, fats_100g: 2.2, carbs_100g: 2, calories_100g: 100 },
+  { id: 45, name: "Тунец консервированный в соку", protein_100g: 22.5, fats_100g: 0.7, carbs_100g: 0, calories_100g: 96 },
+  { id: 46, name: "Яйцо куриное", protein_100g: 12.7, fats_100g: 10.9, carbs_100g: 0.7, calories_100g: 157 },
+  { id: 47, name: "Масло оливковое", protein_100g: 0, fats_100g: 99.8, carbs_100g: 0, calories_100g: 898 },
+  { id: 48, name: "Масло сливочное", protein_100g: 0.5, fats_100g: 82.5, carbs_100g: 0.8, calories_100g: 748 },
+  { id: 49, name: "Картофель отварной", protein_100g: 2, fats_100g: 0.4, carbs_100g: 15.8, calories_100g: 75 },
+  { id: 50, name: "Огурцы", protein_100g: 0.8, fats_100g: 0.1, carbs_100g: 2.5, calories_100g: 14 },
+  { id: 51, name: "Помидоры", protein_100g: 1.1, fats_100g: 0.2, carbs_100g: 3.8, calories_100g: 24 },
+  { id: 52, name: "Яблоки", protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 9.8, calories_100g: 47 },
+  { id: 53, name: "Банан", protein_100g: 1.5, fats_100g: 0.5, carbs_100g: 21, calories_100g: 96 },
+  { id: 54, name: "Грецкие орехи", protein_100g: 16.2, fats_100g: 60.8, carbs_100g: 11.1, calories_100g: 656 },
+  { id: 55, name: "Арахис", protein_100g: 26.3, fats_100g: 45.2, carbs_100g: 9.9, calories_100g: 552 },
+  { id: 56, name: "Шоколад горький", protein_100g: 8, fats_100g: 36, carbs_100g: 46.8, calories_100g: 540 },
+  { id: 57, name: "Хлеб пшеничный из муки 1 сорта", protein_100g: 7.6, fats_100g: 0.9, carbs_100g: 49.7, calories_100g: 226 },
+  { id: 58, name: "Сыр Гауда", protein_100g: 25, fats_100g: 27, carbs_100g: 2, calories_100g: 356 },
+  { id: 59, name: "Сыр Моцарелла", protein_100g: 22.2, fats_100g: 22.3, carbs_100g: 2.2, calories_100g: 300 },
+  { id: 60, name: "Йогурт натуральный", protein_100g: 5, fats_100g: 3.2, carbs_100g: 4, calories_100g: 66 },
+  { id: 61, name: "Капуста белокочанная", protein_100g: 1.8, fats_100g: 0.1, carbs_100g: 4.7, calories_100g: 28 },
+  { id: 62, name: "Капуста брокколи", protein_100g: 2.8, fats_100g: 0.3, carbs_100g: 6.6, calories_100g: 34 },
+  { id: 63, name: "Свекла", protein_100g: 1.5, fats_100g: 0.1, carbs_100g: 8.8, calories_100g: 42 },
+  { id: 64, name: "Морковь", protein_100g: 1.3, fats_100g: 0.1, carbs_100g: 6.9, calories_100g: 35 },
+  { id: 65, name: "Шампиньоны", protein_100g: 4.3, fats_100g: 1, carbs_100g: 0.1, calories_100g: 27 },
+  { id: 66, name: "Горошек зеленый конс.", protein_100g: 3.1, fats_100g: 0.2, carbs_100g: 6.5, calories_100g: 40 },
+  { id: 67, name: "Кукуруза консервированная", protein_100g: 2.5, fats_100g: 0.5, carbs_100g: 15, calories_100g: 80 },
+  { id: 68, name: "Авокадо", protein_100g: 2, fats_100g: 14.6, carbs_100g: 8.5, calories_100g: 160 },
+  { id: 69, name: "Апельсин", protein_100g: 0.9, fats_100g: 0.2, carbs_100g: 8.1, calories_100g: 43 },
+  { id: 70, name: "Виноград", protein_100g: 0.6, fats_100g: 0.6, carbs_100g: 15.4, calories_100g: 72 },
+  { id: 71, name: "Миндаль", protein_100g: 18.6, fats_100g: 53.7, carbs_100g: 13, calories_100g: 609 },
+  { id: 72, name: "Кешью", protein_100g: 18.5, fats_100g: 48.5, carbs_100g: 22.5, calories_100g: 600 },
+  { id: 73, name: "Сахар", protein_100g: 0, fats_100g: 0, carbs_100g: 99.8, calories_100g: 399 },
+  { id: 74, name: "Мед натуральный", protein_100g: 0.8, fats_100g: 0, carbs_100g: 80.3, calories_100g: 308 },
+  { id: 75, name: "Шоколад молочный", protein_100g: 6.9, fats_100g: 35.7, carbs_100g: 54.4, calories_100g: 550 },
+  { id: 76, name: "Вино белое сухое", protein_100g: 0.1, fats_100g: 0, carbs_100g: 0.3, calories_100g: 75 },
+  { id: 77, name: "Пиво светлое легкое", protein_100g: 0.3, fats_100g: 0, carbs_100g: 5, calories_100g: 44 },
+  { id: 78, name: "Кофе черный без сахара", protein_100g: 0.2, fats_100g: 0.5, carbs_100g: 0.3, calories_100g: 7 },
+  { id: 79, name: "Кока-кола", protein_100g: 0, fats_100g: 0, carbs_100g: 10.4, calories_100g: 42 },
+  { id: 80, name: "Сок яблочный", protein_100g: 0.4, fats_100g: 0.1, carbs_100g: 10, calories_100g: 44 }
 ];
 
+// === КОМПОНЕНТЫ ===
 const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
   <div onClick={onClick} className={`btn-glass flex flex-col items-center gap-1 w-14 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'text-slate-400'}`}>
-    {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}
-    <span className="text-[10px] font-semibold">{label}</span>
+    {React.cloneElement(icon, { size: 24, strokeWidth: isActive ? 2.5 : 2 })}<span className="text-[10px] font-semibold">{label}</span>
   </div>
 ));
 
@@ -275,16 +331,14 @@ const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
     <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-xl border border-white/5 flex flex-col shadow-lg">
       <span className="text-xs text-slate-400 mb-1">{label}</span>
       <span className="font-bold text-sm mb-2 text-white">{Math.round(current)} / {goal}{g}</span>
-      <div className="h-1.5 w-full bg-slate-700/50 rounded-full mt-auto overflow-hidden">
-        <div className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}`} style={{ width: `${percent}%` }} />
-      </div>
+      <div className="h-1.5 w-full bg-slate-700/50 rounded-full mt-auto overflow-hidden"><div className={`h-full rounded-full transition-all duration-1000 bg-gradient-to-r ${color}`} style={{ width: `${percent}%` }} /></div>
     </div>
   );
 });
 
 const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate, setSelectedDate, requestAddMeal, currentWater, addWater, deleteMeal, checkAccess }: any) => {
-  const { t, lang } = useContext(LanguageContext);
-  const [adviceData, setAdviceData] = useState<any>(null);
+  const { t, lang } = useContext(LanguageContext) as any;
+  const [adviceData, setAdviceData] = useState(null);
   const [loadingAdvice, setLoadingAdvice] = useState(false);
   const [showAdviceModal, setShowAdviceModal] = useState(false);
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
@@ -350,15 +404,9 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
   return (
     <div className="p-4 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
       <div className="flex justify-between items-center bg-slate-800/80 backdrop-blur-md p-2 rounded-2xl shadow-lg border border-white/5">
-        <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
-          <ChevronLeft size={24} />
-        </div>
-        <div className="flex items-center gap-2 font-bold text-white text-lg">
-          <CalendarDays size={20} className="text-emerald-400" />{formatDisplayDate(selectedDate)}
-        </div>
-        <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl">
-          <ChevronRight size={24} />
-        </div>
+        <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() - 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl"><ChevronLeft size={24} /></div>
+        <div className="flex items-center gap-2 font-bold text-white text-lg"><CalendarDays size={20} className="text-emerald-400" />{formatDisplayDate(selectedDate)}</div>
+        <div onClick={() => { const d = new Date(selectedDate); d.setDate(d.getDate() + 1); setSelectedDate(d); }} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-xl"><ChevronRight size={24} /></div>
       </div>
 
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5 relative overflow-hidden">
@@ -519,12 +567,12 @@ const Dashboard = React.memo(({ current, goals, meals, onAddClick, selectedDate,
 });
 
 const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, incrementScan, checkAccess }: any) => {
-  const { t, lang } = useContext(LanguageContext);
+  const { t, lang } = useContext(LanguageContext) as any;
   const [status, setStatus] = useState('idle');
   const [result, setResult] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<any>(null);
   const [errorDetails, setErrorDetails] = useState('');
-  
+
   const handleFileChange = async (e: any) => {
     if (subscription === 'silver' && scansToday >= 10) { checkAccess('gold'); return; }
     const file = e.target.files[0];
@@ -546,47 +594,22 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
 
   return (
     <div className="h-full flex flex-col bg-slate-900 absolute inset-0 z-40 animate-in slide-in-from-bottom duration-300 overflow-y-auto">
-      <div className="flex items-center justify-between p-4 bg-slate-800/80 backdrop-blur-md shadow-md sticky top-0 z-10 border-b border-white/5">
-        <div onClick={onCancel} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div>
-        <h2 className="font-semibold text-lg text-white">{t.aiScanner}</h2>
-        <div className="w-10"></div>
-      </div>
+      <div className="flex items-center justify-between p-4 bg-slate-800/80 backdrop-blur-md shadow-md sticky top-0 z-10 border-b border-white/5"><div onClick={onCancel} className="btn-glass p-2 text-slate-400 bg-slate-700/50 rounded-full"><ChevronLeft size={24} /></div><h2 className="font-semibold text-lg text-white">{t.aiScanner}</h2><div className="w-10"></div></div>
       <div className="flex-1 p-4 flex flex-col items-center justify-start min-h-full">
         {status === 'idle' && (
           <div className="text-center w-full max-w-sm mt-10 space-y-4">
             {subscription === 'silver' && <div className="bg-slate-800/80 text-sm text-slate-400 p-2 rounded-xl mb-4 border border-white/5">Доступно: <span className="text-white font-bold">{10 - scansToday}/10</span></div>}
-            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block">
-              <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileChange} />
-              <div className="bg-emerald-500/20 p-4 rounded-full inline-block"><Camera size={32} className="text-emerald-400" /></div>
-              <div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.takePhoto}</p></div>
-            </label>
-            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-blue-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block">
-              <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-              <div className="bg-blue-500/20 p-4 rounded-full inline-block"><ImagePlus size={32} className="text-blue-400" /></div>
-              <div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.fromGallery}</p></div>
-            </label>
+            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileChange} /><div className="bg-emerald-500/20 p-4 rounded-full inline-block"><Camera size={32} className="text-emerald-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.takePhoto}</p></div></label>
+            <label className="btn-glass w-full bg-slate-800/80 backdrop-blur-md border border-blue-500/30 rounded-2xl p-6 flex items-center justify-start gap-6 shadow-lg block"><input type="file" accept="image/*" className="hidden" onChange={handleFileChange} /><div className="bg-blue-500/20 p-4 rounded-full inline-block"><ImagePlus size={32} className="text-blue-400" /></div><div className="text-left inline-block align-middle ml-4"><p className="text-white font-bold text-lg mb-1">{t.fromGallery}</p></div></label>
           </div>
         )}
         {status === 'error' && (
-          <div className="text-center mt-10 w-full max-w-sm">
-            <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
-              <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3>
-              <p className="text-red-400/80 text-sm mb-4 bg-black/20 p-2 rounded-lg break-words">{errorDetails}</p>
-              <div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div>
-            </div>
-          </div>
+          <div className="text-center mt-10 w-full max-w-sm"><div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6"><AlertCircle size={48} className="text-red-500 mx-auto mb-4" /><h3 className="text-lg font-bold text-white mb-2">{t.recognitionError}</h3><p className="text-slate-400 text-xs mb-4">{errorDetails}</p><div onClick={() => setStatus('idle')} className="btn-glass w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-xl mt-4 text-center">{t.tryAgain}</div></div></div>
         )}
         {(status === 'scanning' || status === 'result') && imagePreview && (
           <div className="w-full max-w-sm animate-in fade-in flex flex-col items-center pb-10">
-            <div className="relative w-full aspect-square rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-2xl bg-black">
-              <img src={imagePreview} alt="Еда" className="w-full h-full object-contain" />
-              {status === 'scanning' && (
-                <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-white font-medium text-lg">{t.aiThinking}</p>
-                </div>
-              )}
+            <div className="relative w-full aspect-square rounded-3xl overflow-hidden mb-6 border border-white/10 shadow-2xl bg-black"><img src={imagePreview} alt="Еда" className="w-full h-full object-contain" />
+              {status === 'scanning' && <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center"><div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-white font-medium text-lg">{t.aiThinking}</p></div>}
             </div>
             {status === 'result' && result && (
               <div className="w-full bg-slate-800/90 backdrop-blur-md rounded-2xl p-5 border border-white/10 shadow-xl">
@@ -597,9 +620,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
                   <div className="text-center"><div className="text-sm font-bold text-amber-400">{Math.round(result.total?.fat || 0)}г</div></div>
                   <div className="text-center"><div className="text-sm font-bold text-purple-400">{Math.round(result.total?.carbs || 0)}г</div></div>
                 </div>
-                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">
-                  {t.addToDiary}
-                </div>
+                <div onClick={() => onSave({ dish_name: result.dish_name, total: result.total })} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-3 px-4 rounded-xl shadow-[0_5px_20px_rgba(16,185,129,0.4)] text-center">{t.addToDiary}</div>
               </div>
             )}
           </div>
@@ -610,7 +631,7 @@ const CameraScanner = React.memo(({ onSave, onCancel, subscription, scansToday, 
 });
 
 const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
-  const { t, lang } = useContext(LanguageContext);
+  const { t, lang } = useContext(LanguageContext) as any;
   const [activeSubTab, setActiveSubTab] = useState('global');
   const [query, setQuery] = useState('');
   const [weight, setWeight] = useState(100);
@@ -723,37 +744,20 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
     if (ingSelected) {
       return (
         <div className="p-4 animate-in slide-in-from-right h-full bg-slate-900">
-          <div className="flex items-center gap-3 mb-6">
-            <div onClick={() => setIngSelected(null)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div>
-            <h3 className="font-bold text-lg text-white truncate">Вес: {ingSelected.name}</h3>
-          </div>
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <input type="number" value={ingWeight} onChange={e => setIngWeight(Number(e.target.value))} className="bg-slate-800/80 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 text-white outline-none" />
-            <span className="text-xl text-slate-400">{t.g}</span>
-          </div>
-          <div onClick={addIngredientToRecipe} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-lg shadow-emerald-500/40">
-            {t.addIngredient}
-          </div>
+          <div className="flex items-center gap-3 mb-6"><div onClick={() => setIngSelected(null)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div><h3 className="font-bold text-lg text-white truncate">Вес: {ingSelected.name}</h3></div>
+          <div className="flex items-center justify-center gap-4 mb-8"><input type="number" value={ingWeight} onChange={e => setIngWeight(Number(e.target.value))} className="bg-slate-800/80 border border-white/10 rounded-xl py-3 px-4 text-center text-3xl font-bold w-32 text-white outline-none" /><span className="text-xl text-slate-400">{t.g}</span></div>
+          <div onClick={addIngredientToRecipe} className="btn-glass w-full bg-emerald-500 text-slate-900 font-bold py-4 rounded-xl text-lg text-center shadow-[0_5px_20px_rgba(16,185,129,0.4)]">{t.addIngredient}</div>
         </div>
       );
     }
     return (
       <div className="p-4 animate-in fade-in flex flex-col h-full bg-slate-900">
-        <div className="flex items-center gap-3 mb-6">
-          <div onClick={() => setIsSearchingIngredient(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div>
-          <h2 className="text-xl font-bold">{t.ingredient}</h2>
-        </div>
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-          <input type="text" placeholder={t.searchPlaceholder} value={safeIngQuery} onChange={e => setIngQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
-        </div>
+        <div className="flex items-center gap-3 mb-6"><div onClick={() => setIsSearchingIngredient(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div><h2 className="text-xl font-bold">{t.ingredient}</h2></div>
+        <div className="relative mb-4"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} /><input type="text" placeholder={t.searchPlaceholder} value={safeIngQuery} onChange={e => setIngQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/></div>
         <div className="flex-1 overflow-y-auto pb-10 space-y-2">
           {ingSearchResults.map((item: any, idx: number) => (
             <div key={`${item.id || idx}`} onClick={() => { setIngSelected(item); setIngWeight(100); }} className="btn-glass bg-slate-800/80 p-4 rounded-xl flex justify-between items-center border border-white/5 mb-2">
-              <div className="pr-2">
-                <h4 className="font-medium text-slate-100 truncate">{item.name}</h4>
-                <div className="text-xs text-slate-400 mt-1 flex gap-2"><span>Б: {item.protein_100g}</span><span>Ж: {item.fats_100g}</span><span>У: {item.carbs_100g}</span></div>
-              </div>
+              <div className="pr-2"><h4 className="font-medium text-slate-100 truncate">{item.name}</h4><div className="text-xs text-slate-400 mt-1 flex gap-2"><span>Б: {item.protein_100g}</span><span>Ж: {item.fats_100g}</span><span>У: {item.carbs_100g}</span></div></div>
               <div className="font-bold text-emerald-400 whitespace-nowrap">{item.calories_100g} <span className="text-[10px] text-slate-500">{t.kcal}</span></div>
             </div>
           ))}
@@ -766,13 +770,8 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
     const isReadyToSave = recipeName && recipeIngredients.length > 0;
     return (
       <div className="p-4 animate-in slide-in-from-right flex flex-col h-full bg-slate-900 overflow-y-auto pb-20">
-        <div className="flex items-center gap-3 mb-6">
-          <div onClick={() => setIsCreatingRecipe(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div>
-          <h2 className="text-xl font-bold">{t.constructor}</h2>
-        </div>
-        <div className="mb-6">
-          <input type="text" placeholder={t.recipeName} value={recipeName} onChange={e => setRecipeName(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none"/>
-        </div>
+        <div className="flex items-center gap-3 mb-6"><div onClick={() => setIsCreatingRecipe(false)} className="btn-glass p-2 text-slate-400 bg-slate-800 rounded-full"><ChevronLeft size={24} /></div><h2 className="text-xl font-bold">{t.constructor}</h2></div>
+        <div className="mb-6"><input type="text" placeholder={t.recipeName} value={recipeName} onChange={e => setRecipeName(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-4 py-3 text-white outline-none"/></div>
         {recipeError && <div className="text-red-400 text-sm text-center mb-4 bg-red-500/10 p-2 rounded-xl border border-red-500/30">{recipeError}</div>}
         <div className="mb-6 flex-1">
           <div className="space-y-2 mb-4">
@@ -783,9 +782,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
               </div>
             ))}
           </div>
-          <div onClick={() => setIsSearchingIngredient(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-3 rounded-xl flex justify-center items-center gap-2 font-medium">
-            <Plus size={18}/> {t.addIngredient}
-          </div>
+          <div onClick={() => setIsSearchingIngredient(true)} className="btn-glass w-full bg-slate-800 border border-emerald-500/30 text-emerald-400 py-3 rounded-xl flex justify-center items-center gap-2 font-medium"><Plus size={18}/> {t.addIngredient}</div>
         </div>
         {recipeIngredients.length > 0 && (
           <div className="bg-slate-800/50 p-4 rounded-xl border border-white/5 mb-6">
@@ -798,9 +795,7 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
             </div>
           </div>
         )}
-        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/40' : 'bg-slate-700 text-slate-500'}`}>
-          {t.saveRecipe}
-        </div>
+        <div onClick={saveCustomRecipe} className={`btn-glass w-full py-4 rounded-xl text-center font-bold ${isReadyToSave ? 'bg-emerald-500 text-slate-900 shadow-[0_5px_20px_rgba(16,185,129,0.4)]' : 'bg-slate-700 text-slate-500'}`}>{t.saveRecipe}</div>
       </div>
     );
   }
@@ -814,12 +809,9 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
             <div onClick={() => setActiveSubTab('custom')} className={`btn-glass flex-1 py-2 text-sm font-bold rounded-lg flex items-center justify-center ${activeSubTab === 'custom' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400'}`}>{t.myRecipes}</div>
           </div>
           <div className="flex gap-2 mb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input type="text" placeholder={t.searchPlaceholder} value={safeQuery} onChange={e => setQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/>
-            </div>
+            <div className="relative flex-1"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} /><input type="text" placeholder={t.searchPlaceholder} value={safeQuery} onChange={e => setQuery(String(e.target?.value || ''))} className="w-full bg-slate-800/80 border border-white/5 rounded-xl py-3 pl-10 pr-4 text-white outline-none"/></div>
             {activeSubTab === 'global' && (
-              <label 
+              <label
                 onClick={(e) => { if (subscription === 'bronze' && barcodeScansToday >= 7) { e.preventDefault(); checkAccess('silver'); } }}
                 className={`btn-glass bg-slate-800/80 border border-white/5 rounded-xl px-4 flex justify-center items-center ${isScanning ? 'opacity-50 pointer-events-none' : 'text-slate-400'}`}
               >
@@ -855,10 +847,10 @@ const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods,
 });
 
 const WeightTracker = React.memo(({ history, onAdd }: any) => {
-  const { t } = useContext(LanguageContext);
+  const { t } = useContext(LanguageContext) as any;
   const [inputWeight, setInputWeight] = useState('');
   const handleSubmit = (e: any) => { e.preventDefault(); const val = parseFloat(String(inputWeight).replace(',', '.')); if (!isNaN(val) && val > 0) { onAdd(val); setInputWeight(''); } };
-  
+
   const chartData = [...history].reverse();
   const maxW = chartData.length > 0 ? Math.max(...chartData.map((h: any) => h.weight)) + 1 : 100;
   const minW = chartData.length > 0 ? Math.max(0, Math.min(...chartData.map((h: any) => h.weight)) - 1) : 0;
@@ -869,31 +861,17 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h2 className="text-slate-200 font-semibold mb-4 flex items-center gap-2"><Scale size={20} className="text-emerald-400" /> {t.weightTitle}</h2>
-        <form onSubmit={handleSubmit} className="flex gap-3">
-          <input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/>
-          <button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button>
-        </form>
+        <form onSubmit={handleSubmit} className="flex gap-3"><input type="text" inputMode="decimal" value={inputWeight} onChange={e => setInputWeight(String(e.target?.value || ''))} placeholder={t.weightPlaceholder} className="flex-1 bg-slate-900/80 border border-white/5 rounded-xl px-4 py-3 text-white outline-none text-center"/><button type="submit" className="btn-glass bg-emerald-500 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-[0_5px_15px_rgba(16,185,129,0.3)]">{t.add}</button></form>
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.chart}</h3>
         {history.length > 1 ? (
-          <div className="w-full h-32 relative flex items-center justify-center">
-            <svg viewBox="-10 -10 320 120" className="w-full h-full overflow-visible">
-              <polyline points={points} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg" />
-              {chartData.map((d: any, i: number) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}
-            </svg>
-          </div>
-        ) : (
-          <div className="w-full h-32 flex flex-col items-center justify-center text-slate-500 border border-dashed border-slate-700 rounded-xl">
-            <TrendingDown size={32} className="mb-2 opacity-50" />
-            <p className="text-sm text-center px-4">{t.needMoreData}</p>
-          </div>
-        )}
+          <div className="w-full h-32 relative flex items-center justify-center"><svg viewBox="-10 -10 320 120" className="w-full h-full overflow-visible"><polyline points={points} fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg" />{chartData.map((d: any, i: number) => <circle key={i} cx={(i / Math.max(chartData.length - 1, 1)) * 300} cy={100 - ((d.weight - minW) / range) * 100} r="4" fill="#0f172a" stroke="#10b981" strokeWidth="2" />)}</svg></div>
+        ) : (<div className="w-full h-32 flex flex-col items-center justify-center text-slate-500 border border-dashed border-slate-700 rounded-xl"><TrendingDown size={32} className="mb-2 opacity-50" /><p className="text-sm text-center px-4">{t.needMoreData}</p></div>)}
       </div>
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-white/5">
         <h3 className="text-sm font-medium text-slate-400 mb-4">{t.history}</h3>
-        <div className="space-y-0">
-          {history.map((record: any, index: number) => {
+        <div className="space-y-0">{history.map((record: any, index: number) => {
             const prevRecord = history[index + 1];
             const diff = prevRecord ? (record.weight - prevRecord.weight).toFixed(1) : 0;
             return (
@@ -909,15 +887,14 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
                 </div>
               </div>
             );
-          })}
-        </div>
+        })}</div>
       </div>
     </div>
   );
 });
 
 const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
-  const { t, lang, setLang } = useContext(LanguageContext);
+  const { t, lang, setLang } = useContext(LanguageContext) as any;
   const [purchaseStatus, setPurchaseStatus] = useState('idle');
   const [expandedTier, setExpandedTier] = useState<any>(null);
   const [purchasingTier, setPurchasingTier] = useState<any>(null);
@@ -926,26 +903,21 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
     setPurchasingTier(level);
     setPurchaseStatus('loading');
     setTimeout(() => {
-      setPurchaseStatus('confetti'); 
-      setTimeout(() => { 
-        setPurchaseStatus('success'); 
-        setSubscription(level); 
-        setTimeout(() => { setPurchaseStatus('idle'); setPurchasingTier(null); }, 3500); 
-      }, 500); 
+      setPurchaseStatus('confetti');
+      setTimeout(() => {
+        setPurchaseStatus('success');
+        setSubscription(level);
+        setTimeout(() => { setPurchaseStatus('idle'); setPurchasingTier(null); }, 3500);
+      }, 500);
     }, 1000);
   };
 
   return (
-    <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6 pb-20">
+    <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 flex justify-between items-center border border-white/5 shadow-lg">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500">
-            <User size={32} className="text-slate-400" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-white">@telegram_user</h2>
-            <p className="text-slate-400 text-sm">{t.inSystemSince}</p>
-          </div>
+          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500"><User size={32} className="text-slate-400" /></div>
+          <div><h2 className="text-xl font-bold text-white">@telegram_user</h2><p className="text-slate-400 text-sm">{t.inSystemSince}</p></div>
         </div>
       </div>
 
@@ -965,15 +937,10 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
               <h4 className="font-bold text-lg text-[#cd7f32] flex items-center gap-2"><Shield size={20} /> Bronze</h4>
               <span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">{currentSub === 'bronze' ? t.current : t.free}</span>
             </div>
-            
-            <div 
-              onClick={() => setExpandedTier(expandedTier === 'bronze' ? null : 'bronze')} 
-              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
-            >
+            <div onClick={() => setExpandedTier(expandedTier === 'bronze' ? null : 'bronze')} className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5">
               <span className="text-sm">{expandedTier === 'bronze' ? t.hideDetails : t.allFeatures}</span>
               <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'bronze' ? 'rotate-180 text-emerald-400' : 'text-slate-500'}`} size={20}/>
             </div>
-            
             {expandedTier === 'bronze' && (
               <ul className="text-sm text-slate-300 space-y-3 mt-4 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
                 {[
@@ -1002,15 +969,10 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
               <h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4>
               <span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span>
             </div>
-            
-            <div 
-              onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} 
-              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
-            >
+            <div onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5">
               <span className="text-sm">{expandedTier === 'silver' ? t.hideDetails : t.allFeatures}</span>
               <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180 text-blue-400' : 'text-slate-500'}`} size={20}/>
             </div>
-            
             {expandedTier === 'silver' && (
               <ul className="text-sm text-slate-300 space-y-3 mt-4 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
                 {[
@@ -1028,7 +990,6 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
                 ))}
               </ul>
             )}
-            
             <div className="mt-6">
               {currentSub !== 'silver' && currentSub !== 'gold' ? (
                 <div onClick={() => handlePurchase('silver')} className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center">{t.buySilver}</div>
@@ -1046,15 +1007,10 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
               <h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4>
               <span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span>
             </div>
-            
-            <div 
-              onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} 
-              className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5"
-            >
+            <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center justify-between w-full py-3 mt-2 text-slate-300 font-medium bg-slate-800/50 hover:bg-slate-800 transition-colors rounded-xl px-4 border border-white/5">
               <span className="text-sm">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures}</span>
               <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180 text-amber-400' : 'text-slate-500'}`} size={20}/>
             </div>
-            
             {expandedTier === 'gold' && (
               <ul className="text-sm text-slate-300 space-y-3 mt-4 relative z-10 animate-in slide-in-from-top-2 fade-in bg-slate-800/30 p-4 rounded-xl border border-white/5">
                 {[
@@ -1071,7 +1027,6 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
                 ))}
               </ul>
             )}
-            
             <div className="mt-6">
               {currentSub !== 'gold' ? (
                 <div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>
@@ -1112,7 +1067,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription }: any) => {
 });
 
 const OnboardingScreen = React.memo(({ onComplete }: any) => {
-  const { t } = useContext(LanguageContext);
+  const { t } = useContext(LanguageContext) as any;
   const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -1124,15 +1079,15 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
 
   const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
   const activityOptions = [
-    { id: 'min', label: t.activities.min }, 
-    { id: 'low', label: t.activities.low }, 
-    { id: 'med', label: t.activities.med }, 
-    { id: 'high', label: t.activities.high }, 
+    { id: 'min', label: t.activities.min },
+    { id: 'low', label: t.activities.low },
+    { id: 'med', label: t.activities.med },
+    { id: 'high', label: t.activities.high },
     { id: 'ext', label: t.activities.ext }
   ];
   const goalOptions = [
-    { id: 'lose', label: t.goals.lose }, 
-    { id: 'keep', label: t.goals.keep }, 
+    { id: 'lose', label: t.goals.lose },
+    { id: 'keep', label: t.goals.keep },
     { id: 'gain', label: t.goals.gain }
   ];
 
@@ -1193,9 +1148,10 @@ const OnboardingScreen = React.memo(({ onComplete }: any) => {
   );
 });
 
+// === ОСНОВНОЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ ===
 function NutriBotApp() {
-  const { t, lang } = useContext(LanguageContext);
-  
+  const { t, lang } = useContext(LanguageContext) as any;
+
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
@@ -1203,19 +1159,19 @@ function NutriBotApp() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [dailyGoals, setDailyGoals] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedDate, setSelectedDate] = useState(new Date()); 
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [meals, setMeals] = useState<any[]>([]);
   const [weightHistory, setWeightHistory] = useState<any[]>([]);
   const [waterLogs, setWaterLogs] = useState<any>({});
   const [customFoods, setCustomFoods] = useState<any[]>([]);
   const [recentFoods, setRecentFoods] = useState<any[]>([]);
   const [pendingMeal, setPendingMeal] = useState<any>(null);
-  
-  const [streakDays, setStreakDays] = useState(0); 
+
+  const [streakDays, setStreakDays] = useState(0);
   const [showStreakPopup, setShowStreakPopup] = useState(false);
-  const [subscription, setSubscription] = useState('bronze'); 
-  const [scansToday, setScansToday] = useState(0); 
-  const [barcodeScansToday, setBarcodeScansToday] = useState(0); 
+  const [subscription, setSubscription] = useState('bronze');
+  const [scansToday, setScansToday] = useState(0);
+  const [barcodeScansToday, setBarcodeScansToday] = useState(0);
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
 
   const streakStyle = useMemo(() => {
@@ -1242,16 +1198,16 @@ function NutriBotApp() {
         setAuthLoading(false);
       } else {
         try {
-          if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) { 
-            await signInWithCustomToken(auth, (window as any).__initial_auth_token); 
-          } else { 
-            await signInAnonymously(auth); 
+          if (typeof (window as any).__initial_auth_token !== 'undefined' && (window as any).__initial_auth_token) {
+            await signInWithCustomToken(auth, (window as any).__initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
           }
-        } catch (e: any) { 
+        } catch (e: any) {
           let localUid = localStorage.getItem('nutribot_uid');
-          if (!localUid) { 
-            localUid = 'offline-user-' + Math.random().toString(36).substring(7); 
-            localStorage.setItem('nutribot_uid', localUid); 
+          if (!localUid) {
+            localUid = 'offline-user-' + Math.random().toString(36).substring(7);
+            localStorage.setItem('nutribot_uid', localUid);
           }
           setUser({ uid: localUid });
           setAuthLoading(false);
@@ -1310,7 +1266,7 @@ function NutriBotApp() {
 
     const unsubWeight = onSnapshot(collection(db, 'artifacts', appId, 'users', uid, 'weights'), (snap: any) => {
       if (!isSubscribed) return;
-      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a,b) => b.id - a.id));
+      const items: any[] = []; snap.forEach((d: any) => items.push(d.data())); setWeightHistory(items.sort((a: any,b: any) => b.id - a.id));
     }, (err: any) => console.error("Weight sync error:", err));
 
     const unsubWater = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'water'), (docSnap: any) => {
@@ -1327,8 +1283,7 @@ function NutriBotApp() {
       if (!isSubscribed) return;
       if(docSnap.exists()) {
         const data = docSnap.data();
-        setSubscription(data.subscription || 'bronze'); 
-        setStreakDays(data.streakDays || 0);
+        setSubscription(data.subscription || 'bronze'); setStreakDays(data.stats?.streakDays ?? 0);
         if(data.lastScanDate === new Date().toDateString()) {
           setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
         } else { setScansToday(0); setBarcodeScansToday(0); }
@@ -1354,18 +1309,18 @@ function NutriBotApp() {
 
   const current = useMemo(() => currentDayMeals.reduce(
     (acc: any, meal: any) => ({
-      calories: acc.calories + (meal.total?.calories || 0), 
+      calories: acc.calories + (meal.total?.calories || 0),
       protein: acc.protein + (meal.total?.protein || 0),
-      fat: acc.fat + (meal.total?.fat || 0), 
+      fat: acc.fat + (meal.total?.fat || 0),
       carbs: acc.carbs + (meal.total?.carbs || 0),
     }), { calories: 0, protein: 0, fat: 0, carbs: 0 }
   ), [currentDayMeals]);
 
   const handleOnboardingComplete = useCallback(async (goals: any, formData: any) => {
-    setUserProfile(formData); 
-    setDailyGoals(goals); 
+    setUserProfile(formData);
+    setDailyGoals(goals);
     setIsFirstLaunch(false);
-    const d = new Date(); 
+    const d = new Date();
     const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
     setWeightHistory([wData]);
@@ -1386,23 +1341,21 @@ function NutriBotApp() {
   const confirmAddMeal = useCallback(async (type: string) => {
     if(pendingMeal) {
       const willIgniteStreak = formattedSelectedDate === todayFormatted && !hasMealsToday;
-      const d = new Date(); 
+      const d = new Date();
       const safeTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
       const newMeal = { ...pendingMeal, type, date: formattedSelectedDate, id: Date.now() + Math.random(), time: safeTime };
-      setMeals((prev: any) => [...prev, newMeal]); 
-      setPendingMeal(null); 
+      setMeals((prev: any) => [...prev, newMeal]);
+      setPendingMeal(null);
       setActiveTab('dashboard');
-      
-      if (willIgniteStreak) { 
-        const newStreak = streakDays + 1; 
+
+      if (willIgniteStreak) {
+        const newStreak = streakDays + 1;
         setStreakDays(newStreak);
-        
         const jubileeDays = [5, 10, 30, 60, 100, 200, 400];
         if (jubileeDays.includes(newStreak)) {
-          setShowStreakPopup(true); 
-          setTimeout(() => setShowStreakPopup(false), 4500); 
+          setShowStreakPopup(true);
+          setTimeout(() => setShowStreakPopup(false), 4500);
         }
-
         if(user && db && !user.uid.startsWith('offline-user')) {
           setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { streakDays: newStreak }, {merge:true});
         }
@@ -1423,7 +1376,7 @@ function NutriBotApp() {
   const addWeight = useCallback(async (weightStr: any) => {
     const weight = parseFloat(String(weightStr).replace(',', '.'));
     if(isNaN(weight)) return;
-    const d = new Date(); 
+    const d = new Date();
     const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight };
     setWeightHistory((prev: any) => [wData, ...prev]);
@@ -1465,12 +1418,12 @@ function NutriBotApp() {
 
   const incrementScan = useCallback(async (type: string) => {
     const todayStr = new Date().toDateString();
-    const newStats = { 
-      lastScanDate: todayStr, 
-      scansToday: type === 'photo' ? scansToday + 1 : scansToday, 
-      barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday 
+    const newStats = {
+      lastScanDate: todayStr,
+      scansToday: type === 'photo' ? scansToday + 1 : scansToday,
+      barcodeScansToday: type === 'barcode' ? barcodeScansToday + 1 : barcodeScansToday
     };
-    if (type === 'photo') setScansToday(p => p+1); 
+    if (type === 'photo') setScansToday(p => p+1);
     if (type === 'barcode') setBarcodeScansToday(p => p+1);
     if(user && db && !user.uid.startsWith('offline-user')) {
       await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), newStats, {merge:true}).catch(console.error);
@@ -1494,10 +1447,7 @@ function NutriBotApp() {
     <div className="flex flex-col h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto shadow-2xl relative overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
       <header className="px-4 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center z-10 relative">
-        <div className="flex items-center gap-2">
-          <Activity className="text-emerald-400" size={24} />
-          <h1 className="text-lg font-bold">NutriBot</h1>
-        </div>
+        <div className="flex items-center gap-2"><Activity className="text-emerald-400" size={24} /><h1 className="text-lg font-bold">NutriBot</h1></div>
         <div className="flex items-center gap-3">
           <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all duration-300 ${hasMealsToday ? `bg-${streakStyle.bg}/10 ${streakStyle.border} ${streakStyle.text} shadow-md ${streakStyle.shadow}` : 'bg-slate-700/50 border-slate-600 text-slate-400'}`}>
             <Flame size={16} className={hasMealsToday ? `${streakStyle.fill} animate-pulse` : ""} />
