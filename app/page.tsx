@@ -61,6 +61,37 @@ const globalStyles = `
   @keyframes silverPulseWave { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.8); } 70% { transform: scale(1.08); box-shadow: 0 0 0 24px rgba(56, 189, 248, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); } }
   @keyframes lightningFlash { 0%, 100% { opacity: 0.1; } 12%, 35%, 55% { opacity: 0.85; } 22%, 45% { opacity: 0.15; } }
   @keyframes boltFlicker { 0%, 100% { opacity: 0.3; transform: scaleY(0.96); } 15%, 45%, 75% { opacity: 1; transform: scaleY(1); } 30%, 60% { opacity: 0.15; } }
+  
+  /* Dynamic Gold FX Animations */
+  @keyframes goldRayRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes goldShockwave {
+    0% { transform: scale(0.4); opacity: 1; border-width: 6px; }
+    50% { opacity: 0.85; }
+    100% { transform: scale(2.8); opacity: 0; border-width: 1px; }
+  }
+  @keyframes goldCrownBounce {
+    0% { transform: scale(0.1) translateY(80px) rotate(-15deg); opacity: 0; filter: drop-shadow(0 0 50px #f59e0b) brightness(2.5); }
+    55% { transform: scale(1.22) translateY(-15px) rotate(6deg); opacity: 1; filter: drop-shadow(0 0 70px #fde047) brightness(1.6); }
+    75% { transform: scale(0.95) translateY(5px) rotate(-3deg); }
+    100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 45px #f59e0b) brightness(1.2); }
+  }
+  @keyframes goldTextShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes floatSparkle {
+    0% { transform: translateY(20px) scale(0.5); opacity: 0; }
+    25% { opacity: 1; }
+    80% { opacity: 0.9; }
+    100% { transform: translateY(-130px) scale(1.2); opacity: 0; }
+  }
+  @keyframes goldAuraPulse {
+    0%, 100% { transform: scale(0.85); opacity: 0.55; }
+    50% { transform: scale(1.18); opacity: 0.95; }
+  }
 `;
 
 const langMap: any = { ru: "Русский", en: "English" };
@@ -126,33 +157,140 @@ const LightningStorm = () => (
 
 const GoldBurstAnimation = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center">
-    <div className="absolute w-96 h-96 bg-amber-500/60 blur-[60px] rounded-full animate-pulse"></div>
-    <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
-      <Crown size={90} className="text-[#fde047] mb-[-12px] z-20" fill="currentColor" style={{ filter: 'drop-shadow(0 0 20px rgba(253,224,71,0.8))' }} />
-      <span className="text-[#fde047] font-black text-7xl tracking-widest z-10 relative" style={{ filter: 'drop-shadow(0 0 25px rgba(253,224,71,1))' }}>GOLD</span>
+    {/* Atmospheric Golden Nebula */}
+    <div 
+      className="absolute w-[360px] h-[360px] bg-gradient-to-r from-amber-500/50 via-yellow-400/60 to-orange-500/50 blur-[85px] rounded-full"
+      style={{ animation: 'goldAuraPulse 2.8s ease-in-out infinite' }}
+    />
+
+    {/* Rotating Majestic Sunburst Rays */}
+    <div 
+      className="absolute w-[680px] h-[680px] pointer-events-none opacity-35" 
+      style={{ animation: 'goldRayRotate 24s linear infinite' }}
+    >
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        <defs>
+          <radialGradient id="goldRayGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#fef08a" stopOpacity="0.9" />
+            <stop offset="35%" stopColor="#f59e0b" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {[...Array(16)].map((_, i) => (
+          <path
+            key={`ray-${i}`}
+            d={`M 50 50 L ${50 + 50 * Math.cos((i * 22.5 * Math.PI) / 180)} ${50 + 50 * Math.sin((i * 22.5 * Math.PI) / 180)} A 50 50 0 0 1 ${50 + 50 * Math.cos(((i * 22.5 + 11.25) * Math.PI) / 180)} ${50 + 50 * Math.sin(((i * 22.5 + 11.25) * Math.PI) / 180)} Z`}
+            fill="url(#goldRayGrad)"
+          />
+        ))}
+      </svg>
     </div>
-    <div className="absolute inset-0 z-20 flex items-center justify-center">
-      {[...Array(40)].map((_, i) => {
-        const angle = (i * 360) / 40 + (Math.random() * 10 - 5);
-        const distance = 100 + Math.random() * 300;
-        const tx = `${Math.cos(angle * Math.PI / 180) * distance}px`;
-        const ty = `${Math.sin(angle * Math.PI / 180) * distance}px`;
-        const size = 4 + Math.random() * 6;
+
+    {/* Triple Golden Shockwave Rings */}
+    <div className="absolute w-56 h-56 rounded-full border border-amber-400/90 shadow-[0_0_35px_#f59e0b]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite' }} />
+    <div className="absolute w-56 h-56 rounded-full border border-yellow-300/80 shadow-[0_0_30px_#fde047]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) 0.65s infinite' }} />
+    <div className="absolute w-56 h-56 rounded-full border border-orange-400/60 shadow-[0_0_25px_#ea580c]" style={{ animation: 'goldShockwave 2s cubic-bezier(0.1, 0.8, 0.3, 1) 1.3s infinite' }} />
+
+    {/* Floating Rising Luxury Glyphs */}
+    <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+      {[
+        { icon: '✨', left: '18%', delay: '0.2s', dur: '2.4s' },
+        { icon: '👑', left: '80%', delay: '0.5s', dur: '2.8s' },
+        { icon: '⭐', left: '30%', delay: '1.0s', dur: '2.2s' },
+        { icon: '✦', left: '70%', delay: '0.3s', dur: '2.6s' },
+        { icon: '💎', left: '14%', delay: '1.3s', dur: '3.0s' },
+        { icon: '✨', left: '86%', delay: '1.6s', dur: '2.3s' },
+        { icon: '⭐', left: '50%', delay: '0.8s', dur: '2.7s' },
+      ].map((item, idx) => (
+        <div
+          key={`flt-${idx}`}
+          className="absolute bottom-1/4 text-2xl select-none filter drop-shadow-[0_0_12px_rgba(253,224,71,0.9)]"
+          style={{
+            left: item.left,
+            animation: `floatSparkle ${item.dur} ease-out ${item.delay} infinite`
+          }}
+        >
+          {item.icon}
+        </div>
+      ))}
+    </div>
+
+    {/* Explosive Sparkling Golden Particles & Diamonds */}
+    <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+      {[...Array(60)].map((_, i) => {
+        const angle = (i * 360) / 60 + (Math.random() * 8 - 4);
+        const distance = 95 + Math.random() * 320;
+        const tx = `${Math.cos((angle * Math.PI) / 180) * distance}px`;
+        const ty = `${Math.sin((angle * Math.PI) / 180) * distance}px`;
+        const size = 3 + Math.random() * 7;
+        const isDiamond = i % 3 === 0;
+        const colors = ['#fef08a', '#fde047', '#f59e0b', '#ffffff', '#fbbf24'];
+        const color = colors[i % colors.length];
         return (
           <div 
-            key={`p-${i}`} 
-            className="absolute bg-yellow-200 rounded-full"
+            key={`gp-${i}`} 
+            className={`absolute ${isDiamond ? 'rotate-45 rounded-sm' : 'rounded-full'}`}
             style={{
-              width: size, height: size,
-              left: '50%', top: '50%',
-              '--tx': tx, '--ty': ty,
-              animation: `particle-explode ${0.8 + Math.random() * 1.5}s ease-out infinite`,
-              animationDelay: `${Math.random() * 0.5}s`,
-              boxShadow: '0 0 15px 3px #fcd34d'
+              width: size, 
+              height: size,
+              backgroundColor: color,
+              left: '50%', 
+              top: '50%',
+              '--tx': tx, 
+              '--ty': ty,
+              animation: `particle-explode ${0.85 + Math.random() * 1.3}s ease-out infinite`,
+              animationDelay: `${Math.random() * 0.6}s`,
+              boxShadow: `0 0 16px 3px ${color}`
             }}
           />
         );
       })}
+    </div>
+
+    {/* Central Dynamic Hero Badge */}
+    <div 
+      className="relative z-30 flex flex-col items-center justify-center px-4" 
+      style={{ animation: 'goldCrownBounce 0.9s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards' }}
+    >
+      <div className="relative mb-3 flex items-center justify-center">
+        <div className="absolute w-28 h-28 bg-yellow-400/40 rounded-full blur-2xl animate-pulse" />
+        <Crown 
+          size={98} 
+          className="text-[#fde047] relative z-10 filter drop-shadow-[0_0_35px_rgba(253,224,71,1)]" 
+          fill="#fde047" 
+          stroke="#b45309" 
+          strokeWidth="1.5" 
+        />
+        <span className="absolute -top-1 -right-3 text-2xl animate-spin" style={{ animationDuration: '6s' }}>✦</span>
+        <span className="absolute -bottom-1 -left-4 text-xl animate-bounce" style={{ animationDuration: '2s' }}>✨</span>
+      </div>
+
+      <span 
+        className="font-black text-7xl tracking-widest uppercase bg-gradient-to-r from-amber-200 via-yellow-100 via-amber-300 to-yellow-500 bg-[length:200%_auto] bg-clip-text text-transparent filter drop-shadow-[0_0_35px_rgba(245,158,11,0.9)]"
+        style={{ animation: 'goldTextShimmer 2.8s linear infinite' }}
+      >
+        GOLD
+      </span>
+
+      <div className="mt-3 flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/25 via-yellow-400/30 to-amber-500/25 border border-amber-300/60 shadow-[0_0_25px_rgba(245,158,11,0.5)] backdrop-blur-md">
+        <Crown size={14} className="text-yellow-300 fill-yellow-300" />
+        <span className="text-amber-100 font-extrabold text-xs tracking-wider uppercase drop-shadow-[0_0_8px_rgba(253,224,71,0.8)]">
+          VIP PRO СТАТУС АКТИВЕН
+        </span>
+        <Crown size={14} className="text-yellow-300 fill-yellow-300" />
+      </div>
+
+      <div className="mt-4 flex items-center gap-3 text-xs text-amber-200/90 font-medium">
+        <span className="flex items-center gap-1">⚡ Безлимит ИИ</span>
+        <span>•</span>
+        <span className="flex items-center gap-1">👑 ИИ-диетолог</span>
+        <span>•</span>
+        <span className="flex items-center gap-1">🚀 Турбо</span>
+      </div>
+
+      <span className="text-[11px] text-amber-200/50 uppercase tracking-widest mt-6">
+        Нажмите в любое место, чтобы продолжить
+      </span>
     </div>
   </div>
 );
