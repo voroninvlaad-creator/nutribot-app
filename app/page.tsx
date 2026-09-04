@@ -9,7 +9,7 @@ Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, S
 TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
 ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe
 } from 'lucide-react';
-/* STREAMING_CHUNK:Initializing Firebase... */
+/* Инициализация Firebase */
 let app: any, auth: any, db: any, appId: any = 'default-app-id';
 try {
 if (typeof window !== 'undefined') {
@@ -22,7 +22,7 @@ db = getFirestore(app);
 if (typeof (window as any).__app_id !== 'undefined') appId = (window as any).__app_id;
 }
 } catch (e: any) { console.error("Firebase init:", e); }
-/* STREAMING_CHUNK:Defining Translations... */
+/* Локализация */
 const translations: any = {
 ru: {
 dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Запись голосом", dictatePrompt: "Напишите или продиктуйте, что вы съели.", dictatePlaceholder: "Напр: 200г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск...", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD СТАТУС", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", bronzeF2: "скан. штрихкодов",
@@ -34,10 +34,10 @@ activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: 
 }
 };
 const LanguageContext = createContext(null);
-/* STREAMING_CHUNK:Configuring Global Styles... */
+/* ИСПРАВЛЕНО: Добавлены обратные кавычки для стилей */
 const globalStyles = .btn-glass { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.1s ease, background-color 0.1s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; transform: translateZ(0); } .btn-glass:active { transform: scale(0.96) translateZ(0); opacity: 0.7; } @keyframes zapIn { 0% { transform: scale(0.1) skewX(20deg); opacity: 0; filter: brightness(2); } 60% { transform: scale(1.15) skewX(-10deg); opacity: 1; filter: brightness(1.5); } 100% { transform: scale(1) skewX(0); opacity: 1; filter: brightness(1); } } @keyframes floatUp { 0% { transform: translateY(150px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } } @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } } @keyframes lightning-bg { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 0.8; background-color: rgba(30,58,138,0.5); } 10%, 20% { opacity: 0; } 30% { opacity: 0.4; background-color: rgba(30,58,138,0.3); } } @keyframes lightning-bolt { 0%, 100% { opacity: 0; } 5%, 15%, 25% { opacity: 1; } 10%, 20% { opacity: 0; } 26% { opacity: 1; } } @keyframes lightning-bolt-delay { 0%, 5%, 100% { opacity: 0; } 6%, 16%, 26% { opacity: 1; } 11%, 21% { opacity: 0; } 27% { opacity: 1; } } @keyframes rain-fall { to { transform: translateY(120vh) rotate(5deg); } } @keyframes particle-explode { 0% { transform: translate(0, 0) scale(0); opacity: 1; } 20% { transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.2)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } };
 const langMap: any = { ru: "Русский", en: "English" };
-/* STREAMING_CHUNK:Defining Animations and Helpers... */
+/* Анимации покупки */
 const LightningStorm = () => (
 const GoldBurstAnimation = () => (
 <div className="relative z-10 flex flex-col items-center justify-center" style={{ animation: 'floatUp 0.8s ease-out forwards' }}>
@@ -77,7 +77,7 @@ const GoldBurstAnimation = () => (
 </div>
 
 
-/* STREAMING_CHUNK:AI API Integration... */
+/* API-функции для Gemini */
 async function fetchGeminiWithRetry(prompt: string, schema: any, base64Image: any = null, mimeType: any = null) {
 const parts: any[] = [{ text: prompt }];
 if (base64Image) {
@@ -213,7 +213,6 @@ required: ["dish_name", "total"]
 };
 return await fetchGeminiWithRetry(Text: "${text}". Convert to meal, estimate weight & macros. Language: ${langMap[lang] || 'Russian'}, schema);
 }
-/* STREAMING_CHUNK:Local Calculation Helpers... */
 const calculateLocalMacros = (profile: any, weight: any) => {
 const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
 const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
@@ -230,7 +229,7 @@ const MOCK_CATALOG = [
 { id: 4, name: "Гречка (отварная)", calories_100g: 110, protein_100g: 4.5, fats_100g: 1.1, carbs_100g: 20 },
 { id: 5, name: "Яйцо куриное (вареное)", calories_100g: 155, protein_100g: 13, fats_100g: 11, carbs_100g: 1.1 }
 ];
-/* STREAMING_CHUNK:UI Components... */
+/* Компоненты UI */
 const NavButton = React.memo(({ icon, label, isActive, onClick }: any) => (
 const MacroCard = React.memo(({ label, current, goal, color, g }: any) => {
 const percent = Math.min(Math.round((current / goal) * 100), 100) || 0;
@@ -514,7 +513,6 @@ return (
 )}
 );
 });
-/* STREAMING_CHUNK:Additional UI Components... */
 const FoodSearch = React.memo(({ customFoods, saveCustomRecipeToDB, recentFoods, setRecentFoods, onSave, checkAccess, subscription, barcodeScansToday, incrementScan }: any) => {
 const { t, lang } = useContext(LanguageContext);
 const [activeSubTab, setActiveSubTab] = useState('global');
@@ -964,7 +962,7 @@ NutriBot
 {t.startUsing}
 );
 });
-/* STREAMING_CHUNK:Main Application State... */
+/* Главный Компонент */
 function NutriBotApp() {
 const { t, lang } = useContext(LanguageContext);
 const [user, setUser] = useState(null);
@@ -1092,7 +1090,8 @@ const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 
   if (!isSubscribed) return;
   if(docSnap.exists()) {
     const data = docSnap.data();
-    setSubscription(data.subscription || 'bronze'); setStreakDays(data.streakDays || 0);
+    setSubscription(data.subscription || 'bronze'); 
+    setStreakDays(data.streakDays || 0);
     if(data.lastScanDate === new Date().toDateString()) {
       setScansToday(data.scansToday || 0); setBarcodeScansToday(data.barcodeScansToday || 0);
     } else { setScansToday(0); setBarcodeScansToday(0); }
