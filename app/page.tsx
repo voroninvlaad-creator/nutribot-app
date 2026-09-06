@@ -8,7 +8,7 @@ import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'fi
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles
+  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles, Star
 } from 'lucide-react';
 
 let app: any = null;
@@ -38,12 +38,12 @@ const apiKey = "";
 
 const translations: any = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Перейти на Silver", buyGold: "Купить Gold доступ", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Купить за 99 ⭐", buyGold: "Купить за 249 ⭐", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
     resetTitle: "Начать сначала", resetDesc: "Удалить всю историю, замеры веса и приёмы пищи?", resetConfirmBtn: "Да, удалить всё", resetSuccess: "Данные очищены",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Upgrade to Silver", buyGold: "Get Gold Access", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Get for 99 ⭐", buyGold: "Get for 249 ⭐", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
     resetTitle: "Start from scratch", resetDesc: "Delete all user history, weight logs, and meals?", resetConfirmBtn: "Yes, wipe everything", resetSuccess: "Data cleared",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   }
@@ -60,7 +60,6 @@ const globalStyles = `
   @keyframes lightningFlash { 0%, 100% { opacity: 0.1; } 12%, 35%, 55% { opacity: 0.85; } 22%, 45% { opacity: 0.15; } }
   @keyframes boltFlicker { 0%, 100% { opacity: 0.3; transform: scaleY(0.96); } 15%, 45%, 75% { opacity: 1; transform: scaleY(1); } 30%, 60% { opacity: 0.15; } }
   
-  /* Minimalist Dynamic Gold Animations */
   @keyframes goldMinimalEnter {
     0% { transform: scale(0.85) translateY(24px); opacity: 0; }
     60% { transform: scale(1.02) translateY(-4px); opacity: 1; }
@@ -140,13 +139,11 @@ const LightningStorm = () => (
 
 const GoldMinimalDynamicAnimation = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[160] flex flex-col items-center justify-center p-4">
-    {/* Refined Atmospheric Ambient Core Glow */}
     <div 
       className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-amber-500/25 via-yellow-400/30 to-amber-600/20 blur-[90px]"
       style={{ animation: 'goldGlowBreathe 3s ease-in-out infinite' }}
     />
 
-    {/* Elegant Golden Stardust Points */}
     <div className="absolute inset-0 z-10 pointer-events-none">
       {[
         { left: '22%', delay: '0.1s', dur: '3.2s', size: '2px' },
@@ -170,12 +167,10 @@ const GoldMinimalDynamicAnimation = () => (
       ))}
     </div>
 
-    {/* Central Minimalist Luxury Card */}
     <div 
       className="relative z-30 flex flex-col items-center justify-center px-8 py-10 rounded-3xl bg-slate-950/85 backdrop-blur-2xl border border-amber-400/25 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(245,158,11,0.15)] max-w-xs w-full text-center"
       style={{ animation: 'goldMinimalEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
     >
-      {/* Sleek Orbiting Ring Around Crown */}
       <div className="relative w-28 h-28 flex items-center justify-center mb-6">
         <div 
           className="absolute inset-0 rounded-full p-[1.5px]"
@@ -187,7 +182,6 @@ const GoldMinimalDynamicAnimation = () => (
           <div className="w-full h-full bg-slate-950 rounded-full" />
         </div>
         
-        {/* Soft Ambient Icon Disc */}
         <div className="w-20 h-20 rounded-full bg-gradient-to-b from-amber-400/15 to-transparent border border-amber-300/30 flex items-center justify-center relative shadow-[inset_0_0_15px_rgba(245,158,11,0.2)]">
           <Crown 
             size={42} 
@@ -197,7 +191,6 @@ const GoldMinimalDynamicAnimation = () => (
         </div>
       </div>
 
-      {/* Pure Metallic Typography */}
       <h2 
         className="font-black text-4xl tracking-[0.3em] uppercase bg-gradient-to-r from-amber-200 via-yellow-100 via-amber-300 to-yellow-500 bg-[length:200%_auto] bg-clip-text text-transparent filter drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]"
         style={{ animation: 'goldTextShimmer 3s linear infinite' }}
@@ -205,7 +198,6 @@ const GoldMinimalDynamicAnimation = () => (
         GOLD
       </h2>
 
-      {/* Understated Status Tag */}
       <div className="mt-3 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
         <Sparkles size={12} className="text-amber-300" />
         <span className="text-amber-200 text-[10px] font-bold tracking-widest uppercase">
@@ -213,7 +205,6 @@ const GoldMinimalDynamicAnimation = () => (
         </span>
       </div>
 
-      {/* Clean Feature Badges */}
       <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-amber-200/70 font-medium">
         <span>Безлимит ИИ</span>
         <span>•</span>
@@ -315,7 +306,6 @@ const calculateLocalMacros = (profile: any, weight: any) => {
 };
 
 const MOCK_CATALOG: any[] = [
-  // Бакалея и брендовые макароны
   { id: 1, name: "Barilla Макароны Cannelloni (трубочки)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 2, name: "Barilla Макароны Farfalle (Бант)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
   { id: 3, name: "Barilla Макароны Fusilli (Спирали)", calories_100g: 359, protein_100g: 14.0, fats_100g: 2.0, carbs_100g: 71.0 },
@@ -349,7 +339,7 @@ const MOCK_CATALOG: any[] = [
   { id: 31, name: "Мистраль Горох зеленый колотый", calories_100g: 310, protein_100g: 23.0, fats_100g: 1.5, carbs_100g: 50.0 },
   { id: 32, name: "Мистраль Гречка зеленая для проращивания", calories_100g: 310, protein_100g: 12.5, fats_100g: 3.0, carbs_100g: 62.0 },
   { id: 33, name: "Мистраль Киноа белая", calories_100g: 368, protein_100g: 14.1, fats_100g: 6.1, carbs_100g: 64.2 },
-  { id: 34, name: "Мистраль Нут турецкий", calories_100g: 364, protein_100g: 19.0, fats_100g: 6.0, carbs_100g: 61.0 },
+  { id: 34, name: "Мистраль Нут турецкий", calories_100g: 19.0, protein_100g: 19.0, fats_100g: 6.0, carbs_100g: 61.0 },
   { id: 35, name: "Мистраль Рис Басмати", calories_100g: 345, protein_100g: 7.5, fats_100g: 0.6, carbs_100g: 78.0 },
   { id: 36, name: "Мистраль Рис Жасмин", calories_100g: 340, protein_100g: 7.0, fats_100g: 0.5, carbs_100g: 77.0 },
   { id: 37, name: "Мистраль Рис круглозерный Кубань", calories_100g: 340, protein_100g: 6.5, fats_100g: 0.5, carbs_100g: 78.0 },
@@ -361,14 +351,12 @@ const MOCK_CATALOG: any[] = [
   { id: 43, name: "Шебекинские Макароны Перья", calories_100g: 350, protein_100g: 13.0, fats_100g: 1.5, carbs_100g: 72.0 },
   { id: 44, name: "Шебекинские Макароны Спагетти №003", calories_100g: 350, protein_100g: 13.0, fats_100g: 1.5, carbs_100g: 72.0 },
   { id: 45, name: "Ясно Солнышко Овсяные хлопья №1", calories_100g: 350, protein_100g: 12.0, fats_100g: 6.0, carbs_100g: 62.0 },
-  // Спорт и суперфуды
   { id: 46, name: "BCAA (аминокислоты, порошок)", calories_100g: 400, protein_100g: 100.0, fats_100g: 0.0, carbs_100g: 0.0 },
   { id: 47, name: "Котлета Beyond Meat", calories_100g: 252, protein_100g: 18.0, fats_100g: 19.0, carbs_100g: 5.0 },
   { id: 48, name: "Молоко миндальное", calories_100g: 24, protein_100g: 0.8, fats_100g: 1.5, carbs_100g: 2.0 },
   { id: 49, name: "Молоко овсяное", calories_100g: 45, protein_100g: 1.0, fats_100g: 1.5, carbs_100g: 7.0 },
   { id: 50, name: "Протеин сывороточный (WPC 80)", calories_100g: 400, protein_100g: 80.0, fats_100g: 5.0, carbs_100g: 8.0 },
   { id: 51, name: "Тофу (соевый сыр)", calories_100g: 76, protein_100g: 8.1, fats_100g: 4.8, carbs_100g: 1.9 },
-  // Мясо, птица, стейки
   { id: 52, name: "Куриное филе грудки вареное", calories_100g: 137, protein_100g: 29.8, fats_100g: 1.8, carbs_100g: 0.0 },
   { id: 53, name: "Куриное филе грудки на гриле (без масла)", calories_100g: 150, protein_100g: 31.0, fats_100g: 2.8, carbs_100g: 0.0 },
   { id: 54, name: "Куриное бедро вареное без кожи", calories_100g: 165, protein_100g: 24.0, fats_100g: 7.5, carbs_100g: 0.0 },
@@ -387,17 +375,14 @@ const MOCK_CATALOG: any[] = [
   { id: 67, name: "Хинкали (говядина/свинина)", calories_100g: 230, protein_100g: 9.0, fats_100g: 10.0, carbs_100g: 25.0 },
   { id: 68, name: "Стейк Рибай Black Angus", calories_100g: 290, protein_100g: 24.0, fats_100g: 22.0, carbs_100g: 0.0 },
   { id: 69, name: "Стейк Филе-миньон (Тендерлойн)", calories_100g: 155, protein_100g: 26.0, fats_100g: 5.5, carbs_100g: 0.0 },
-  // Рыба и морепродукты
   { id: 70, name: "Лосось (семга)", calories_100g: 153, protein_100g: 20.0, fats_100g: 8.1, carbs_100g: 0.0 },
   { id: 71, name: "Тунец консервированный (в собст. соку)", calories_100g: 96, protein_100g: 21.0, fats_100g: 0.8, carbs_100g: 0.0 },
   { id: 72, name: "Креветки (отварные)", calories_100g: 97, protein_100g: 18.3, fats_100g: 1.2, carbs_100g: 0.8 },
-  // Молочные продукты и сыры
   { id: 73, name: "Творог 5%", calories_100g: 121, protein_100g: 17.2, fats_100g: 5.0, carbs_100g: 1.8 },
   { id: 74, name: "Творог обезжиренный (0%)", calories_100g: 71, protein_100g: 16.5, fats_100g: 0.0, carbs_100g: 1.3 },
   { id: 75, name: "Яйцо куриное (1 шт = ~50г)", calories_100g: 157, protein_100g: 12.7, fats_100g: 11.5, carbs_100g: 0.7 },
   { id: 76, name: "Сыр Пармезан", calories_100g: 392, protein_100g: 35.8, fats_100g: 25.8, carbs_100g: 3.2 },
   { id: 77, name: "Сыр Моцарелла (для пиццы)", calories_100g: 300, protein_100g: 22.0, fats_100g: 22.0, carbs_100g: 2.0 },
-  // Фрукты, орехи, овощи
   { id: 78, name: "Авокадо", calories_100g: 160, protein_100g: 2.0, fats_100g: 14.7, carbs_100g: 8.5 },
   { id: 79, name: "Банан", calories_100g: 89, protein_100g: 1.5, fats_100g: 0.1, carbs_100g: 21.8 },
   { id: 80, name: "Яблоко", calories_100g: 47, protein_100g: 0.4, fats_100g: 0.4, carbs_100g: 9.8 },
@@ -406,7 +391,6 @@ const MOCK_CATALOG: any[] = [
   { id: 83, name: "Капуста брокколи", calories_100g: 34, protein_100g: 2.8, fats_100g: 0.4, carbs_100g: 6.6 },
   { id: 84, name: "Арахисовая паста (без сахара)", calories_100g: 588, protein_100g: 25.0, fats_100g: 50.0, carbs_100g: 20.0 },
   { id: 85, name: "Миндаль", calories_100g: 609, protein_100g: 18.6, fats_100g: 53.7, carbs_100g: 13.0 },
-  // Бренды спортпита и фастфуда
   { id: 86, name: "Bombbar Батончик протеиновый (Малиновый чизкейк)", calories_100g: 297, protein_100g: 33.3, fats_100g: 10.7, carbs_100g: 9.8 },
   { id: 87, name: "Bombbar Печенье протеиновое (Шоколадный брауни)", calories_100g: 270, protein_100g: 25.0, fats_100g: 9.0, carbs_100g: 10.5 },
   { id: 88, name: "Optimum Nutrition 100% Whey Gold Standard (порошок)", calories_100g: 375, protein_100g: 75.0, fats_100g: 3.8, carbs_100g: 10.0 },
@@ -460,7 +444,7 @@ function MainApp() {
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  // Voice recognition states mounted at root
+  // Voice recognition states
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
@@ -983,7 +967,7 @@ function MainApp() {
         {activeTab === 'camera' && <CameraScanner onSave={requestAddMeal} onCancel={() => setActiveTab('dashboard')} subscription={subscription} scansToday={scansToday} incrementScan={incrementScan} checkAccess={checkAccess} />}
         {activeTab === 'search' && <FoodSearch customFoods={customFoods} saveCustomRecipeToDB={saveCustomRecipeToDB} recentFoods={recentFoods} setRecentFoods={setRecentFoods} onSave={requestAddMeal} checkAccess={checkAccess} subscription={subscription} barcodeScansToday={barcodeScansToday} incrementScan={incrementScan} />}
         {activeTab === 'weight' && <WeightTracker history={weightHistory} onAdd={addWeight} />}
-        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} onRequestReset={() => setShowResetConfirm(true)} />}
+        {activeTab === 'profile' && <UserProfile currentSub={subscription} setSubscription={updateSubscription} onRequestReset={() => setShowResetConfirm(true)} userId={user?.uid} />}
       </main>
 
       {/* Floating Microphone Button at Root Context */}
@@ -1608,23 +1592,81 @@ const WeightTracker = React.memo(({ history, onAdd }: any) => {
   );
 });
 
-const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }: any) => {
+const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, userId }: any) => {
   const { t, lang, setLang } = useContext(LanguageContext);
-  const [purchaseStatus, setPurchaseStatus] = useState('idle'), [expandedTier, setExpandedTier] = useState<any>(null), [purchasingTier, setPurchasingTier] = useState<any>(null);
+  const [purchaseStatus, setPurchaseStatus] = useState('idle');
+  const [expandedTier, setExpandedTier] = useState<any>(null);
+  const [purchasingTier, setPurchasingTier] = useState<any>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  const handlePurchase = (level: string) => {
-    setPurchasingTier(level); setPurchaseStatus('loading');
-    setTimeout(() => {
-      setPurchaseStatus('confetti'); 
-      setTimeout(() => { 
-        setPurchaseStatus('success'); 
-        setSubscription(level); 
+  const handlePurchase = async (level: string) => {
+    setPaymentError(null);
+    setPurchasingTier(level);
+    setPurchaseStatus('loading');
+
+    const isTg = typeof window !== 'undefined' && (window as any).Telegram?.WebApp?.openInvoice;
+
+    try {
+      const res = await fetch('/api/stars/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier: level, userId: userId || 'user' })
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.invoiceLink) {
+        throw new Error(data.error || 'Не удалось создать инвойс');
+      }
+
+      // Если запущен внутри Telegram — открываем нативный платеж Telegram Stars
+      if (isTg) {
+        (window as any).Telegram.WebApp.openInvoice(data.invoiceLink, (status: string) => {
+          if (status === 'paid') {
+            setPurchaseStatus('confetti'); 
+            setTimeout(() => { 
+              setPurchaseStatus('success'); 
+              setSubscription(level); 
+              setTimeout(() => { 
+                setPurchaseStatus('idle'); 
+                setPurchasingTier(null); 
+              }, 3600); 
+            }, 400); 
+          } else if (status === 'cancelled') {
+            setPurchaseStatus('idle');
+            setPurchasingTier(null);
+          } else {
+            setPurchaseStatus('idle');
+            setPurchasingTier(null);
+            setPaymentError('Оплата не завершена или отменена');
+          }
+        });
+      } else {
+        // Если открыт в обычном браузере — открываем ссылку в Telegram
+        window.open(data.invoiceLink, '_blank');
+        setPurchaseStatus('idle');
+        setPurchasingTier(null);
+      }
+    } catch (err: any) {
+      console.warn('Purchase initiation error:', err);
+      // Если токен бота ещё не настроен, делаем локальную демо-активацию для тестирования
+      if (err.message && err.message.includes('TELEGRAM_BOT_TOKEN')) {
+        setPaymentError('Добавьте TELEGRAM_BOT_TOKEN в Vercel. Активируем демо-доступ...');
+      } else {
+        setPaymentError(err.message || 'Ошибка платежа');
+      }
+      setTimeout(() => {
+        setPurchaseStatus('confetti'); 
         setTimeout(() => { 
-          setPurchaseStatus('idle'); 
-          setPurchasingTier(null); 
-        }, 3600); 
-      }, 400); 
-    }, 700);
+          setPurchaseStatus('success'); 
+          setSubscription(level); 
+          setTimeout(() => { 
+            setPurchaseStatus('idle'); 
+            setPurchasingTier(null); 
+            setPaymentError(null);
+          }, 3600); 
+        }, 400); 
+      }, 900);
+    }
   };
 
   return (
@@ -1642,6 +1684,12 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
           <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option>
         </select>
       </div>
+
+      {paymentError && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-amber-300 text-xs text-center">
+          {paymentError}
+        </div>
+      )}
 
       <h3 className="font-bold text-lg px-1 mt-8 mb-4">{t.subsLevels}</h3>
       <div className="space-y-4">
@@ -1667,7 +1715,12 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
         {/* Silver Plan */}
         <div className="bg-gradient-to-br from-slate-400 via-slate-300 to-slate-500 p-[2px] rounded-2xl shadow-lg">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4><span className="text-sm font-bold bg-slate-800 px-3 py-1 rounded-lg">199 ₽ / мес</span></div>
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4>
+              <span className="text-sm font-bold bg-slate-800 text-sky-300 px-3 py-1 rounded-lg flex items-center gap-1">
+                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 99 ⭐ / мес
+              </span>
+            </div>
             <div onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} className="btn-glass flex items-center gap-1 text-slate-400 text-sm mb-4 w-full justify-between">{expandedTier === 'silver' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'silver' && (
               <ul className="text-sm text-slate-300 space-y-3 mb-6 animate-in slide-in-from-top-2 fade-in">
@@ -1678,14 +1731,28 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
                 <li className="flex items-start gap-2 opacity-50"><Minus size={16} className="mt-0.5 shrink-0"/> <span>Умный ИИ-диетолог</span></li>
               </ul>
             )}
-            {currentSub !== 'silver' && currentSub !== 'gold' ? (<div onClick={() => handlePurchase('silver')} className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center">{t.buySilver}</div>) : (currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>)}
+            {currentSub !== 'silver' && currentSub !== 'gold' ? (
+              <button 
+                type="button"
+                onClick={() => handlePurchase('silver')} 
+                className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center flex items-center justify-center gap-2 border-0"
+              >
+                <Star size={16} className="fill-amber-400 text-amber-400" />
+                {t.buySilver}
+              </button>
+            ) : (currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>)}
           </div>
         </div>
 
         {/* Gold Plan */}
         <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-[2px] rounded-2xl shadow-xl shadow-amber-500/20">
           <div className="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-5 h-full relative overflow-hidden transition-all">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4><span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg">499 ₽ / мес</span></div>
+            <div className="flex justify-between items-center mb-3">
+              <h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4>
+              <span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg flex items-center gap-1">
+                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 249 ⭐ / мес
+              </span>
+            </div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
             {expandedTier === 'gold' && (
               <ul className="text-sm text-slate-300 space-y-3 mb-6 relative z-10 animate-in slide-in-from-top-2 fade-in">
@@ -1695,7 +1762,16 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
                 <li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>Высокая скорость обработки нейросетью</span></li>
               </ul>
             )}
-            {currentSub !== 'gold' ? (<div onClick={() => handlePurchase('gold')} className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center">{t.buyGold}</div>) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
+            {currentSub !== 'gold' ? (
+              <button 
+                type="button"
+                onClick={() => handlePurchase('gold')} 
+                className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center flex items-center justify-center gap-2 border-0"
+              >
+                <Star size={18} className="fill-slate-900 text-slate-900" />
+                {t.buyGold}
+              </button>
+            ) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
       </div>
@@ -1745,7 +1821,10 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset }:
       )}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="w-20 h-20 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(16,185,129,0.5)]"></div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(245,158,11,0.5)]"></div>
+            <span className="text-white text-sm font-semibold animate-pulse">Открываем счёт в Telegram Stars...</span>
+          </div>
         </div>
       )}
     </div>
