@@ -444,7 +444,6 @@ function MainApp() {
   const [upgradePrompt, setUpgradePrompt] = useState({ show: false, required: '' });
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-  // Voice recognition states
   const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isAnalyzingVoice, setIsAnalyzingVoice] = useState(false);
@@ -481,16 +480,24 @@ function MainApp() {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !(window as any).Telegram) {
-      const tgScript = document.createElement('script');
-      tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
-      tgScript.onload = () => { 
-        if ((window as any).Telegram?.WebApp) { 
-          (window as any).Telegram.WebApp.ready(); 
-          (window as any).Telegram.WebApp.expand(); 
-        } 
+    if (typeof window !== 'undefined') {
+      const initTelegram = () => {
+        const tg = (window as any).Telegram?.WebApp;
+        if (tg) {
+          tg.ready();
+          tg.expand();
+        }
       };
-      document.head.appendChild(tgScript);
+
+      if ((window as any).Telegram?.WebApp) {
+        initTelegram();
+      } else {
+        const tgScript = document.createElement('script');
+        tgScript.src = 'https://telegram.org/js/telegram-web-app.js';
+        tgScript.async = true;
+        tgScript.onload = initTelegram;
+        document.head.appendChild(tgScript);
+      }
     }
   }, []);
 
@@ -1599,29 +1606,38 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
   const [purchasingTier, setPurchasingTier] = useState<any>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
+  const tg = typeof window !== 'undefined' ? (window as any).Telegram?.WebApp : null;
+  const tgUser = tg?.initDataUnsafe?.user;
+  const displayName = tgUser?.username 
+    ? `@${tgUser.username}` 
+    : (tgUser?.first_name ? tgUser.first_name : '@telegram_user');
+
   const handlePurchase = async (level: string) => {
     setPaymentError(null);
     setPurchasingTier(level);
     setPurchaseStatus('loading');
 
-    const isTg = typeof window !== 'undefined' && (window as any).Telegram?.WebApp?.openInvoice;
-
     try {
+      const effectiveUserId = tgUser?.id ? String(tgUser.id) : (userId || 'user');
+
+      // 1. Запрос к серверу на создание инвойса в валюте XTR (Telegram Stars)
       const res = await fetch('/api/stars/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier: level, userId: userId || 'user' })
+        body: JSON.stringify({ tier: level, userId: effectiveUserId })
       });
+
       const data = await res.json();
 
       if (!res.ok || !data.invoiceLink) {
-        throw new Error(data.error || 'Не удалось создать инвойс');
+        throw new Error(data.error || 'Не удалось сформировать счёт на оплату звёздами');
       }
 
-      // Если запущен внутри Telegram — открываем нативный платеж Telegram Stars
-      if (isTg) {
-        (window as any).Telegram.WebApp.openInvoice(data.invoiceLink, (status: string) => {
+      // 2. Открытие официальной нативной шторки оплаты внутри Telegram
+      if (tg && typeof tg.openInvoice === 'function') {
+        tg.openInvoice(data.invoiceLink, (status: string) => {
           if (status === 'paid') {
+            // ЗВЁЗДЫ РЕАЛЬНО СПИСАНЫ Telegram: активируем подписку
             setPurchaseStatus('confetti'); 
             setTimeout(() => { 
               setPurchaseStatus('success'); 
@@ -1634,38 +1650,29 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
           } else if (status === 'cancelled') {
             setPurchaseStatus('idle');
             setPurchasingTier(null);
+          } else if (status === 'failed') {
+            setPurchaseStatus('idle');
+            setPurchasingTier(null);
+            setPaymentError('Ошибка списания Звёзд в Telegram. Проверьте баланс и попробуйте снова.');
           } else {
             setPurchaseStatus('idle');
             setPurchasingTier(null);
-            setPaymentError('Оплата не завершена или отменена');
+            setPaymentError(`Оплата не завершена (статус: ${status})`);
           }
         });
       } else {
-        // Если открыт в обычном браузере — открываем ссылку в Telegram
+        // Если запущено вне Telegram — открываем ссылку инвойса
         window.open(data.invoiceLink, '_blank');
         setPurchaseStatus('idle');
         setPurchasingTier(null);
+        setPaymentError('Счёт открыт. Для оплаты Звёздами завершите транзакцию в Telegram.');
       }
     } catch (err: any) {
-      console.warn('Purchase initiation error:', err);
-      // Если токен бота ещё не настроен, делаем локальную демо-активацию для тестирования
-      if (err.message && err.message.includes('TELEGRAM_BOT_TOKEN')) {
-        setPaymentError('Добавьте TELEGRAM_BOT_TOKEN в Vercel. Активируем демо-доступ...');
-      } else {
-        setPaymentError(err.message || 'Ошибка платежа');
-      }
-      setTimeout(() => {
-        setPurchaseStatus('confetti'); 
-        setTimeout(() => { 
-          setPurchaseStatus('success'); 
-          setSubscription(level); 
-          setTimeout(() => { 
-            setPurchaseStatus('idle'); 
-            setPurchasingTier(null); 
-            setPaymentError(null);
-          }, 3600); 
-        }, 400); 
-      }, 900);
+      console.error('Purchase error:', err);
+      setPurchaseStatus('idle');
+      setPurchasingTier(null);
+      // При ошибке подписка НЕ выдаётся бесплатно
+      setPaymentError(err.message || 'Ошибка связи с платёжным сервером Telegram.');
     }
   };
 
@@ -1673,8 +1680,13 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
       <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 flex justify-between items-center border border-white/5 shadow-lg">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500"><User size={32} className="text-slate-400" /></div>
-          <div><h2 className="text-xl font-bold text-white">@telegram_user</h2><p className="text-slate-400 text-sm">{t.inSystemSince}</p></div>
+          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500">
+            <User size={32} className="text-slate-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-white">{displayName}</h2>
+            <p className="text-slate-400 text-sm">{t.inSystemSince}</p>
+          </div>
         </div>
       </div>
 
@@ -1686,8 +1698,9 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
       </div>
 
       {paymentError && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-amber-300 text-xs text-center">
-          {paymentError}
+        <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-red-300 text-xs text-center flex items-center justify-center gap-2">
+          <AlertCircle size={16} className="text-red-400 shrink-0" />
+          <span>{paymentError}</span>
         </div>
       )}
 
@@ -1819,6 +1832,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
           )}
         </div>
       )}
+
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
           <div className="flex flex-col items-center gap-4">
