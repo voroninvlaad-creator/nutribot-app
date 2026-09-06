@@ -461,7 +461,16 @@ function MainApp() {
       const savedWater = localStorage.getItem('nutribot_water');
       const savedCustom = localStorage.getItem('nutribot_custom');
       const savedStreak = localStorage.getItem('nutribot_streak');
-      const savedSub = localStorage.getItem('nutribot_sub');
+      const savedUid = localStorage.getItem('nutribot_uid');
+
+      // Проверяем, заходил ли пользователь ранее
+      const isExistingUser = !!(
+        savedProfile || 
+        savedGoals || 
+        savedMeals || 
+        savedWeights || 
+        savedUid
+      );
 
       if (savedProfile) {
         setUserProfile(JSON.parse(savedProfile));
@@ -473,7 +482,16 @@ function MainApp() {
       if (savedWater) setWaterLogs(JSON.parse(savedWater));
       if (savedCustom) setCustomFoods(JSON.parse(savedCustom));
       if (savedStreak) setStreakDays(parseInt(savedStreak, 10) || 0);
-      if (savedSub) setSubscription(savedSub);
+
+      // GOLD выдаётся ТОЛЬКО тем, кто уже заходил в приложение ранее.
+      // Новые пользователи начинают с Bronze.
+      if (isExistingUser) {
+        setSubscription('gold');
+        localStorage.setItem('nutribot_sub', 'gold');
+      } else {
+        setSubscription('bronze');
+        localStorage.setItem('nutribot_sub', 'bronze');
+      }
     } catch (e) {
       console.warn("LocalStorage initial load note:", e);
     }
@@ -606,11 +624,16 @@ function MainApp() {
 
     const unsubStats = onSnapshot(doc(db, 'artifacts', appId, 'users', uid, 'data', 'stats'), (docSnap: any) => {
       if (!isSubscribed) return;
+
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.subscription) {
           setSubscription(data.subscription);
           localStorage.setItem('nutribot_sub', data.subscription);
+        } else {
+          // Если документ пользователя уже существовал в базе — дарим Gold
+          setSubscription('gold');
+          localStorage.setItem('nutribot_sub', 'gold');
         }
         if (typeof data.streakDays !== 'undefined') {
           setStreakDays(data.streakDays);
@@ -734,6 +757,12 @@ function MainApp() {
     localStorage.setItem('nutribot_profile', JSON.stringify(formData));
     localStorage.setItem('nutribot_goals', JSON.stringify(goals));
 
+    // Новый пользователь, только что прошедший онбординг, остаётся на Bronze
+    if (!localStorage.getItem('nutribot_sub')) {
+      setSubscription('bronze');
+      localStorage.setItem('nutribot_sub', 'bronze');
+    }
+
     const d = new Date(); 
     const today = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     const wData = { id: Date.now(), date: today, weight: parseFloat(String(formData.weight).replace(',', '.')) };
@@ -744,6 +773,7 @@ function MainApp() {
       try {
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'profile'), { formData, goals });
         await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'weights', wData.id.toString()), wData);
+        await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'data', 'stats'), { subscription: 'bronze' }, { merge: true });
       } catch (err) {
         console.warn("Cloud save profile fallback:", err);
       }
@@ -751,9 +781,13 @@ function MainApp() {
   }, [user]);
 
   const checkAccess = useCallback((requiredTier: string) => {
-    const tiers: any = { bronze: 0, silver: 1, gold: 2 };
-    if (tiers[subscription] >= tiers[requiredTier]) return true;
-    setUpgradePrompt({ show: true, required: requiredTier }); 
+    const tiers: Record<string, number> = { bronze: 0, silver: 1, gold: 2 };
+    const currentTierRank = tiers[subscription] ?? 0;
+    const requiredRank = tiers[requiredTier] ?? 0;
+
+    if (currentTierRank >= requiredRank) return true;
+
+    setUpgradePrompt({ show: true, required: requiredTier });
     return false;
   }, [subscription]);
 
