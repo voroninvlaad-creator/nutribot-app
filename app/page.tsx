@@ -8,7 +8,7 @@ import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'fi
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles, Star
+  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles, Star, Headphones
 } from 'lucide-react';
 
 let app: any = null;
@@ -40,11 +40,13 @@ const translations: any = {
   ru: {
     dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Купить за 99 ⭐", buyGold: "Купить за 249 ⭐", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
     resetTitle: "Начать сначала", resetDesc: "Удалить всю историю, замеры веса и приёмы пищи?", resetConfirmBtn: "Да, удалить всё", resetSuccess: "Данные очищены",
+    support: "Служба поддержки", supportDesc: "Помощь и обратная связь",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
     dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Get for 99 ⭐", buyGold: "Get for 249 ⭐", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
     resetTitle: "Start from scratch", resetDesc: "Delete all user history, weight logs, and meals?", resetConfirmBtn: "Yes, wipe everything", resetSuccess: "Data cleared",
+    support: "Support Team", supportDesc: "Help & feedback",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
   }
 };
@@ -1730,6 +1732,31 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
           <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option>
         </select>
       </div>
+
+      {/* Support Bot Action Card */}
+      <a
+        href="https://t.me/MyNutriDiet1_bot"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => {
+          if (tg && typeof tg.openTelegramLink === 'function') {
+            e.preventDefault();
+            tg.openTelegramLink('https://t.me/MyNutriDiet1_bot');
+          }
+        }}
+        className="btn-glass bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg text-white hover:bg-slate-800/95 transition-all"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
+            <Headphones size={20} />
+          </div>
+          <div className="text-left">
+            <div className="font-bold text-sm text-white">{t.support}</div>
+            <div className="text-xs text-slate-400">@MyNutriDiet1_bot</div>
+          </div>
+        </div>
+        <ChevronRight size={18} className="text-slate-500" />
+      </a>
 
       {paymentError && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-red-300 text-xs text-center flex items-center justify-center gap-2">
