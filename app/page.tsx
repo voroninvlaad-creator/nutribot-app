@@ -1749,7 +1749,51 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
 
   return (
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-      {/* ... existing header and support button ... */}
+      {/* User Header */}
+      <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 flex justify-between items-center border border-white/5 shadow-lg">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500">
+            <User size={32} className="text-slate-400" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-white">{displayName}</h2>
+            <p className="text-slate-400 text-sm">{t.inSystemSince}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Language Selector */}
+      <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
+        <div className="flex items-center gap-2 text-white font-medium">
+          <Globe size={20} className="text-blue-400"/> {t.language}
+        </div>
+        <select 
+          value={lang} 
+          onChange={e => setLang(String(e.target.value))} 
+          className="bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 outline-none font-medium"
+        >
+          <option value="ru">🇷🇺 Русский</option>
+          <option value="en">🇬🇧 English</option>
+        </select>
+      </div>
+
+      {/* Support Button */}
+      <a
+        href="https://t.me/MyNutriDiet1_bot"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => {
+          if (tg && typeof tg.openTelegramLink === 'function') {
+            e.preventDefault();
+            tg.openTelegramLink('https://t.me/MyNutriDiet1_bot');
+          }
+        }}
+        className="btn-glass bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg text-inherit no-underline"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <Headphones size={20} />
+          </div>
           <div className="text-left">
             <div className="font-bold text-sm text-white">{t.support}</div>
             <div className="text-xs text-slate-400">@MyNutriDiet1_bot</div>
