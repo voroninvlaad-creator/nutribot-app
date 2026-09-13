@@ -301,7 +301,8 @@ async function analyzeTextToFood(text: string, lang: string) {
 const calculateLocalMacros = (profile: any, weight: any) => {
   const w = parseFloat(weight) || 70, h = parseFloat(profile.height) || 170, a = parseInt(profile.age) || 30;
   const multipliers: any = { min: 1.2, low: 1.375, med: 1.55, high: 1.725, ext: 1.9 };
-  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (profile.gender === 'Мужской' || profile.gender === 'Male' ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
+  const isMale = profile.gender === 'Мужской' || profile.gender === 'Male' || profile.gender === 'male';
+  let tdee = ((10 * w) + (6.25 * h) - (5 * a) + (isMale ? 5 : -161)) * (multipliers[profile.activity] || 1.375);
   if (profile.goal === 'lose') tdee -= 500; if (profile.goal === 'gain') tdee += 500;
   const cals = Math.round(tdee), prot = Math.round(w * (profile.goal === 'gain' ? 2.0 : 1.8)), fat = Math.round(w * 1);
   return { calories: cals, protein: prot, fat: fat, carbs: Math.max(Math.round((cals - (prot * 4) - (fat * 9)) / 4), 0) };
@@ -1979,26 +1980,65 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
 });
 
 const OnboardingScreen = React.memo(({ onComplete }: any) => {
-  const { t } = useContext(LanguageContext);
-  const [formData, setFormData] = useState({ gender: 'Мужской', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
+  const { t, lang, setLang } = useContext(LanguageContext);
+  const [formData, setFormData] = useState({ gender: 'male', age: '', height: '', weight: '', goal: 'lose', activity: 'med' });
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleCalculate = () => {
-    if (!formData.age || !formData.height || !formData.weight) { setErrorMsg("Заполните все поля!"); return; }
+    if (!formData.age || !formData.height || !formData.weight) { 
+      setErrorMsg(lang === 'en' ? "Please fill in all fields!" : "Заполните все поля!"); 
+      return; 
+    }
     setErrorMsg('');
     onComplete(calculateLocalMacros(formData, formData.weight), formData);
   };
 
-  const genderOptions = [{ id: 'Мужской', label: t.male }, { id: 'Женский', label: t.female }];
+  const genderOptions = [{ id: 'male', label: t.male }, { id: 'female', label: t.female }];
   const activityOptions = [{ id: 'min', label: t.activities.min }, { id: 'low', label: t.activities.low }, { id: 'med', label: t.activities.med }, { id: 'high', label: t.activities.high }, { id: 'ext', label: t.activities.ext }];
   const goalOptions = [{ id: 'lose', label: t.goals.lose }, { id: 'keep', label: t.goals.keep }, { id: 'gain', label: t.goals.gain }];
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-900 text-slate-100 font-sans max-w-md mx-auto p-4 relative overflow-y-auto pb-10">
       <style dangerouslySetInnerHTML={{__html: globalStyles}} />
+      
+      {/* Кнопка быстрого переключения языка на экране онбординга */}
+      <div className="flex justify-end pt-1 pb-2">
+        <div className="flex items-center gap-1 bg-slate-800/90 backdrop-blur-md border border-white/10 rounded-2xl p-1 shadow-md">
+          <Globe size={15} className="text-blue-400 ml-1.5 mr-0.5" />
+          <button
+            type="button"
+            onClick={() => setLang('ru')}
+            className={`btn-glass px-3 py-1 rounded-xl text-xs font-bold transition-all border-0 ${
+              lang === 'ru' 
+                ? 'bg-emerald-500 text-slate-900 shadow-[0_0_12px_rgba(16,185,129,0.4)]' 
+                : 'text-slate-400 hover:text-white bg-transparent'
+            }`}
+          >
+            RU
+          </button>
+          <button
+            type="button"
+            onClick={() => setLang('en')}
+            className={`btn-glass px-3 py-1 rounded-xl text-xs font-bold transition-all border-0 ${
+              lang === 'en' 
+                ? 'bg-emerald-500 text-slate-900 shadow-[0_0_12px_rgba(16,185,129,0.4)]' 
+                : 'text-slate-400 hover:text-white bg-transparent'
+            }`}
+          >
+            EN
+          </button>
+        </div>
+      </div>
+
       <div className="flex-1 flex flex-col justify-center">
         <div className="animate-in fade-in slide-in-from-right duration-300">
-          <div className="mb-6 text-center"><Activity className="text-emerald-400 mx-auto mb-2" size={40} /><h1 className="text-3xl font-black text-white mb-1">NutriBot</h1><p className="text-slate-400 text-sm">Умный трекер КБЖУ</p></div>
+          <div className="mb-6 text-center">
+            <Activity className="text-emerald-400 mx-auto mb-2" size={40} />
+            <h1 className="text-3xl font-black text-white mb-1">NutriBot</h1>
+            <p className="text-slate-400 text-sm">
+              {lang === 'en' ? 'Smart Nutrition & Macro Tracker' : 'Умный трекер КБЖУ'}
+            </p>
+          </div>
           {errorMsg && <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm p-3 rounded-xl mb-4 text-center">{errorMsg}</div>}
           <div className="space-y-4">
             <div className="bg-slate-800 p-1 rounded-xl flex gap-1">{genderOptions.map(g => (<div key={g.id} onClick={() => setFormData({...formData, gender: g.id})} className={`btn-glass flex-1 py-3 text-sm font-bold rounded-lg text-center ${formData.gender === g.id ? 'bg-emerald-500 text-slate-900 shadow-sm' : 'text-slate-400'}`}>{g.label}</div>))}</div>
