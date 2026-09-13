@@ -6,12 +6,12 @@ const TIER_PRICES: Record<string, { title: string; desc: string; stars: number }
   silver: {
     title: 'NutriBot Silver (1 мес)',
     desc: 'AI-сканирование еды по фото (до 10 раз/день) и безлимитный сканер штрихкодов',
-    stars: 99,
+    stars: 240,
   },
   gold: {
     title: 'NutriBot Gold VIP (1 мес)',
     desc: 'Безлимитное AI-сканирование еды, умный ИИ-диетолог и приоритетный доступ',
-    stars: 249,
+    stars: 440,
   },
 };
 
