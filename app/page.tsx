@@ -1715,9 +1715,10 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
     setPurchaseStatus('loading');
 
     try {
+      const tgApp = typeof window !== 'undefined' ? (window as any).Telegram?.WebApp : null;
       const effectiveUserId = tgUser?.id ? String(tgUser.id) : (userId || 'user');
 
-      // Запрос к роуту Crypto Pay на создание счета
+      // 1. Запрос к API на создание счета в Crypto Pay
       const res = await fetch('/api/crypto/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1726,18 +1727,23 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
 
       const data = await res.json();
 
-      if (!res.ok || !data.payUrl) {
+      if (!res.ok || (!data.payUrl && !data.botInvoiceUrl)) {
         throw new Error(data.error || 'Не удалось сформировать счёт в Crypto Pay');
       }
 
       setPurchaseStatus('idle');
       setPurchasingTier(null);
 
-      // Открытие нативного диалога Crypto Bot внутри Telegram
-      if (tg && typeof tg.openTelegramLink === 'function') {
-        tg.openTelegramLink(data.payUrl);
+      // 2. Выбираем надежную ссылку для открытия внутри Telegram
+      const targetUrl = data.botInvoiceUrl || data.payUrl || data.webPayUrl;
+
+      if (tgApp && typeof tgApp.openTelegramLink === 'function' && targetUrl.includes('t.me/')) {
+        // Открывает диалог с @CryptoBot с готовым счетом
+        tgApp.openTelegramLink(targetUrl);
+      } else if (tgApp && typeof tgApp.openLink === 'function') {
+        tgApp.openLink(data.webPayUrl || targetUrl);
       } else {
-        window.open(data.payUrl, '_blank');
+        window.open(targetUrl, '_blank');
       }
     } catch (err: any) {
       console.error('Crypto purchase error:', err);
