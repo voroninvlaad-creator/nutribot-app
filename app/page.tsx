@@ -8,7 +8,7 @@ import { getFirestore, doc, setDoc, collection, onSnapshot, deleteDoc } from 'fi
 import { 
   Camera, Search, Home, Plus, Activity, CheckCircle2, ChevronLeft, ChevronRight, Scale, User, 
   TrendingDown, TrendingUp, Minus, Crown, Zap, Shield, Check, Barcode, AlertCircle,
-  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles, Star, Headphones
+  ImagePlus, Lightbulb, X, Mic, Send, CalendarDays, Flame, Droplet, Trash2, History, ChevronDown, Globe, MicOff, Sparkles, Star, Headphones, Wallet
 } from 'lucide-react';
 
 let app: any = null;
@@ -38,13 +38,13 @@ const apiKey = "";
 
 const translations: any = {
   ru: {
-    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Купить за 99 ⭐", buyGold: "Купить за 249 ⭐", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
+    dashboard: "Сводка", searchTab: "Поиск", weightTab: "Вес", profileTab: "Профиль", calsLeft: "Осталось калорий", eatenToday: "Съедено за день", from: "из", kcal: "ккал", aiDietitian: "ИИ-диетолог: Что съесть?", proteins: "Белки", fats: "Жиры", carbs: "Углеводы", g: "г", waterConsumed: "Выпито воды", ml: "мл", addFood: "Добавить еду", breakfast: "Завтрак", lunch: "Обед", dinner: "Ужин", snack: "Перекус", recordVoice: "Голосовой ввод", dictatePrompt: "Нажмите на микрофон и скажите, что вы съели, или напишите текст.", dictatePlaceholder: "Напр: 200г куриной грудки и 150г гречки", aiThinking: "Нейросеть анализирует...", aiCreating: "Создаем рецепты...", whereToSave: "Куда записать блюдо?", date: "Дата", cancel: "Отмена", base: "База", myRecipes: "Мои рецепты", searchPlaceholder: "Поиск продуктов (Barilla, мясо, сыр...)", recentAdded: "Недавно добавленные", notFound: "Ничего не найдено", ingredient: "Ингредиент", constructor: "Конструктор", recipeName: "Название блюда", addIngredient: "Добавить ингредиент", saveRecipe: "Сохранить рецепт", kbju100g: "КБЖУ (на 100 грамм)", addToDiary: "Добавить в дневник", weightInfo: "грамм", aiScanner: "AI Сканер еды", takePhoto: "Сделать фото", fromGallery: "Из галереи", recognitionError: "Ошибка распознавания", tryAgain: "Попробовать еще раз", recognized: "Распознанные продукты", weightTitle: "Записать вес (кг)", weightPlaceholder: "Напр. 75.5", add: "Добавить", chart: "График", needMoreData: "Нужен еще один замер", history: "История замеров", start: "Начало", inSystemSince: "Пользователь базы", subsLevels: "Уровни подписки", current: "Текущий", free: "Бесплатно", allFeatures: "Все возможности", hideDetails: "Скрыть подробности", bronzeF1: "Базовый поиск еды", bronzeF2: "скан. штрихкодов", bronzeF3: "ИИ сканер недоступен", silverF1: "Всё, что входит в Bronze", silverF2: "ИИ-фото в день", silverF3: "Безлимитный сканер штрихкодов", goldF1: "Полный доступ ко всем функциям", goldF2: "Безлимитное ИИ-сканирование", goldF3: "Советы ИИ-диетолога", buySilver: "Купить за 240 ⭐", buyGold: "Купить за 440 ⭐", yourTier: "Ваш текущий тариф", proActive: "Активный PRO-доступ", continue: "Продолжить", makingPlan: "Создаем план...", accountSetup: "Настроим NutriBot", activityLabel: "Активность", goalLabel: "Ваша цель", startUsing: "Начать использование", language: "Язык", loadingData: "Загрузка...", reqSub: "Требуется подписка", reqSubDesc: "Эта функция недоступна на вашем текущем тарифе. Перейдите в профиль, чтобы снять ограничения.", toProfile: "В профиль", silverUnlocked: "SILVER РАЗБЛОКИРОВАН", goldUnlocked: "GOLD VIP АКТИВИРОВАН", male: "Мужской", female: "Женский", age: "Возраст", height: "Рост (см)", weight: "Вес (кг)", listening: "Слушаю... Говорите", tapToSpeak: "Нажмите для голосового ввода", micBlocked: "Доступ к микрофону ограничен. Введите блюдо текстом ниже.",
     resetTitle: "Начать сначала", resetDesc: "Удалить всю историю, замеры веса и приёмы пищи?", resetConfirmBtn: "Да, удалить всё", resetSuccess: "Данные очищены",
     support: "Служба поддержки", supportDesc: "Помощь и обратная связь",
     activities: { min: "Минимальная", low: "Слабая", med: "Средняя", high: "Высокая", ext: "Экстремальная" }, goals: { lose: "Похудение", keep: "Поддержание веса", gain: "Набор массы" }
   },
   en: {
-    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Get for 99 ⭐", buyGold: "Get for 249 ⭐", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
+    dashboard: "Dashboard", searchTab: "Search", weightTab: "Weight", profileTab: "Profile", calsLeft: "Calories left", eatenToday: "Eaten today", from: "of", kcal: "kcal", aiDietitian: "AI Dietitian: What to eat?", proteins: "Protein", fats: "Fats", carbs: "Carbs", g: "g", waterConsumed: "Water consumed", ml: "ml", addFood: "Add food", breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack", recordVoice: "Voice Input", dictatePrompt: "Tap the mic and speak what you ate, or type below.", dictatePlaceholder: "e.g., 200g chicken breast and 150g rice", aiThinking: "AI is analyzing...", aiCreating: "Creating recipes...", whereToSave: "Where to save this meal?", date: "Date", cancel: "Cancel", base: "Database", myRecipes: "My Recipes", searchPlaceholder: "Search food (Barilla, meat, cheese...)", recentAdded: "Recently added", notFound: "Nothing found", ingredient: "Ingredient", constructor: "Constructor", recipeName: "Recipe name", addIngredient: "Add ingredient", saveRecipe: "Save recipe", kbju100g: "Macros (per 100g)", addToDiary: "Add to diary", weightInfo: "grams", aiScanner: "AI Food Scanner", takePhoto: "Take a photo", fromGallery: "From gallery", recognitionError: "Recognition error", tryAgain: "Try again", recognized: "Recognized products", weightTitle: "Log weight (kg)", weightPlaceholder: "e.g. 75.5", add: "Add", chart: "Chart", needMoreData: "Need one more log", history: "Weight history", start: "Start", inSystemSince: "Cloud Member", subsLevels: "Subscription Tiers", current: "Current", free: "Free", allFeatures: "All features", hideDetails: "Hide details", bronzeF1: "Basic food search", bronzeF2: "barcode scans", bronzeF3: "AI scanner unavailable", silverF1: "Everything in Bronze", silverF2: "AI photo scans per day", silverF3: "Unlimited barcode scanner", goldF1: "Full access to all features", goldF2: "Unlimited AI food scanning", goldF3: "Smart AI Dietitian tips", buySilver: "Get for 240 ⭐", buyGold: "Get for 440 ⭐", yourTier: "Your current tier", proActive: "PRO Access Active", continue: "Continue", makingPlan: "Creating plan...", accountSetup: "Setup NutriBot", activityLabel: "Activity", goalLabel: "Your goal", startUsing: "Start using", language: "Language", loadingData: "Loading...", reqSub: "Subscription Required", reqSubDesc: "This feature is not available on your current plan. Upgrade in profile to unlock.", toProfile: "To Profile", silverUnlocked: "SILVER UNLOCKED", goldUnlocked: "GOLD VIP ACTIVE", male: "Male", female: "Female", age: "Age", height: "Height (cm)", weight: "Weight (kg)", listening: "Listening... Speak now", tapToSpeak: "Tap to record voice", micBlocked: "Microphone permission denied. Please type below.",
     resetTitle: "Start from scratch", resetDesc: "Delete all user history, weight logs, and meals?", resetConfirmBtn: "Yes, wipe everything", resetSuccess: "Data cleared",
     support: "Support Team", supportDesc: "Help & feedback",
     activities: { min: "Minimal", low: "Light", med: "Moderate", high: "High", ext: "Extreme" }, goals: { lose: "Weight loss", keep: "Maintain weight", gain: "Muscle gain" }
@@ -1673,7 +1673,6 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
       if (tg && typeof tg.openInvoice === 'function') {
         tg.openInvoice(data.invoiceLink, (status: string) => {
           if (status === 'paid') {
-            // ЗВЁЗДЫ РЕАЛЬНО СПИСАНЫ Telegram: активируем подписку
             setPurchaseStatus('confetti'); 
             setTimeout(() => { 
               setPurchaseStatus('success'); 
@@ -1697,7 +1696,6 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
           }
         });
       } else {
-        // Если запущено вне Telegram — открываем ссылку инвойса
         window.open(data.invoiceLink, '_blank');
         setPurchaseStatus('idle');
         setPurchasingTier(null);
@@ -1707,49 +1705,51 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
       console.error('Purchase error:', err);
       setPurchaseStatus('idle');
       setPurchasingTier(null);
-      // При ошибке подписка НЕ выдаётся бесплатно
       setPaymentError(err.message || 'Ошибка связи с платёжным сервером Telegram.');
+    }
+  };
+
+  const handleCryptoPurchase = async (level: string) => {
+    setPaymentError(null);
+    setPurchasingTier(level);
+    setPurchaseStatus('loading');
+
+    try {
+      const effectiveUserId = tgUser?.id ? String(tgUser.id) : (userId || 'user');
+
+      // Запрос к роуту Crypto Pay на создание счета
+      const res = await fetch('/api/crypto/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier: level, userId: effectiveUserId })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.payUrl) {
+        throw new Error(data.error || 'Не удалось сформировать счёт в Crypto Pay');
+      }
+
+      setPurchaseStatus('idle');
+      setPurchasingTier(null);
+
+      // Открытие нативного диалога Crypto Bot внутри Telegram
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(data.payUrl);
+      } else {
+        window.open(data.payUrl, '_blank');
+      }
+    } catch (err: any) {
+      console.error('Crypto purchase error:', err);
+      setPurchaseStatus('idle');
+      setPurchasingTier(null);
+      setPaymentError(err.message || 'Ошибка связи с Crypto Pay');
     }
   };
 
   return (
     <div className="p-4 animate-in fade-in slide-in-from-bottom-4 duration-300 space-y-6">
-      <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 flex justify-between items-center border border-white/5 shadow-lg">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500">
-            <User size={32} className="text-slate-400" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-white">{displayName}</h2>
-            <p className="text-slate-400 text-sm">{t.inSystemSince}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg">
-        <div className="flex items-center gap-2 text-white font-medium"><Globe size={20} className="text-blue-400"/> {t.language}</div>
-        <select value={lang} onChange={e => setLang(String(e.target.value))} className="bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 outline-none font-medium">
-          <option value="ru">🇷🇺 Русский</option><option value="en">🇬🇧 English</option>
-        </select>
-      </div>
-
-      {/* Support Bot Action Card */}
-      <a
-        href="https://t.me/MyNutriDiet1_bot"
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => {
-          if (tg && typeof tg.openTelegramLink === 'function') {
-            e.preventDefault();
-            tg.openTelegramLink('https://t.me/MyNutriDiet1_bot');
-          }
-        }}
-        className="btn-glass bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center border border-white/5 shadow-lg text-white hover:bg-slate-800/95 transition-all"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 shrink-0">
-            <Headphones size={20} />
-          </div>
+      {/* ... existing header and support button ... */}
           <div className="text-left">
             <div className="font-bold text-sm text-white">{t.support}</div>
             <div className="text-xs text-slate-400">@MyNutriDiet1_bot</div>
@@ -1792,7 +1792,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
             <div className="flex justify-between items-center mb-3">
               <h4 className="font-bold text-lg text-slate-300 flex items-center gap-2"><Zap size={20} /> Silver</h4>
               <span className="text-sm font-bold bg-slate-800 text-sky-300 px-3 py-1 rounded-lg flex items-center gap-1">
-                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 99 ⭐ / мес
+                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 240 ⭐
               </span>
             </div>
             <div onClick={() => setExpandedTier(expandedTier === 'silver' ? null : 'silver')} className="btn-glass flex items-center gap-1 text-slate-400 text-sm mb-4 w-full justify-between">{expandedTier === 'silver' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'silver' ? 'rotate-180' : ''}`} size={16}/></div>
@@ -1805,15 +1805,26 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
                 <li className="flex items-start gap-2 opacity-50"><Minus size={16} className="mt-0.5 shrink-0"/> <span>Умный ИИ-диетолог</span></li>
               </ul>
             )}
+            {}
             {currentSub !== 'silver' && currentSub !== 'gold' ? (
-              <button 
-                type="button"
-                onClick={() => handlePurchase('silver')} 
-                className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center flex items-center justify-center gap-2 border-0"
-              >
-                <Star size={16} className="fill-amber-400 text-amber-400" />
-                {t.buySilver}
-              </button>
+              <div className="space-y-2">
+                <button 
+                  type="button"
+                  onClick={() => handlePurchase('silver')} 
+                  className="btn-glass w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl text-center flex items-center justify-center gap-2 border-0"
+                >
+                  <Star size={16} className="fill-amber-400 text-amber-400" />
+                  {t.buySilver}
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => handleCryptoPurchase('silver')} 
+                  className="btn-glass w-full bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 font-medium py-2.5 rounded-xl text-center flex items-center justify-center gap-2 text-xs"
+                >
+                  <Wallet size={15} className="text-sky-400" />
+                  Оплатить $2.00 в USDT / TON (Crypto Bot)
+                </button>
+              </div>
             ) : (currentSub === 'silver' && <div className="w-full text-center text-slate-400 font-bold py-3 bg-slate-800 rounded-xl">{t.yourTier}</div>)}
           </div>
         </div>
@@ -1824,7 +1835,7 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
             <div className="flex justify-between items-center mb-3">
               <h4 className="font-bold text-lg text-amber-400 flex items-center gap-2"><Crown size={20} /> Gold</h4>
               <span className="text-sm font-bold bg-amber-500/20 text-amber-400 px-3 py-1 rounded-lg flex items-center gap-1">
-                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 249 ⭐ / мес
+                <Star size={14} className="fill-amber-400 text-amber-400 inline" /> 440 ⭐
               </span>
             </div>
             <div onClick={() => setExpandedTier(expandedTier === 'gold' ? null : 'gold')} className="btn-glass flex items-center gap-1 text-slate-300 text-sm mb-4 w-full justify-between">{expandedTier === 'gold' ? t.hideDetails : t.allFeatures} <ChevronDown className={`transition-transform duration-300 ${expandedTier === 'gold' ? 'rotate-180' : ''}`} size={16}/></div>
@@ -1836,15 +1847,26 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
                 <li className="flex items-start gap-2 text-white"><Check size={16} className="text-amber-400 mt-0.5 shrink-0"/> <span>Высокая скорость обработки нейросетью</span></li>
               </ul>
             )}
+            {}
             {currentSub !== 'gold' ? (
-              <button 
-                type="button"
-                onClick={() => handlePurchase('gold')} 
-                className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-4 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center flex items-center justify-center gap-2 border-0"
-              >
-                <Star size={18} className="fill-slate-900 text-slate-900" />
-                {t.buyGold}
-              </button>
+              <div className="space-y-2">
+                <button 
+                  type="button"
+                  onClick={() => handlePurchase('gold')} 
+                  className="btn-glass w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-900 font-bold py-3.5 rounded-xl shadow-[0_5px_15px_rgba(245,158,11,0.4)] text-center flex items-center justify-center gap-2 border-0"
+                >
+                  <Star size={18} className="fill-slate-900 text-slate-900" />
+                  {t.buyGold}
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => handleCryptoPurchase('gold')} 
+                  className="btn-glass w-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-semibold py-2.5 rounded-xl text-center flex items-center justify-center gap-2 text-xs"
+                >
+                  <Wallet size={15} className="text-amber-400" />
+                  Оплатить $4.40 в USDT / TON (Crypto Bot)
+                </button>
+              </div>
             ) : (<div className="w-full text-center text-amber-400 font-bold py-4 bg-amber-500/10 rounded-xl border border-amber-500/30">{t.proActive}</div>)}
           </div>
         </div>
@@ -1893,12 +1915,12 @@ const UserProfile = React.memo(({ currentSub, setSubscription, onRequestReset, u
           )}
         </div>
       )}
-
+      {}
       {purchaseStatus === 'loading' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
           <div className="flex flex-col items-center gap-4">
             <div className="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin shadow-[0_0_20px_rgba(245,158,11,0.5)]"></div>
-            <span className="text-white text-sm font-semibold animate-pulse">Открываем счёт в Telegram Stars...</span>
+            <span className="text-white text-sm font-semibold animate-pulse">Создаем счёт на оплату...</span>
           </div>
         </div>
       )}
